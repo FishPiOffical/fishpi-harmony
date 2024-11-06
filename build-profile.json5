@@ -1,0 +1,55 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.cer",
+          "storePassword": "0000001B49CD8D52276609E64C8FBF3FE2EFD3CEE2B92A1F2B96D8AA5C9D8B1807A2481A50ED990A5896D0",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BEDFB062B409F68403869D72F3F5C24741303680B28050DD9BACCCD497D32907C45C4D45F480CCD",
+          "profile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
