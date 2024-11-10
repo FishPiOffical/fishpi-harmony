@@ -1,4 +1,5 @@
 import defHttp, { IKeyVal, IResponseData } from '../libs/http';
+import { Chatroom } from './chatroom';
 import User from './user';
 
 export interface IToken {
@@ -44,6 +45,7 @@ export interface UploadInfo {
 export class Fishpi {
   private token: string = '';
   user: User = new User();
+  chatroom: Chatroom = new Chatroom();
 
   constructor(token?: string) {
     if (!token) {
@@ -55,6 +57,7 @@ export class Fishpi {
   setToken(token: string) {
     this.token = token;
     this.user.setToken(token);
+    this.chatroom.setToken(token);
     return token
   }
 
