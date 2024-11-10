@@ -1,0 +1,18 @@
+<svg width="24.000000" height="24.000000" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<clipPath id="clip297_579">
+			<rect id="scan" width="24.000000" height="24.000000" fill="white" fill-opacity="0"/>
+		</clipPath>
+	</defs>
+	<rect id="scan" width="24.000000" height="24.000000" fill="#FFFFFF" fill-opacity="0"/>
+	<g clip-path="url(#clip297_579)">
+		<path id="Vector (Stroke)" d="M5 4C4.73 4 4.48 4.1 4.29 4.29C4.1 4.48 4 4.73 4 5L4 7C4 7.55 3.55 8 3 8C2.44 8 2 7.55 2 7L2 5C2 4.2 2.31 3.44 2.87 2.87C3.44 2.31 4.2 2 5 2L7 2C7.55 2 8 2.44 8 3C8 3.55 7.55 4 7 4L5 4Z" fill="#000000" fill-opacity="1.000000" fill-rule="evenodd"/>
+		<path id="Vector (Stroke)" d="M16 3C16 2.44 16.44 2 17 2L19 2C19.79 2 20.55 2.31 21.12 2.87C21.68 3.44 22 4.2 22 5L22 7C22 7.55 21.55 8 21 8C20.44 8 20 7.55 20 7L20 5C20 4.73 19.89 4.48 19.7 4.29C19.51 4.1 19.26 4 19 4L17 4C16.44 4 16 3.55 16 3Z" fill="#000000" fill-opacity="1.000000" fill-rule="evenodd"/>
+		<path id="Vector (Stroke)" d="M21 16C21.55 16 22 16.44 22 17L22 19C22 19.79 21.68 20.55 21.12 21.12C20.55 21.68 19.79 22 19 22L17 22C16.44 22 16 21.55 16 21C16 20.44 16.44 20 17 20L19 20C19.26 20 19.51 19.89 19.7 19.7C19.89 19.51 20 19.26 20 19L20 17C20 16.44 20.44 16 21 16Z" fill="#000000" fill-opacity="1.000000" fill-rule="evenodd"/>
+		<path id="Vector (Stroke)" d="M3 16C3.55 16 4 16.44 4 17L4 19C4 19.26 4.1 19.51 4.29 19.7C4.48 19.89 4.73 20 5 20L7 20C7.55 20 8 20.44 8 21C8 21.55 7.55 22 7 22L5 22C4.2 22 3.44 21.68 2.87 21.12C2.31 20.55 2 19.79 2 19L2 17C2 16.44 2.44 16 3 16Z" fill="#000000" fill-opacity="1.000000" fill-rule="evenodd"/>
+		<path id="Vector (Stroke)" d="M6 12C6 11.44 6.44 11 7 11L17 11C17.55 11 18 11.44 18 12C18 12.55 17.55 13 17 13L7 13C6.44 13 6 12.55 6 12Z" fill="#000000" fill-opacity="1.000000" fill-rule="evenodd"/>
+	</g>
+</svg>

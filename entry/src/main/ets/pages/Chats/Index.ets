@@ -2,6 +2,7 @@ import { AppStorageV2 } from '@kit.ArkUI';
 import { MainLayout } from '../../layout/main';
 import { htmlToText } from '../../libs/utils';
 import Fishpi from '../../service/fishpi'
+import { ChatRoomMessageType, IChatRoomMessage } from '../../service/types/chatroom';
 import { ChatItem } from './ChatItem';
 
 @ObservedV2
@@ -37,6 +38,12 @@ export struct Chats {
     this.fishpi.chatroom.more().then((res) => {
       this.chatroom.time = res[0].time;
       this.chatroom.content = htmlToText(res[0].content);
+    })
+    this.fishpi.chatroom.addListener((res) => {
+      if (res.type != ChatRoomMessageType.msg) return;
+      const msg = res.data as IChatRoomMessage;
+      this.chatroom.time = msg.time;
+      this.chatroom.content = htmlToText(msg.content);
     })
   }
 

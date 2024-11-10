@@ -1,0 +1,13 @@
+<svg width="20.000000" height="20.000000" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<clipPath id="clip297_3037">
+			<rect id="police" width="20.000000" height="20.000000" fill="white" fill-opacity="0"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clip297_3037)">
+		<path id="path" d="M2.42 9.72C2.69 8.49 2.95 7.34 1.66 5.41L4.58 2.08C4.58 2.08 7.5 3.33 10 1.25C12.5 3.33 15.41 2.08 15.41 2.08L18.33 5.41C17.05 7.34 17.3 8.49 17.57 9.72C17.82 10.89 18.09 12.13 17.08 14.16C16.11 16.09 14.45 16.76 12.9 17.39C11.77 17.85 10.7 18.28 10 19.16C9.29 18.28 8.22 17.85 7.09 17.39C5.54 16.76 3.88 16.09 2.91 14.16C1.9 12.13 2.17 10.89 2.42 9.72ZM11.98 10.64L13.96 8.71L11.22 8.31L10 5.83L8.77 8.31L6.03 8.71L8.01 10.64L7.55 13.37L10 12.08L12.44 13.37L11.98 10.64Z" fill="#FFFFFF" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
+</svg>

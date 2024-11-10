@@ -22,7 +22,7 @@ export class Chatroom {
   private rws?: ReconnectingWebSocket;
   private discusse:string = '';
   private onlines:IOnlineMsg[] = [];
-  private _wsCallbacks:Array<(msg: IMessage) => void> = [];
+  private wsCallbacks:Array<(msg: IMessage) => void> = [];
 
 
   constructor(token?: string) {
@@ -139,7 +139,7 @@ export class Chatroom {
             break;
           }
         }
-        this._wsCallbacks.forEach(call => call({ type: msg.type, data } as IMessage));
+        this.wsCallbacks.forEach(call => call({ type: msg.type, data } as IMessage));
       }
       this.rws.onerror = ((e) => {
         console.error(e.message);
@@ -149,4 +149,39 @@ export class Chatroom {
       });
     });
   }
+
+
+  /**
+   * 清除聊天室监听
+   */
+  clearListener() {
+    this.wsCallbacks = [];
+  }
+
+  /**
+   * 移除聊天室消息监听函数
+   * @param wsCallback 消息监听函数
+   */
+  removeListener(wsCallback: (msg: IMessage) => void) {
+    if (this.wsCallbacks.indexOf(wsCallback) < 0) return;
+    this.wsCallbacks.splice(this.wsCallbacks.indexOf(wsCallback), 1);
+  }
+
+  /**
+   * 添加聊天室消息监听函数
+   * @param wsCallback 消息监听函数
+   * @param timeout 超时时间
+   * @param error 错误回调
+   * @param close 关闭回调
+   */
+  async addListener(wsCallback: (msg: IMessage) => void, timeout=10) {
+    if (this.rws !== null) {
+      if (this.wsCallbacks.indexOf(wsCallback) < 0)
+        this.wsCallbacks.push(wsCallback);
+      return;
+    }
+    this.wsCallbacks.push(wsCallback);
+    await this.connect(timeout);
+  }
+
 }
