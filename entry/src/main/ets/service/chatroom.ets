@@ -58,17 +58,18 @@ export class Chatroom {
     }));
   }
 
-  connect(timeout = 10): Promise<BusinessError<void>> {
+  connect(timeout = 10): Promise<boolean | void> {
     return new Promise(async (resolve, reject) => {
 
-      if (!this.rws) {
-        return;
+      if (this.rws) {
+        return resolve(this.rws.reconnect());
       }
       this.rws = new ReconnectingWebSocket(`wss://fishpi.cn/chat-room-channel?apiKey=${this.token}`, {
         connectionTimeout: 1000 * timeout,
       });
       this.rws.onopen = (e) => {
-        resolve(e);
+        if (e) reject(e);
+        else resolve(true);
       };
       this.rws.onmessage = (_err, msgData: Message) => {
         const msg = JSON.parse(msgData.toString()) as IMessageEvent;
@@ -175,7 +176,7 @@ export class Chatroom {
    * @param close 关闭回调
    */
   async addListener(wsCallback: (msg: IMessage) => void, timeout=10) {
-    if (this.rws !== null) {
+    if (this.rws !== undefined) {
       if (this.wsCallbacks.indexOf(wsCallback) < 0)
         this.wsCallbacks.push(wsCallback);
       return;

@@ -64,6 +64,7 @@ export class ReconnectingWebSocket {
   constructor(url: string, options?: WsOptions) {
     this.url = url;
     this.options = options || {};
+    this.connect();
   }
 
   /**
@@ -119,7 +120,7 @@ export class ReconnectingWebSocket {
     this.closeCalled = false;
     this._retryCount = -1;
     this.disconnect(code, reason);
-    this.connect();
+    return this.connect();
   }
 
   /**
@@ -213,7 +214,7 @@ export class ReconnectingWebSocket {
     });
   }
 
-  private connect() {
+  private connect(): Promise<boolean> | undefined {
     if (this.connectLock || !this.shouldReconnect) {
       return;
     }
@@ -231,23 +232,26 @@ export class ReconnectingWebSocket {
 
     this.debug('connect', this._retryCount);
     this.removeListeners();
-    this.wait()
+    return this.wait()
       .then(() => this.url)
-      .then(async url => {
+      .then(url => new Promise((resolve, reject) => {
         // close could be called before creating the ws
         if (this.closeCalled) {
           return;
         }
         this.debug('connect', url, ', protocols:', this.options.protocols || 'undefined');
         this.ws = webSocket.createWebSocket();
-        await this.ws.connect(url, {
-          protocol: this.options.protocols
-        })
-        this.connectLock = false;
         this.addListeners();
-
+        this.ws.connect(url, (err, value) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(value);
+          }
+        });
+        this.connectLock = false;
         this.connectTimeout = setTimeout((): void => this.handleTimeout(), connectionTimeout);
-      });
+      }));
   }
 
   private handleTimeout() {
