@@ -8,6 +8,8 @@ export struct ChatItem {
   @Require @Param content: string;
   @Require @Param time: string;
 
+  @Event onTap: (event?: ClickEvent) => void = ()=>{};
+
   getShortTime() {
     if (!this.time) return ''
     const date = new Date(this.time)
@@ -58,5 +60,6 @@ export struct ChatItem {
     })
     .width('100%')
     .height(70)
+    .onClick(this.onTap)
   }
 }

@@ -1,4 +1,12 @@
 {
   "routerMap": [
+    {
+      "name": "ChatRoom",
+      "pageSourceFile": "src/main/ets/pages/Chats/ChatRoom.ets",
+      "buildFunction": "ChatRoomBuilder",
+      "data": {
+        "description": "聊天室"
+      }
+    }
   ]
 }

@@ -32,7 +32,7 @@ export struct Chats {
   @Local chatList: ChatItemProps[] = [];
   @Local chatroom: ChatItemProps = new ChatItemProps($r('app.media.chatroom'), '聊天室');
 
-  pathStack: NavPathStack = new NavPathStack()
+  @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
 
   aboutToAppear() {
     this.fishpi.chatroom.more().then((res) => {
@@ -54,7 +54,10 @@ export struct Chats {
           icon: this.chatroom.icon,
           name: this.chatroom.name,
           time: this.chatroom.time,
-          content: this.chatroom.content
+          content: this.chatroom.content,
+          onTap: () => {
+            this.pathStack.pushPathByName('ChatRoom', null)
+          }
         })
       }
     }

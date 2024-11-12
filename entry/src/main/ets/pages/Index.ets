@@ -16,7 +16,7 @@ PersistenceV2.notifyOnError((key: string, reason: string, msg: string) => {
 @Entry
 @ComponentV2
 struct Index {
-  pathStack: NavPathStack = new NavPathStack()
+  @Provider('routerTab') pathStack: NavPathStack = new NavPathStack()
   private controller: TabsController = new TabsController()
   @Local ws: webSocket.WebSocket = webSocket.createWebSocket();
 
