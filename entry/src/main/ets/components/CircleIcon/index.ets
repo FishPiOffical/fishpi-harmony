@@ -23,5 +23,6 @@ export struct CircleIcon {
     .alignItems(HorizontalAlign.Center)
     .justifyContent(FlexAlign.Center)
     .border({ width: 2, color: '#18191F' })
+    .clip(true)
   }
 }

@@ -100,6 +100,10 @@ export interface IChatRoomMessage extends IChatRoomMessageRsp {
    * 扩展消息内容
    */
   extends: ExtendsType;
+  /**
+   * 消息类型
+   */
+  type: ChatRoomMessageType;
 }
 export interface IChatRoomMessageRsp {
   /**

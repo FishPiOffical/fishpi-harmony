@@ -5,7 +5,8 @@
     "@ohos/axios": "^2.2.4",
     "@pura/harmony-utils": "^1.2.1",
     "@ohos/crypto-js": "^2.0.4",
-    "@ohasasugar/hp-richtext": "^3.0.4"
+    "@ohasasugar/hp-richtext": "^3.0.4",
+    "@luvi/lv-markdown-in": "^2.0.9"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.19",

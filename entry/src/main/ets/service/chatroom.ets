@@ -4,7 +4,8 @@ import { ChatContentType, ExtendsType, IChatRoomMessage, IChatroomQuery, IChatVi
   IMessageEvent,
   IOnlineMsg,
   IMessage,
-  MessageData} from "./types/chatroom";
+  MessageData,
+  ChatRoomMessageType} from "./types/chatroom";
 import { Metal } from "./types/user";
 import { BusinessError } from "@kit.BasicServicesKit";
 import { IRedPacketStatusMsg } from "./redpack";
@@ -42,6 +43,7 @@ export class Chatroom {
     }).then((res) => res.map((item) => {
       item.via = clientToVia(item.client)
       item.metalList = Metal.toMetal(item.sysMetal);
+      item.type = ChatRoomMessageType.msg;
       try {
         const data: ExtendsType = JSON.parse(item.content);
         if (data.msgType == 'redPacket' && data.recivers && typeof data.recivers == 'string') {
@@ -50,6 +52,7 @@ export class Chatroom {
         item.extends = data;
         if (data.msgType == 'redPacket') {
           item.content = '[收到一个红包]'
+          item.type = ChatRoomMessageType.redPacket;
         }
       } catch (e) {
         console.error(e);

@@ -37,25 +37,33 @@ export class HeaderAction {
 @ComponentV2
 export struct Header {
   @Require @Param title: string;
-  @Require @Param leftAction: HeaderAction;
-  @Require @Param rightAction: HeaderAction;
+  @Param leftAction: HeaderAction | null = null;
+  @Param rightAction: HeaderAction | null = null;
 
   build() {
     Row() {
-      Icon({
-        icon: this.leftAction.icon,
-        stroke: this.leftAction.options.stockColor,
-        badge: this.leftAction.options.badge,
-      })
-        .margin({ left: 10 })
-        .onClick(this.leftAction.onClick)
+      if (this.leftAction) {
+        Icon({
+          icon: this.leftAction.icon,
+          stroke: this.leftAction.options.stockColor,
+          badge: this.leftAction.options.badge,
+        })
+          .margin({ left: 10 })
+          .onClick(this.leftAction.onClick)
+      } else {
+        Row().width(40)
+      }
       Text(this.title).fontSize(20).fontWeight('bold')
-      Icon({
-        icon: this.rightAction.icon,
-        stroke: this.rightAction.options.stockColor,
-        badge: this.rightAction.options.badge,
-      }).margin({ right: 10 })
-        .onClick(this.rightAction.onClick)
+      if (this.rightAction) {
+        Icon({
+          icon: this.rightAction.icon,
+          stroke: this.rightAction.options.stockColor,
+          badge: this.rightAction.options.badge,
+        }).margin({ right: 10 })
+          .onClick(this.rightAction.onClick)
+      } else {
+        Row().width(40)
+      }
     }
     .alignItems(VerticalAlign.Center)
     .justifyContent(FlexAlign.SpaceBetween)
