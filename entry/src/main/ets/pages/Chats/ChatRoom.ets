@@ -1,9 +1,9 @@
 import { Header, HeaderAction } from "../../layout/main/header";
 import { AppStorageV2 } from "@kit.ArkUI";
-import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
 import Fishpi from "../../service/fishpi";
 import { ChatContentType, ChatRoomMessageType, IChatRoomMessage, IMessage } from "../../service/types/chatroom";
 import { ChatMsg } from "./ChatMsg";
+import { MessageBox, MessageBoxExpose } from "./MessageBox";
 
 @Builder
 export function ChatRoomBuilder(name: string, param: Object) {
@@ -15,6 +15,9 @@ export struct ChatRoom {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Local messages: IMessage[] = [];
+  private msgScroller: Scroller = new Scroller();
+  @Local newMsgSize: number = 0;
+  @Local messageBoxExpose?: MessageBoxExpose;
 
   @Builder
   titleBuilder() {
@@ -34,35 +37,64 @@ export struct ChatRoom {
         type: item.type,
         data: item
       } as IMessage)));
+      this.msgScroller.scrollToIndex(this.messages.length - 1);
     })
     this.fishpi.chatroom.addListener((res) => {
       if (res.type == ChatRoomMessageType.msg) {
+        (res.data as IChatRoomMessage).content = (res.data as IChatRoomMessage).md;
+        const isAtEnd = this.msgScroller.isAtEnd();
         this.messages.push(res);
+        if (isAtEnd) {
+          this.msgScroller.scrollToIndex(this.messages.length - 1);
+        } else {
+          this.newMsgSize++;
+        }
       }
     })
   }
 
   build() {
     NavDestination() {
-      List({ space: 20, initialIndex: 0 }) {
-        ForEach(this.messages, (item: IMessage) => {
-          if (item.type == ChatRoomMessageType.msg) {
-            ChatMsg({
-              message: (item.data as IChatRoomMessage).content,
-              user: (item.data as IChatRoomMessage).userNickname || (item.data as IChatRoomMessage).userName,
-              time: (item.data as IChatRoomMessage).time,
-              avatar: (item.data as IChatRoomMessage).userAvatarURL
+      Flex({ direction: FlexDirection.Column }) {
+        Stack() {
+          List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
+            ForEach(this.messages, (item: IMessage) => {
+              if (item.type == ChatRoomMessageType.msg) {
+                ChatMsg({
+                  message: (item.data as IChatRoomMessage).content,
+                  user: (item.data as IChatRoomMessage).userNickname || (item.data as IChatRoomMessage).userName,
+                  time: (item.data as IChatRoomMessage).time,
+                  avatar: (item.data as IChatRoomMessage).userAvatarURL
+                })
+              }
             })
           }
-        })
+          .width('100%')
+          .height('100%')
+          .listDirection(Axis.Vertical) // 排列方向
+          .scrollBar(BarState.Auto)
+          .friction(0.6)
+          .edgeEffect(EdgeEffect.Spring)
+          .onScrollIndex(() => {
+            if (this.msgScroller.isAtEnd()) {
+              this.newMsgSize = 0;
+            }
+          })
+          .onClick(() => {
+            this.messageBoxExpose?.blur()
+          })
+        }
+        .width('100%')
+        .alignContent(Alignment.Bottom)
+        MessageBox({
+          onExpose: (expose) => {
+            this.messageBoxExpose = expose;
+          },
+          onSend: async (msg) => {
+            return await this.fishpi.chatroom.send(msg).then(() => true).catch(() => false)
+          }
+        }).width('100%')
       }
-      .width('100%')
-      .height('100%')
-      .listDirection(Axis.Vertical) // 排列方向
-      .scrollBar(BarState.Off)
-      .friction(0.6)
-      .divider({ strokeWidth: 2, color: 0xFFFFFF, startMargin: 20, endMargin: 20 }) // 每行之间的分界线
-      .edgeEffect(EdgeEffect.Spring)
       .backgroundColor('#FFF')
       Row() {
         Text('')

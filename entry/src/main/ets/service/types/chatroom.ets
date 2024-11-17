@@ -7,6 +7,12 @@ export interface IChatroomQuery {
   page: number;
 }
 
+export interface IChatroomSend {
+  apiKey: string;
+  content: string;
+  client: string;
+}
+
 export enum ClientType {
   /**
    * 网页端
@@ -60,6 +66,10 @@ export enum ClientType {
    * Golang 插件
    */
   Golang = 'Golang',
+  /**
+   * Golang 插件
+   */
+  Harmony = 'Harmony',
   /**
    * 小冰机器人
    */

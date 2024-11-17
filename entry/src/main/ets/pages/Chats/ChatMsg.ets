@@ -20,16 +20,12 @@ export struct ChatMsg {
       CircleIcon({
         icon: this.avatar,
       }).width(48)
-        .margin({ right: 5 })
+        .margin({ right: 5, top: 20 })
       Column() {
         Row() {
           Text(this.user)
             .fontWeight(FontWeight.Bold)
             .fontSize(20)
-          Text(this.time.replaceAll(this.today, ''))
-            .fontColor('#9FA4B4')
-            .fontSize(12)
-            .margin({ left: 5, bottom: 2 })
         }
         .justifyContent(FlexAlign.Start)
         .alignItems(VerticalAlign.Bottom)
@@ -37,12 +33,17 @@ export struct ChatMsg {
         ChatContent({
           message: this.message
         })
+          .margin({ bottom: 5 })
+        Text(this.time.replaceAll(this.today, ''))
+          .fontColor('#9FA4B4')
+          .fontSize(12)
+          .margin({ left: 5, bottom: 2 })
       }
       .justifyContent(FlexAlign.Start)
       .alignItems(HorizontalAlign.Start)
       .margin({ left: 10 })
       .width('100%')
     }
-    .margin(10)
+    .margin({ left: 10, right: 10 })
   }
 }

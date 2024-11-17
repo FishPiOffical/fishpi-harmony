@@ -2,8 +2,8 @@
 export struct Icon {
   @Require @Param icon: ResourceStr;
   @Param iconSize: number = 24;
-  @Param color: ResourceColor = Color.Black;
-  @Param stroke: ResourceColor = Color.Transparent;
+  @Param color: ResourceColor | null = Color.Black;
+  @Param stroke: ResourceColor | null = Color.Transparent;
   @Param badge: number | boolean = false;
   @Computed get isBadgeNumber(): boolean {
     return typeof this.badge == 'number';
@@ -11,11 +11,17 @@ export struct Icon {
 
   build() {
     Stack({ alignContent: Alignment.TopEnd }) {
-      Image(this.icon)
-        .width(this.iconSize)
-        .height(this.iconSize)
-        .fillColor(this.stroke == Color.Transparent ? this.color : Color.Transparent)
-        .colorBlend(this.stroke)
+      if (!this.color && !this.stroke) {
+        Image(this.icon)
+          .width(this.iconSize)
+          .height(this.iconSize)
+      } else {
+        Image(this.icon)
+          .width(this.iconSize)
+          .height(this.iconSize)
+          .fillColor(this.stroke == Color.Transparent ? this.color : Color.Transparent)
+          .colorBlend(this.stroke)
+      }
       if (this.badge) {
           Text(this.isBadgeNumber ? this.badge.toString() : '')
             .fontColor(Color.White)

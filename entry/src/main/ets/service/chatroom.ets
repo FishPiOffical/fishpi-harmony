@@ -5,7 +5,9 @@ import { ChatContentType, ExtendsType, IChatRoomMessage, IChatroomQuery, IChatVi
   IOnlineMsg,
   IMessage,
   MessageData,
-  ChatRoomMessageType} from "./types/chatroom";
+  ChatRoomMessageType,
+  ClientType,
+  IChatroomSend} from "./types/chatroom";
 import { Metal } from "./types/user";
 import { BusinessError } from "@kit.BasicServicesKit";
 import { IRedPacketStatusMsg } from "./redpack";
@@ -59,6 +61,16 @@ export class Chatroom {
       }
       return item;
     }));
+  }
+
+  send(msg: string, clientType: ClientType | string = ClientType.Harmony, version: string = '1.0.0') {
+    return defHttp.post<void>(`/chat-room/send`, {
+      data: {
+        apiKey: this.token,
+        content: msg,
+        client: `${clientType}/${version}`
+      } as IChatroomSend
+    });
   }
 
   connect(timeout = 10): Promise<boolean | void> {
