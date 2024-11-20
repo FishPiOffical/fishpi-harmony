@@ -3,8 +3,8 @@ import fs from '@ohos.file.fs';
 import axios, { AxiosResponse, FormData } from '@ohos/axios';
 
 interface IRequestParams {
-  data?: object | FormData,
-  params?: object;
+  data?: object | FormData | Record<string, string>,
+  params?: object | Record<string, string>
 }
 
 interface IRequestOptions<T = object> {
@@ -27,6 +27,9 @@ export interface IKeyVal {
 export class defHttp {
   private static domain = 'fishpi.cn';
   private static protocol = 'https';
+  public  static get origin() {
+    return `${defHttp.protocol}://${defHttp.domain}`;
+  }
 
   private static parseUrl(url: string, params?: object) {
     if (!params) return url;
