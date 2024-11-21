@@ -60,12 +60,14 @@ export struct ChatRoom {
           List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
             ForEach(this.messages, (item: IMessage) => {
               if (item.type == ChatRoomMessageType.msg) {
-                ChatMsg({
-                  message: (item.data as IChatRoomMessage).content,
-                  user: (item.data as IChatRoomMessage).userNickname || (item.data as IChatRoomMessage).userName,
-                  time: (item.data as IChatRoomMessage).time,
-                  avatar: (item.data as IChatRoomMessage).userAvatarURL
-                })
+                ListItem() {
+                  ChatMsg({
+                    message: (item.data as IChatRoomMessage).content,
+                    user: (item.data as IChatRoomMessage).userNickname || (item.data as IChatRoomMessage).userName,
+                    time: (item.data as IChatRoomMessage).time,
+                    avatar: (item.data as IChatRoomMessage).userAvatarURL
+                  })
+                }
               }
             })
           }

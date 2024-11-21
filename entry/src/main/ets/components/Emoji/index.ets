@@ -7,7 +7,11 @@ export struct EmojiPicker {
     build() {
       Tabs() {
         TabContent() {
+          Scroll() {
+            EmojiPicker({
 
+            })
+          }
         }
       }
     }

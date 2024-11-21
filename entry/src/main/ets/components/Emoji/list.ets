@@ -6,20 +6,17 @@ export struct EmojiPicker {
 
   build() {
     Grid() {
-      GridItem() {
-        Column()
-          {
-
-          }
-          .width('100%')
-          .height('100%')
-          .clip(true)
-      }
-      .border({
-        color: '#000000',
-        width: 2,
-        radius: 5
-      })
+      ForEach(this.emojis, (item: string) => {
+        GridItem() {
+          Column()
+            {
+              Image(item)
+            }
+            .width('100%')
+            .height('100%')
+            .clip(true)
+        }
+      }, (item: string) => item)
     }
     .columnsTemplate('1fr 1fr 1fr 1fr 1fr')
     .height(80)
