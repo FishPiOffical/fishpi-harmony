@@ -1,7 +1,8 @@
 import { AppStorageV2, PersistenceV2, promptAction, router, UIUtils } from '@kit.ArkUI'
 import CryptoJS from '@ohos/crypto-js'
 import { AppData } from '../service';
-import Fishpi, { IAccount } from '../service/fishpi'
+import Fishpi from '../service/fishpi';
+import { IAccount } from '../service/types/fishpi'
 
 @ObservedV2
 class Account implements IAccount {

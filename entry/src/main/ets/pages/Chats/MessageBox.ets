@@ -1,3 +1,4 @@
+import { EmojiPicker } from "../../components/Emoji";
 import { Icon } from "../../components/Icon";
 
 export interface MessageBoxExpose {
@@ -10,7 +11,7 @@ export struct MessageBox {
   @Local controller: TextAreaController = new TextAreaController();
   @Local text: string = '';
   @Local isFocus: boolean = false;
-  @Local expandFeature: boolean = false;
+  @Local emojiShow: boolean = false;
   @Event onSend: (text: string) => boolean | Promise<boolean> = () => true;
   @Event onExpose: (expose: MessageBoxExpose) => void = () => { };
 
@@ -18,7 +19,7 @@ export struct MessageBox {
     this.onExpose({
       blur: () => {
         if (this.isFocus) this.controller.stopEditing();
-        if (this.expandFeature) this.expandFeature = false;
+        if (this.emojiShow) this.emojiShow = false;
       }
     });
   }
@@ -35,11 +36,18 @@ export struct MessageBox {
           iconSize: 30,
         })
           .margin({ left: 5 })
+          .onClick(() => {
+            this.emojiShow = !this.emojiShow;
+            this.controller.stopEditing();
+          })
         TextArea({ placeholder: "说点什么", text: $$this.text, controller: this.controller })
           .margin({ left: 5, right: 5 })
+          .onClick(() => {
+            this.emojiShow = false;
+          })
           .onFocus(() => {
             this.isFocus = true;
-            this.expandFeature = false;
+            this.emojiShow = false;
           })
           .onBlur(() => {
             this.isFocus = false;
@@ -89,35 +97,13 @@ export struct MessageBox {
             })
         }
       }
-      if (this.expandFeature) {
-        Grid() {
-          GridItem() {
-            Icon({
-              icon: $r('app.media.redpack'),
-              color: null,
-              stroke: null,
-              iconSize: 30,
-            })
-              .onClick(() => {
-                console.log('image');
-              })
+      if (this.emojiShow) {
+        EmojiPicker({
+          onPick: (emoji) => {
+            this.onSend(emoji);
+            this.emojiShow = false;
           }
-          .border({
-            color: '#000000',
-            width: 2,
-            radius: 5
-          })
-        }
-        .columnsTemplate('1fr 1fr 1fr 1fr 1fr')
-        .height(80)
-        .padding({
-          left: 5,
-          right: 5,
-          bottom: 20,
-          top: 5
         })
-        .columnsGap(15)
-        .rowsGap(10)
       }
     }
     .alignSelf(ItemAlign.Center)

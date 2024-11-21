@@ -1,5 +1,6 @@
 import defHttp, { IKeyVal, IResponseData } from '../libs/http';
 import { Chatroom } from './chatroom';
+import { Emoji } from './emoji';
 import { AtUser,
   IAccount,
   ILog,
@@ -16,6 +17,7 @@ export class Fishpi {
   private token: string = '';
   user: User = new User();
   chatroom: Chatroom = new Chatroom();
+  emoji: Emoji = new Emoji();
 
   constructor(token?: string) {
     if (!token) {
@@ -28,6 +30,7 @@ export class Fishpi {
     this.token = token;
     this.user.setToken(token);
     this.chatroom.setToken(token);
+    this.emoji.setToken(token);
     return token
   }
 

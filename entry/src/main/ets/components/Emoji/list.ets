@@ -1,32 +1,38 @@
 
 @ComponentV2
-export struct EmojiPicker {
+export struct EmojiList {
   @Param onSend: (emoji: string) => void = () => {};
   @Require @Param emojis: string[];
 
   build() {
-    Grid() {
+    GridRow({
+      columns: 5,
+      gutter: { x: 5, y: 10 },
+      breakpoints: { value: ["400vp", "600vp", "800vp"],
+        reference: BreakpointsReference.WindowSize },
+      direction: GridRowDirection.Row
+    }) {
       ForEach(this.emojis, (item: string) => {
-        GridItem() {
+        GridCol({ span: { xs: 1, sm: 2, md: 3, lg: 4 }, offset: 0, order: 0 }) {
           Column()
             {
               Image(item)
             }
-            .width('100%')
-            .height('100%')
+            .width(50)
+            .height(50)
             .clip(true)
+          .onClick(() => {
+            this.onSend(item)
+          })
         }
       }, (item: string) => item)
     }
-    .columnsTemplate('1fr 1fr 1fr 1fr 1fr')
-    .height(80)
+    .alignItems(ItemAlign.Start)
     .padding({
       left: 5,
       right: 5,
       bottom: 20,
       top: 5
     })
-    .columnsGap(15)
-    .rowsGap(10)
   }
 }
