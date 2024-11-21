@@ -1,3 +1,5 @@
+import defHttp, { IResponseData } from "../libs/http";
+
 export const emojis: Record<string, string> = {
   "doge": "https://file.fishpi.cn/vditor/dist/images/emoji/doge.png",
   "trollface": "https://file.fishpi.cn/vditor/dist/images/emoji/trollface.png",
@@ -179,3 +181,59 @@ export const emojis: Record<string, string> = {
   "speech_balloon": `https://file.fishpi.cn/emoji/graphics/speech_balloon.png`,
   "thought_balloon": `https://file.fishpi.cn/emoji/graphics/thought_balloon.png`
 };
+
+export class Emoji {
+  private token: string = '';
+
+  constructor(token?: string) {
+    if (!token) return;
+    this.setToken(token);
+  }
+
+  setToken(token: string) {
+    this.token = token;
+  }
+
+  list() {
+    return defHttp.post<string>('/api/cloud/get', {
+      data: {
+        gameId: 'emojis',
+        apiKey: this.token,
+      }
+    }).then(res => JSON.parse(res) as string[]).catch(() => [] as string[]);
+  }
+
+  save(data: string[]) {
+    return defHttp.post<IResponseData>('/api/cloud/sync', {
+      data: {
+        gameId: 'emojis',
+        apiKey: this.token,
+        data: JSON.stringify(data)
+      }
+    }).then(() => true).catch(() => false);
+  }
+
+  append(data: string) {
+    return this.list().then(async (list: string[]) => {
+      if (list.includes(data)) return true;
+      list.push(data);
+      return await this.save(list);
+    });
+  }
+
+  remove(data: string) {
+    return this.list().then(async (list: string[]) => {
+      if (!list.includes(data)) return true;
+      list.splice(list.indexOf(data), 1);
+      return await this.save(list);
+    });
+  }
+
+  exists(data: string) {
+    return this.list().then((list: string[]) => list.includes(data));
+  }
+
+  static get default() {
+    return emojis;
+  }
+}

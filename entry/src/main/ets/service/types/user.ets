@@ -1,3 +1,4 @@
+import { IResponseData } from "../../libs/http";
 
 function analyzeMetalAttr(m: Metal): Metal {
   if (!m) return m;
@@ -234,4 +235,20 @@ export interface IUserInfoRsp {
    * 用户勋章列表
    */
   sysMetal: string;
+}
+
+export interface ILiveness extends  IResponseData {
+  liveness: number;
+}
+
+export interface ICheckIn extends IResponseData {
+  checkedIn: boolean;
+}
+
+export interface ICollectedYesterdayLivenessReward extends IResponseData {
+  isCollectedYesterdayLivenessReward: boolean;
+}
+
+export interface IRewardLiveness extends IResponseData {
+  sum: number;
 }
