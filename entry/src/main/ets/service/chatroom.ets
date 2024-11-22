@@ -7,13 +7,14 @@ import {
   IChatVia,
   IMessageEvent,
   IOnlineMsg,
-  IMessage,
+  ChatRoomMessageData,
   MessageData,
   ClientType,
   IChatroomSend,
   ChatRoomMessage,
   ChatMessageMode,
-  IMuteItem
+  IMuteItem,
+  ChatRoomMessageType
 } from "./types/chatroom";
 import { IRedPacketStatusMsg } from "./types/redpacket";
 import { bundleManager } from "@kit.AbilityKit";
@@ -35,7 +36,7 @@ export class Chatroom {
   private token: string = '';
   private rws?: ReconnectingWebSocket;
   private _onlineList: IOnlineMsg[] = [];
-  private wsCallbacks: Array<(msg: IMessage) => void> = [];
+  private wsCallbacks: Array<(msg: ChatRoomMessageData) => void> = [];
   private version = '';
   private _discusse: string = '';
 
@@ -198,7 +199,7 @@ export class Chatroom {
             try {
               let content = JSON.parse(msg.content) as ExtendsType;
               extendsData = content;
-              msg.type = content.msgType
+              msg.type = content.msgType as ChatRoomMessageType
             } catch (e) {
             }
             data = new ChatRoomMessage(msg);
@@ -219,7 +220,7 @@ export class Chatroom {
             break;
           }
         }
-        this.wsCallbacks.forEach(call => call({ type: msg.type, data } as IMessage));
+        this.wsCallbacks.forEach(call => call(new ChatRoomMessageData(msg.type, data)));
       }
       this.rws.onerror = ((e) => {
         console.error(e.message);
@@ -242,7 +243,7 @@ export class Chatroom {
    * 移除聊天室消息监听函数
    * @param wsCallback 消息监听函数
    */
-  removeListener(wsCallback: (msg: IMessage) => void) {
+  removeListener(wsCallback: (msg: ChatRoomMessageData) => void) {
     if (this.wsCallbacks.indexOf(wsCallback) < 0) {
       return;
     }
@@ -256,7 +257,7 @@ export class Chatroom {
    * @param error 错误回调
    * @param close 关闭回调
    */
-  async addListener(wsCallback: (msg: IMessage) => void, timeout = 10) {
+  async addListener(wsCallback: (msg: ChatRoomMessageData) => void, timeout = 10) {
     if (this.rws !== undefined) {
       if (this.wsCallbacks.indexOf(wsCallback) < 0) {
         this.wsCallbacks.push(wsCallback);

@@ -1,7 +1,7 @@
 import { Header, HeaderAction } from "../../layout/main/header";
 import { AppStorageV2 } from "@kit.ArkUI";
 import Fishpi from "../../service/fishpi";
-import { ChatContentType, ChatRoomMessageType, IChatRoomMessage, IMessage } from "../../service/types/chatroom";
+import { ChatContentType, ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom";
 import { ChatMsg } from "./ChatMsg";
 import { MessageBox, MessageBoxExpose } from "./MessageBox";
 
@@ -14,7 +14,7 @@ export function ChatRoomBuilder(name: string, param: Object) {
 export struct ChatRoom {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
-  @Local messages: IMessage[] = [];
+  @Local messages: ChatRoomMessageData[] = [];
   private msgScroller: Scroller = new Scroller();
   @Local newMsgSize: number = 0;
   @Local messageBoxExpose?: MessageBoxExpose;
@@ -33,15 +33,12 @@ export struct ChatRoom {
   aboutToAppear(): void {
     this.fishpi.chatroom.history(1, ChatContentType.Markdown).then((res) => {
       res.reverse();
-      this.messages.push(...res.map(item => ({
-        type: item.type,
-        data: item
-      } as IMessage)));
+      this.messages.push(...res.map(item => (new ChatRoomMessageData(item.type,item))));
       this.msgScroller.scrollToIndex(this.messages.length - 1);
     })
     this.fishpi.chatroom.addListener((res) => {
       if (res.type == ChatRoomMessageType.msg) {
-        (res.data as IChatRoomMessage).content = (res.data as IChatRoomMessage).md;
+        res.message.content = res.message.md;
         const isAtEnd = this.msgScroller.isAtEnd();
         this.messages.push(res);
         if (isAtEnd) {
@@ -58,14 +55,14 @@ export struct ChatRoom {
       Flex({ direction: FlexDirection.Column }) {
         Stack() {
           List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
-            ForEach(this.messages, (item: IMessage) => {
+            ForEach(this.messages, (item: ChatRoomMessageData) => {
               if (item.type == ChatRoomMessageType.msg) {
                 ListItem() {
                   ChatMsg({
-                    message: (item.data as IChatRoomMessage).content,
-                    user: (item.data as IChatRoomMessage).userNickname || (item.data as IChatRoomMessage).userName,
-                    time: (item.data as IChatRoomMessage).time,
-                    avatar: (item.data as IChatRoomMessage).userAvatarURL
+                    message: item.message.content,
+                    user: item.message.userNickname || item.message.userName,
+                    time: item.message.time,
+                    avatar: item.message.userAvatarURL
                   })
                 }
               }

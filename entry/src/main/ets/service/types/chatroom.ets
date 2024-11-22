@@ -335,15 +335,53 @@ export enum ChatRoomMessageType {
 /**
  * 聊天室消息
  */
-export interface IMessage {
+export class ChatRoomMessageData {
   /**
    * 消息类型，
    */
-  type: ChatRoomMessageType | string;
+  type: ChatRoomMessageType;
   /**
    * 消息内容
    */
   data: MessageData;
+
+  constructor(type: ChatRoomMessageType, data: MessageData) {
+    this.type = type;
+    this.data = data;
+  }
+
+  get onlineList() {
+    if (this.type != ChatRoomMessageType.online) return [];
+    return this.data as IOnlineMsg[];
+  }
+
+  get discuss() {
+    if (this.type != ChatRoomMessageType.discussChanged) return '';
+    return this.data as discussMsg;
+  }
+
+  get revoke() {
+    if (this.type != ChatRoomMessageType.revoke) return '';
+    return this.data as RevokeMsg;
+  }
+
+  get message() {
+    if (this.type != ChatRoomMessageType.msg) return new ChatRoomMessage();
+    return this.data as ChatRoomMessage;
+  }
+
+  get redPacketStatus() {
+    return this.data as IRedPacketStatusMsg;
+  }
+
+  get barrager() {
+    return this.data as IBarragerMsg;
+  }
+
+  get custom() {
+    return this.data as ICustomMsg;
+  }
+
 }
 
 export type MessageData = IOnlineMsg[] | discussMsg | RevokeMsg | ChatRoomMessage | IRedPacketStatusMsg | IBarragerMsg | ICustomMsg;
@@ -352,7 +390,7 @@ export interface IMessageEvent extends IRedPacketStatusMsg, IBarragerMsg {
   /**
    * 消息类型，
    */
-  type: ChatRoomMessageType | string;
+  type: ChatRoomMessageType;
 
   /**
    * 在线用户
