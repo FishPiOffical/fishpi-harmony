@@ -1,10 +1,13 @@
-import { IRedPacketMessage, IRedPacketStatusMsg } from "../redpack";
+import { IRedPacketMessage, IRedPacketStatusMsg } from "./redpacket";
 import { Metal, MetalList } from "./user";
 
 export interface IChatroomQuery {
   apiKey: string;
   type: ChatContentType;
-  page: number;
+  page?: number;
+  mode?: ChatMessageMode;
+  size?: number;
+  oId?: string;
 }
 
 export interface IChatroomSend {
@@ -268,7 +271,7 @@ export enum ChatContentType {
 /**
  * chatroom get 接口获取 oId 的相关消息类型
  */
-export enum ChatMessageType {
+export enum ChatMessageMode {
   /**
    * 前后消息
    */
@@ -484,3 +487,26 @@ export type discussMsg = string
  * 撤回消息，被撤回消息的 oId
  */
 export type RevokeMsg = string
+
+/**
+ * 禁言用户信息
+ */
+export interface IMuteItem {
+  /**
+   * 解除禁言时间戳
+   */
+  time: number;
+  /**
+   * 用户头像
+   */
+  userAvatarURL: string;
+  /**
+   * 用户名
+   */
+  userName: string;
+  /**
+   * 用户昵称
+   */
+  userNickname: string;
+}
+

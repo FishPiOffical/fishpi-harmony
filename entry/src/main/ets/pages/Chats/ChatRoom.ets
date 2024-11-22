@@ -31,7 +31,7 @@ export struct ChatRoom {
   }
 
   aboutToAppear(): void {
-    this.fishpi.chatroom.more(1, ChatContentType.Markdown).then((res) => {
+    this.fishpi.chatroom.history(1, ChatContentType.Markdown).then((res) => {
       res.reverse();
       this.messages.push(...res.map(item => ({
         type: item.type,

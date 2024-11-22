@@ -160,7 +160,7 @@ export interface IRedPacketMessage {
 /**
  * 红包信息
  */
-export interface RedPacketInfo {
+export class RedPacketInfo {
   /**
    * 数量
    */
@@ -200,6 +200,17 @@ export interface RedPacketInfo {
    * 已领取者列表
    */
   who: Array<IRedPacketGot>;
+
+  constructor(data?: IRedPacketRsp) {
+    this.count = data?.info.count || 0;
+    this.gesture = data?.info.gesture;
+    this.got = data?.info.who.length || 0;
+    this.msg = data?.info.msg || '';
+    this.userName = data?.info.userName || '';
+    this.userAvatarURL = data?.info.userAvatarURL || '';
+    this.recivers = data?.recivers || [];
+    this.who = data?.who || [];
+  }
 }
 
 /**
@@ -229,5 +240,23 @@ export interface IRedPacketStatusMsg {
   /**
    * 领取者信息
    */
-  whoGot: string
+  whoGot: IRedPacketGot[],
+}
+
+/**
+ * 红包信息
+ */
+export interface IRedPacketRsp {
+  /**
+   * 红包基本信息
+   */
+  info: RedPacketInfo;
+  /**
+   * 接收者，专属红包有效
+   */
+  recivers: string[];
+  /**
+   * 已领取者列表
+   */
+  who: IRedPacketGot[];
 }

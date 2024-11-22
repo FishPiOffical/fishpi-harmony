@@ -35,7 +35,7 @@ export struct Chats {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
 
   aboutToAppear() {
-    this.fishpi.chatroom.more().then((res) => {
+    this.fishpi.chatroom.history().then((res) => {
       this.chatroom.time = res[0].time;
       this.chatroom.content = htmlToText(res[0].content);
     })
