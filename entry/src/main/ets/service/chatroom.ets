@@ -7,14 +7,16 @@ import { ChatContentType, ExtendsType, IChatRoomMessage, IChatroomQuery, IChatVi
   MessageData,
   ChatRoomMessageType,
   ClientType,
-  IChatroomSend} from "./types/chatroom";
+  IChatroomSend,
+  ChatRoomMessage} from "./types/chatroom";
 import { Metal } from "./types/user";
 import { BusinessError } from "@kit.BasicServicesKit";
 import { IRedPacketStatusMsg } from "./redpack";
+import { bundleManager } from "@kit.AbilityKit";
 
 function clientToVia(client: string): IChatVia | undefined {
   if (!client) {
-    return;
+    return { client: ClientType.Other, version: 'unknown' }
   }
   const via = client.split('/')
   return { client: via[0], version: via[1] };
@@ -23,12 +25,16 @@ function clientToVia(client: string): IChatVia | undefined {
 export class Chatroom {
   private token: string = '';
   private rws?: ReconnectingWebSocket;
-  private discusse:string = '';
-  private onlines:IOnlineMsg[] = [];
+  private discusse: string = '';
+  private onlineList: IOnlineMsg[] = [];
   private wsCallbacks:Array<(msg: IMessage) => void> = [];
-
+  private version = '';
 
   constructor(token?: string) {
+    bundleManager.getBundleInfoForSelf(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION)
+      .then((info) => {
+        this.version = info.versionName;
+      })
     if (!token) {
       return;
     }
@@ -42,33 +48,15 @@ export class Chatroom {
   more(page = 1, type = ChatContentType.HTML): Promise<IChatRoomMessage[]> {
     return defHttp.get<IChatRoomMessage[]>(`/chat-room/more`, {
       params: { apiKey: this.token, type, page } as IChatroomQuery
-    }).then((res) => res.map((item) => {
-      item.via = clientToVia(item.client)
-      item.metalList = Metal.toMetal(item.sysMetal);
-      item.type = ChatRoomMessageType.msg;
-      try {
-        const data: ExtendsType = JSON.parse(item.content);
-        if (data.msgType == 'redPacket' && data.recivers && typeof data.recivers == 'string') {
-          data.recivers = JSON.parse(data.recivers);
-        }
-        item.extends = data;
-        if (data.msgType == 'redPacket') {
-          item.content = '[收到一个红包]'
-          item.type = ChatRoomMessageType.redPacket;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-      return item;
-    }));
+    }).then((res) => res.map((item) => new ChatRoomMessage(item)));
   }
 
-  send(msg: string, clientType: ClientType | string = ClientType.Harmony, version: string = '1.0.0') {
+  send(msg: string, clientType: ClientType | string = ClientType.Harmony, version: string = '0.0.1') {
     return defHttp.post<void>(`/chat-room/send`, {
       data: {
         apiKey: this.token,
         content: msg,
-        client: `${clientType}/${version}`
+        client: `${clientType}/${this.version || version}`
       } as IChatroomSend
     });
   }
@@ -91,9 +79,9 @@ export class Chatroom {
         let data: MessageData;
         switch (msg.type) {
           case 'online': {
-            this.onlines = msg.users!;
+            this.onlineList = msg.users!;
             this.discusse = msg.discussing!;
-            data = this.onlines;
+            data = this.onlineList;
             break;
           }
           case 'discussChanged': {
@@ -125,19 +113,7 @@ export class Chatroom {
               msg.type = content.msgType
             } catch (e) {
             }
-            data = {
-              userOId: msg.userOId,
-              oId: msg.oId,
-              time: msg.time,
-              userName: msg.userName,
-              userNickname: msg.userNickname,
-              userAvatarURL: msg.userAvatarURL,
-              content: msg.content,
-              md: msg.md,
-              client: msg.client,
-              via: clientToVia(msg.client),
-              extends: extendsData
-            } as IChatRoomMessage;
+            data = new ChatRoomMessage(msg);
             break;
           }
           case 'redPacketStatus': {

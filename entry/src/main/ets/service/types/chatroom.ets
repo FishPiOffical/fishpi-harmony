@@ -1,5 +1,5 @@
 import { IRedPacketMessage, IRedPacketStatusMsg } from "../redpack";
-import { MetalList } from "./user";
+import { Metal, MetalList } from "./user";
 
 export interface IChatroomQuery {
   apiKey: string;
@@ -97,25 +97,7 @@ export interface IChatVia {
 
 export type ExtendsType = IRedPacketMessage;
 
-/**
- * 聊天室消息
- */
-export interface IChatRoomMessage extends IChatRoomMessageRsp {
-  /**
-   * 用户勋章列表
-   */
-  metalList: MetalList;
-
-  /**
-   * 扩展消息内容
-   */
-  extends: ExtendsType;
-  /**
-   * 消息类型
-   */
-  type: ChatRoomMessageType;
-}
-export interface IChatRoomMessageRsp {
+export class ChatRoomMessage implements IChatRoomMessageRsp {
   /**
    * 消息 Id
    */
@@ -145,9 +127,114 @@ export interface IChatRoomMessageRsp {
    */
   client: string;
   /**
+   * 消息内容
+   */
+  content: string;
+
+  /**
+   * 消息内容 Markdown
+   */
+  md: string;
+
+  /**
+   * 发送时间
+   */
+  time: string;
+  /**
    * 消息来源解析
    */
-  via?: IChatVia;
+  via: IChatVia;
+
+  /**
+   * 用户勋章列表
+   */
+  metalList: MetalList;
+
+  /**
+   * 扩展消息内容
+   */
+  extends?: ExtendsType;
+  /**
+   * 消息类型
+   */
+  type: ChatRoomMessageType;
+
+  constructor(data?: IChatRoomMessageRsp | IMessageEvent) {
+    this.oId = data?.oId ?? '';
+    this.userOId = data?.userOId ?? '';
+    this.userName = data?.userName ?? '';
+    this.userNickname = data?.userNickname ?? '';
+    this.userAvatarURL = data?.userAvatarURL ?? '';
+    this.sysMetal = data?.sysMetal ?? '';
+    this.client = data?.client ?? '';
+    this.content = data?.content ?? '';
+    this.md = data?.md ?? '';
+    this.time = data?.time ?? '';
+    this.type = ChatRoomMessageType.msg;
+    const clients = this.client.split('/');
+    this.via = {
+      client: clients[0] as ClientType || ClientType.Other,
+      version: clients[1] || 'unknown'
+    };
+    this.metalList = Metal.toMetal(this.sysMetal);
+
+    if (!data?.content) return;
+    try {
+      const extend: ExtendsType = JSON.parse(data.content);
+      if (extend.msgType == 'redPacket' && extend.recivers && typeof extend.recivers == 'string') {
+        try { extend.recivers = JSON.parse(extend.recivers); } catch (_) { }
+      }
+      this.extends = extend;
+      if (extend.msgType == 'redPacket') {
+        this.content = '[收到一个红包]'
+        this.type = ChatRoomMessageType.redPacket;
+      } else if (extend.msgType == 'weather') {
+        this.content = '[收到一个天气卡片]'
+        this.type = ChatRoomMessageType.weather;
+      } else if (extend.msgType == 'music') {
+        this.content = '[收到一个音乐卡片]'
+        this.type = ChatRoomMessageType.music;
+      }
+    } catch (e) {}
+  }
+
+  get redPacket() {
+    if (this.type == ChatRoomMessageType.redPacket) {
+      return this.extends as IRedPacketMessage;
+    }
+    return null;
+  }
+}
+
+export interface IChatRoomMessageRsp {
+  /**
+   * 消息 Id
+   */
+  oId: string;
+  /**
+   * 发送用户 Id
+   */
+  userOId: string;
+  /**
+   * 发送者用户名
+   */
+  userName: string;
+  /**
+   * 用户昵称
+   */
+  userNickname: string;
+  /**
+   * 用户头像
+   */
+  userAvatarURL: string;
+  /**
+   * 用户徽章
+   */
+  sysMetal: string;
+  /**
+   * 消息来源
+   */
+  client: string;
   /**
    * 消息内容
    */
@@ -232,6 +319,14 @@ export enum ChatRoomMessageType {
    * 自定义消息
    */
   custom = 'customMessage',
+  /**
+   * 天气
+   */
+  weather = 'weather',
+  /**
+   * 音乐
+   */
+  music = 'music',
 }
 
 /**
@@ -248,7 +343,7 @@ export interface IMessage {
   data: MessageData;
 }
 
-export type MessageData = IOnlineMsg[] | discussMsg | RevokeMsg | IChatRoomMessage | IRedPacketStatusMsg | IBarragerMsg | ICustomMsg;
+export type MessageData = IOnlineMsg[] | discussMsg | RevokeMsg | ChatRoomMessage | IRedPacketStatusMsg | IBarragerMsg | ICustomMsg;
 
 export interface IMessageEvent extends IRedPacketStatusMsg, IBarragerMsg {
   /**
@@ -256,29 +351,70 @@ export interface IMessageEvent extends IRedPacketStatusMsg, IBarragerMsg {
    */
   type: ChatRoomMessageType | string;
 
+  /**
+   * 在线用户
+   */
   users: IOnlineMsg[];
 
+  /**
+   * 话题
+   */
   discussing: discussMsg;
 
+  /**
+   * 新话题
+   */
   newDiscuss: discussMsg;
 
+  /**
+   * 用户 Id
+   */
   userOId: string;
 
+  /**
+   * 时间
+   */
   time: string;
 
+  /**
+   * 用户名
+   */
   userName: string;
 
+  /**
+   * 用户昵称
+   */
   userNickname: string;
 
+  /**
+   * 用户头像
+   */
   userAvatarURL: string;
 
+  /**
+   * 消息内容
+   */
   content: string;
 
+  /**
+   * 消息内容 Markdown
+   */
   md: string;
 
+  /**
+   * 消息来源
+   */
   client: string;
 
+  /**
+   * 进出场消息
+   */
   message: string;
+
+  /**
+   * 用户徽章
+   */
+  sysMetal: string;
 }
 
 export type ICustomMsg = string;
