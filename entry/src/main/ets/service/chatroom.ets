@@ -96,9 +96,16 @@ export class Chatroom {
    * @param size 获取数量
    * @returns
    */
-  more(oId: string, mode: ChatMessageMode = ChatMessageMode.Before, type = ChatContentType.Markdown, size: 25): Promise<ChatRoomMessage[]> {
+  more(oId: string, mode: ChatMessageMode = ChatMessageMode.Before, type = ChatContentType.Markdown,
+    size: 25): Promise<ChatRoomMessage[]> {
     return defHttp.get<ChatRoomMessage[]>(`/chat-room/getMessage`, {
-      params: { apiKey: this.token, type, oId, mode, size } as IChatroomQuery
+      params: {
+        apiKey: this.token,
+        type,
+        oId,
+        mode,
+        size
+      } as IChatroomQuery
     }).then((res) => res.map((item) => new ChatRoomMessage(item)));
   }
 

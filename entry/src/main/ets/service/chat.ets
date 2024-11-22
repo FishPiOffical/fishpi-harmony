@@ -1,6 +1,6 @@
 import { defHttp, IResponseData } from "../libs/http";
 import { Message, ReconnectingWebSocket } from "../libs/ws";
-import { ChatListener, ChatMsg, ChatMsgType, IChatData, IChatMsg, IChatQuery } from "./types/chat";
+import { ChatListener, ChatMsg, IChatData, IChatMsg, IChatQuery } from "./types/chat";
 import { IToken } from "./types/fishpi";
 
 interface IHistory extends IToken {

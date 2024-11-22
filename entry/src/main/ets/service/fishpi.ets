@@ -1,15 +1,24 @@
 import defHttp, { IKeyVal, IResponseData } from '../libs/http';
+import { Article } from './article';
+import { Breezemoon } from './breezemoon';
+import { Chat } from './chat';
 import { Chatroom } from './chatroom';
 import { Emoji } from './emoji';
-import { AtUser,
+import { Notice } from './notice';
+import {
+  AtUser,
   IAccount,
   ILog,
   ILoginRsp,
   IPageParam,
   IRegisterUserId,
-  IUserQuery, PreRegisterInfo, RegisterInfo, Report,
+  IUserQuery,
+  PreRegisterInfo,
+  RegisterInfo,
+  Report,
   UploadInfo,
-  UserLite } from './types/fishpi';
+  UserLite
+} from './types/fishpi';
 import { IUserInfo, Metal } from './types/user';
 import User from './user';
 
@@ -18,6 +27,10 @@ export class Fishpi {
   user: User = new User();
   chatroom: Chatroom = new Chatroom();
   emoji: Emoji = new Emoji();
+  chat: Chat = new Chat();
+  breezemoon: Breezemoon = new Breezemoon();
+  notice: Notice = new Notice();
+  article: Article = new Article();
 
   constructor(token?: string) {
     if (!token) {
@@ -31,6 +44,10 @@ export class Fishpi {
     this.user.setToken(token);
     this.chatroom.setToken(token);
     this.emoji.setToken(token);
+    this.chat.setToken(token);
+    this.breezemoon.setToken(token);
+    this.notice.setToken(token);
+    this.article.setToken(token);
     return token
   }
 
@@ -41,12 +58,14 @@ export class Fishpi {
    * @returns 返回 API Key
    */
   login(data: IAccount) {
-      return defHttp.post<ILoginRsp>('/api/getKey', {
-        data
-      }).then((res): string => this.setToken(res.Key));
+    return defHttp.post<ILoginRsp>('/api/getKey', {
+      data
+    }).then((res): string => this.setToken(res.Key));
   }
 
-  static get captcha() { return `${defHttp.origin}/captcha` };
+  static get captcha() {
+    return `${defHttp.origin}/captcha`
+  };
 
   /**
    * 预注册
@@ -141,9 +160,9 @@ export class Fishpi {
    * 获取操作日志
    * @param page 页码
    * @param pageSize 每页数量
-    * @returns 操作日志列表
-    */
-  getLogs(page: number=1, pageSize: number=30) {
+   * @returns 操作日志列表
+   */
+  getLogs(page: number = 1, pageSize: number = 30) {
     return defHttp.get<ILog[]>('/logs/more', {
       params: {
         page,
@@ -152,14 +171,14 @@ export class Fishpi {
     });
   }
 
-   /**
+  /**
    * 上传文件
    * @param files 要上传的文件，如果是在 Node 使用，则传入文件路径数组，若是在浏览器使用，则传入文件对象数组。
    */
   upload(files: string[]) {
-     return defHttp.upload<UploadInfo>('/upload', files.map((file) => ({ key: 'file[]', value: file } as IKeyVal)), {
-        'apiKey': this.token
-     });
+    return defHttp.upload<UploadInfo>('/upload', files.map((file) => ({ key: 'file[]', value: file } as IKeyVal)), {
+      'apiKey': this.token
+    });
   }
 }
 

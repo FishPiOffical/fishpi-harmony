@@ -939,3 +939,35 @@ export enum VoteType {
    */
   UnVote = -1
 }
+
+/**
+ * 文章查询条件，类型与用户名必二选一
+ */
+export interface IArticleQuery {
+  /**
+   * 用户名
+   */
+  user?: string;
+  /**
+   * 文章类型
+   */
+  type?: ArticleListType,
+  /**
+   * 页码
+   */
+  page?: number,
+  /**
+   * 每页数量
+   */
+  size?: number,
+  /**
+   * 标签
+   */
+  tag?: string,
+}
+
+export interface IArticleHeat extends IArticleComment {
+  type: string;
+  commentOnArticleId: string;
+  operation: string;
+}
