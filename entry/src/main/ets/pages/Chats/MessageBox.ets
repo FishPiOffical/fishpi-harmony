@@ -1,5 +1,10 @@
 import { EmojiPicker } from "../../components/Emoji";
 import { Icon } from "../../components/Icon";
+import { photoAccessHelper } from "@kit.MediaLibraryKit";
+import { BusinessError } from "@kit.BasicServicesKit";
+import { AppStorageV2 } from "@kit.ArkUI";
+import Fishpi from "../../service/fishpi";
+import { toast } from "../../libs/utils";
 
 export interface MessageBoxExpose {
   blur: () => void;
@@ -8,12 +13,15 @@ export interface MessageBoxExpose {
 
 @ComponentV2
 export struct MessageBox {
+  @Param redpack: boolean = false;
+  @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Local controller: TextAreaController = new TextAreaController();
   @Local text: string = '';
   @Local isFocus: boolean = false;
   @Local emojiShow: boolean = false;
   @Event onSend: (text: string) => boolean | Promise<boolean> = () => true;
   @Event onExpose: (expose: MessageBoxExpose) => void = () => { };
+  @Event onRedpack: () => void = () => { };
 
   aboutToAppear(): void {
     this.onExpose({
@@ -22,6 +30,27 @@ export struct MessageBox {
         if (this.emojiShow) this.emojiShow = false;
       }
     });
+  }
+
+  sendImage() {
+    const photoSelectOptions = new photoAccessHelper.PhotoSelectOptions();
+    photoSelectOptions.MIMEType = photoAccessHelper.PhotoViewMIMETypes.IMAGE_TYPE;
+    photoSelectOptions.maxSelectNumber = 5;
+
+    let uris: Array<string> = [];
+    const photoViewPicker = new photoAccessHelper.PhotoViewPicker();
+    photoViewPicker.select(photoSelectOptions).then((photoSelectResult: photoAccessHelper.PhotoSelectResult) => {
+      uris = photoSelectResult.photoUris;
+      console.info('photoViewPicker.select to file succeed and uris are:' + uris);
+      this.fishpi.upload(uris).then((res) => {
+        const message = res.succFiles.map((item) => `![${item.name}](${item.url})`).join('  \n');
+        this.onSend(message);
+      }).catch((err: Error) => {
+        toast('上传失败: ' + err.message);
+      });
+    }).catch((err: BusinessError) => {
+      toast(err.message);
+    })
   }
 
   build() {
@@ -60,18 +89,20 @@ export struct MessageBox {
           })
             .margin({ left: 5, right: 5 })
             .onClick(() => {
-              console.log('image');
+              this.sendImage();
             })
-          Icon({
-            icon: $r('app.media.redpack'),
-            color: null,
-            stroke: null,
-            iconSize: 30,
-          })
-            .margin({ left: 5, right: 5 })
-            .onClick(() => {
-              console.log('image');
+          if (this.redpack) {
+            Icon({
+              icon: $r('app.media.redpack'),
+              color: null,
+              stroke: null,
+              iconSize: 30,
             })
+              .margin({ left: 5, right: 5 })
+              .onClick(() => {
+                this.onRedpack();
+              })
+          }
           // Icon({
           //   icon: $r('app.media.plus_circle'),
           //   stroke: '#000000',

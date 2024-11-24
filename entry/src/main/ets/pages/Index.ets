@@ -62,30 +62,6 @@ struct Index {
       router.replaceUrl({ url: 'pages/Login' })
     }
     else this.fishpi.setToken(this.app.token)
-
-
-    let defaultIpAddress = "wss://fishpi.cn/chat-room-channel?apiKey=" + this.app.token;
-    this.ws.on('open', (err: BusinessError, value: Object) => {
-      console.log("on open, status:" + JSON.stringify(value));
-      // 当收到on('open')事件时，可以通过send()方法与服务器进行通信
-    });
-    this.ws.on('message', (err: BusinessError, value: string | ArrayBuffer) => {
-      console.log("on message, message:" + value);
-      // 当收到服务器的`bye`消息时（此消息字段仅为示意，具体字段需要与服务器协商），主动断开连接
-    });
-    this.ws.on('close', (err: BusinessError, value: webSocket.CloseResult) => {
-      console.log("on close, code is " + value.code + ", reason is " + value.reason);
-    });
-    this.ws.on('error', (err: BusinessError) => {
-      console.log("on error, error:" + JSON.stringify(err));
-    });
-    this.ws.connect(defaultIpAddress, (err: BusinessError, value: boolean) => {
-      if (!err) {
-        console.log("Connected successfully");
-      } else {
-        console.log("Connection failed. Err:" + JSON.stringify(err));
-      }
-    });
   }
 
   build() {

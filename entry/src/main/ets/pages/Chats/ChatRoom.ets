@@ -15,7 +15,7 @@ export struct ChatRoom {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Local messages: ChatRoomMessageData[] = [];
-  private msgScroller: Scroller = new Scroller();
+  @Local msgScroller: Scroller = new Scroller();
   @Local newMsgSize: number = 0;
   @Local messageBoxExpose?: MessageBoxExpose;
 
@@ -34,7 +34,9 @@ export struct ChatRoom {
     this.fishpi.chatroom.history(1, ChatContentType.Markdown).then((res) => {
       res.reverse();
       this.messages.push(...res.map(item => (new ChatRoomMessageData(item.type,item))));
-      this.msgScroller.scrollToIndex(this.messages.length - 1);
+      setTimeout(() => {
+        this.msgScroller.scrollToIndex(this.messages.length - 1)
+      }, 100);
     })
     this.fishpi.chatroom.addListener((res) => {
       if (res.type == ChatRoomMessageType.msg) {
@@ -71,7 +73,6 @@ export struct ChatRoom {
           .width('100%')
           .height('100%')
           .listDirection(Axis.Vertical) // 排列方向
-          .scrollBar(BarState.Auto)
           .friction(0.6)
           .edgeEffect(EdgeEffect.Spring)
           .onScrollIndex(() => {
@@ -91,6 +92,10 @@ export struct ChatRoom {
           },
           onSend: async (msg) => {
             return await this.fishpi.chatroom.send(msg).then(() => true).catch(() => false)
+          },
+          redpack: true,
+          onRedpack: () => {
+            this.pathStack.pushPathByName('RedPacket', null)
           }
         }).width('100%')
       }

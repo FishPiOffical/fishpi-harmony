@@ -259,7 +259,7 @@ export interface ILoginRsp extends IResponseData {
   Key: string;
 }
 
-export interface UploadInfo {
+export interface IUploadInfo {
   /**
    * 上传失败文件
    */
@@ -269,6 +269,38 @@ export interface UploadInfo {
    * 上传成功文件
    */
   succMap: Record<string, string>;
+}
+
+export interface IUploadFile {
+  /**
+   * 文件名
+   */
+  name: string;
+  /**
+   * 文件内容
+   */
+  url: string;
+}
+
+export class UploadInfo {
+  /**
+   * 上传失败文件
+   */
+  errFiles: Array<string>;
+  /**
+   * 上传成功文件
+   */
+  succFiles: Array<IUploadFile>;
+
+  constructor(data: IUploadInfo) {
+    this.errFiles = data.errFiles;
+    this.succFiles = Object.keys(data.succMap).map(key => {
+      return {
+        name: key,
+        url: data.succMap[key]
+      } as IUploadFile;
+    });
+  }
 }
 
 export interface IRegisterUserId extends IResponseData {

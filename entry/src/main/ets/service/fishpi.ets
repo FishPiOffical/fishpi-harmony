@@ -5,6 +5,7 @@ import { Chat } from './chat';
 import { Chatroom } from './chatroom';
 import { Emoji } from './emoji';
 import { Notice } from './notice';
+import { RedPacket } from './redpacket';
 import {
   AtUser,
   IAccount,
@@ -16,8 +17,9 @@ import {
   PreRegisterInfo,
   RegisterInfo,
   Report,
-  UploadInfo,
-  UserLite
+  IUploadInfo,
+  UserLite,
+  UploadInfo
 } from './types/fishpi';
 import { IUserInfo, Metal } from './types/user';
 import User from './user';
@@ -26,6 +28,7 @@ export class Fishpi {
   private token: string = '';
   user: User = new User();
   chatroom: Chatroom = new Chatroom();
+  redPacket: RedPacket = new RedPacket();
   emoji: Emoji = new Emoji();
   chat: Chat = new Chat();
   breezemoon: Breezemoon = new Breezemoon();
@@ -43,6 +46,7 @@ export class Fishpi {
     this.token = token;
     this.user.setToken(token);
     this.chatroom.setToken(token);
+    this.redPacket.setToken(token);
     this.emoji.setToken(token);
     this.chat.setToken(token);
     this.breezemoon.setToken(token);
@@ -176,9 +180,9 @@ export class Fishpi {
    * @param files 要上传的文件，如果是在 Node 使用，则传入文件路径数组，若是在浏览器使用，则传入文件对象数组。
    */
   upload(files: string[]) {
-    return defHttp.upload<UploadInfo>('/upload', files.map((file) => ({ key: 'file[]', value: file } as IKeyVal)), {
+    return defHttp.upload<IUploadInfo>('/upload', files.map((file) => ({ key: 'file[]', value: file } as IKeyVal)), {
       'apiKey': this.token
-    });
+    }).then(res => new UploadInfo(res));
   }
 }
 

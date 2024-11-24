@@ -14,7 +14,7 @@
     "pages": "$profile:main_pages",
     "routerMap": "$profile:route_map",
     "requestPermissions": [{
-      "name": "ohos.permission.INTERNET"
+      "name": "ohos.permission.INTERNET",
     }],
     "abilities": [
       {

@@ -7,6 +7,15 @@
       "data": {
         "description": "聊天室"
       }
+    },
+    {
+      "name": "RedPacket",
+      "pageSourceFile": "src/main/ets/pages/RedPacket/Index.ets",
+      "buildFunction": "RedPacketBuilder",
+      "data": {
+        "description": "发红包"
+      }
     }
+
   ]
 }

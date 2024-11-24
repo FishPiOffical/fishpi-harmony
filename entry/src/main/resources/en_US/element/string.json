@@ -11,6 +11,10 @@
     {
       "name": "EntryAbility_label",
       "value": "label"
+    },
+    {
+      "name": "permission_reason_read_image_video",
+      "value": "Use to upload image or video when chat"
     }
   ]
 }

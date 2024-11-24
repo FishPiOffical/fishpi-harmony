@@ -1,6 +1,7 @@
 import defHttp from "../libs/http";
 import { Chatroom } from "./chatroom";
-import { IRedPacketMessage, GestureType, IRedPacketRsp, RedPacketInfo } from './types/redpacket';
+import { IRedPacketMessage, GestureType, IRedPacketRsp, RedPacketInfo, IRedPacket,
+  redPacketMsg } from './types/redpacket';
 
 export class RedPacket {
   private token: string = '';
@@ -35,7 +36,8 @@ export class RedPacket {
    * @param data 红包对象
    * @returns 是否发送成功
    */
-  send(data: IRedPacketMessage): Promise<boolean> {
+  send(data: IRedPacket): Promise<boolean> {
+    if (!data.msg) data.msg =  redPacketMsg[data.type];
     return new Chatroom(this.token).send(`[redpacket]${JSON.stringify(data)}[/redpacket]`)
   }
 }

@@ -11,6 +11,10 @@
     {
       "name": "EntryAbility_label",
       "value": "label"
+    },
+    {
+      "name": "permission_reason_read_image_video",
+      "value": "用于聊天时选择上传图片或视频"
     }
   ]
 }

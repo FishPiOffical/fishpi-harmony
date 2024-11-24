@@ -108,7 +108,7 @@ export interface IRedPacketGot {
 }
 
 /**
- * 红包历史信息
+ * 红包信息
  */
 export interface IRedPacketMessage {
   /**
@@ -154,7 +154,7 @@ export interface IRedPacketMessage {
   /**
    * 已领取者列表
    */
-  who: IRedPacketGot[]
+  who?: IRedPacketGot[]
 }
 
 /**
@@ -259,4 +259,20 @@ export interface IRedPacketRsp {
    * 已领取者列表
    */
   who: IRedPacketGot[];
+}
+
+export const redPacketName: Record<RedPacketType, string> = {
+  [RedPacketType.Random]: '拼手气红包',
+  [RedPacketType.Average]: '普通红包',
+  [RedPacketType.Specify]: '专属红包',
+  [RedPacketType.Heartbeat]: '心跳红包',
+  [RedPacketType.RockPaperScissors]: '猜拳红包',
+}
+
+export const redPacketMsg: Record<RedPacketType, string> = {
+  [RedPacketType.Random]: '摸鱼者，事竟成！',
+  [RedPacketType.Average]: '平分红包，人人有份！',
+  [RedPacketType.Specify]: '试试看，这是给你的红包吗？',
+  [RedPacketType.Heartbeat]: '玩的就是心跳！',
+  [RedPacketType.RockPaperScissors]: '石头剪刀布！',
 }
