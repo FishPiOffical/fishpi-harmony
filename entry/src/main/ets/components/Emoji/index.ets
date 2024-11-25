@@ -48,6 +48,5 @@ export struct EmojiPicker {
           }
         }.tabBar(this.getTabBarStyle($r('app.media.thank')))
       }
-      .padding({bottom:20})
     }
 }

@@ -54,7 +54,10 @@ export struct MessageBox {
   }
 
   build() {
-    Column() {
+    Flex({
+      direction: FlexDirection.Column,
+      alignItems: ItemAlign.End,
+    }) {
       Flex({
         justifyContent: FlexAlign.Center,
         alignItems: ItemAlign.End,
@@ -137,7 +140,6 @@ export struct MessageBox {
         })
       }
     }
-    .alignSelf(ItemAlign.Center)
     .padding({
       left: 10,
       right: 5,
@@ -147,6 +149,6 @@ export struct MessageBox {
     .width('100%')
     .gridSpan(2)
     .backgroundColor('#AAffffff')
-
+    .height('auto')
   }
 }

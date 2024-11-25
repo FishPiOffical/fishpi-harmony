@@ -366,19 +366,23 @@ export class ChatRoomMessageData {
   }
 
   get message() {
-    if (this.type != ChatRoomMessageType.msg) return new ChatRoomMessage();
+    if (![ChatRoomMessageType.msg, ChatRoomMessageType.redPacket, ChatRoomMessageType.weather, ChatRoomMessageType.music].includes(this.type))
+      return new ChatRoomMessage();
     return this.data as ChatRoomMessage;
   }
 
   get redPacketStatus() {
+    if (this.type != ChatRoomMessageType.redPacketStatus) return null;
     return this.data as IRedPacketStatusMsg;
   }
 
   get barrager() {
+    if (this.type != ChatRoomMessageType.barrager) return null;
     return this.data as IBarragerMsg;
   }
 
   get custom() {
+    if (this.type != ChatRoomMessageType.custom) return '';
     return this.data as ICustomMsg;
   }
 

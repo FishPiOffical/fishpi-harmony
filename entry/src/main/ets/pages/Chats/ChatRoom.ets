@@ -4,6 +4,7 @@ import Fishpi from "../../service/fishpi";
 import { ChatContentType, ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom";
 import { ChatMsg } from "./ChatMsg";
 import { MessageBox, MessageBoxExpose } from "./MessageBox";
+import { MessageRender } from "../../components/Message";
 
 @Builder
 export function ChatRoomBuilder(name: string, param: Object) {
@@ -39,34 +40,43 @@ export struct ChatRoom {
       }, 100);
     })
     this.fishpi.chatroom.addListener((res) => {
-      if (res.type == ChatRoomMessageType.msg) {
-        res.message.content = res.message.md;
-        const isAtEnd = this.msgScroller.isAtEnd();
-        this.messages.push(res);
-        if (isAtEnd) {
-          this.msgScroller.scrollToIndex(this.messages.length - 1);
-        } else {
-          this.newMsgSize++;
-        }
+      if (res.type == ChatRoomMessageType.online) {
+        return;
+      }
+      if (res.type == ChatRoomMessageType.discussChanged) {
+        return;
+      }
+      if (res.type == ChatRoomMessageType.revoke) {
+        return;
+      }
+      if (res.type == ChatRoomMessageType.redPacketStatus) {
+        return;
+      }
+      if (res.type == ChatRoomMessageType.msg) res.message.content = res.message.md;
+      const isAtEnd = this.msgScroller.isAtEnd();
+      this.messages.push(res);
+      if (isAtEnd) {
+        this.msgScroller.scrollToIndex(this.messages.length - 1);
+      } else {
+        this.newMsgSize++;
       }
     })
   }
 
   build() {
     NavDestination() {
-      Flex({ direction: FlexDirection.Column }) {
-        Stack() {
+      Flex({
+        direction: FlexDirection.Column,
+      }) {
+        Stack({
+          alignContent: Alignment.Bottom,
+        }) {
           List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
-            ForEach(this.messages, (item: ChatRoomMessageData) => {
-              if (item.type == ChatRoomMessageType.msg) {
-                ListItem() {
-                  ChatMsg({
-                    message: item.message.content,
-                    user: item.message.userNickname || item.message.userName,
-                    time: item.message.time,
-                    avatar: item.message.userAvatarURL
-                  })
-                }
+            ForEach(this.messages, (data: ChatRoomMessageData) => {
+              ListItem() {
+                MessageRender({
+                  data
+                })
               }
             })
           }
@@ -84,8 +94,6 @@ export struct ChatRoom {
             this.messageBoxExpose?.blur()
           })
         }
-        .width('100%')
-        .alignContent(Alignment.Bottom)
         MessageBox({
           onExpose: (expose) => {
             this.messageBoxExpose = expose;
@@ -97,7 +105,7 @@ export struct ChatRoom {
           onRedpack: () => {
             this.pathStack.pushPathByName('RedPacket', null)
           }
-        }).width('100%')
+        })
       }
       .backgroundColor('#FFF')
       Row() {

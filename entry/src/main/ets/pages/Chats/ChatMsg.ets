@@ -1,5 +1,6 @@
 import { DateUtil } from '@pura/harmony-utils';
 import { CircleIcon } from '../../components/CircleIcon';
+import { ChatRoomMessageData } from '../../service/types/chatroom';
 import { ChatContent } from './ChatContent'
 
 @ComponentV2
