@@ -144,7 +144,7 @@ export interface IRedPacketMessage {
   /**
    * 红包类型
    */
-  interface: string;
+  type: string;
 
   /**
    * 接收者，专属红包有效

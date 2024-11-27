@@ -1,5 +1,6 @@
 import { IRedPacketMessage, redPacketName } from "../../service/types/redpacket";
 import { Icon } from "../Icon";
+import { LengthMetrics } from "@kit.ArkUI";
 
 @ComponentV2
 export struct RedPacketRender {
@@ -10,7 +11,9 @@ export struct RedPacketRender {
       Flex({
         direction: FlexDirection.Column,
       }) {
-        Row() {
+        Flex({
+          alignItems: ItemAlign.Center
+        }) {
           Icon({
             icon: $r('app.media.redpack'),
             color: null,
@@ -20,30 +23,53 @@ export struct RedPacketRender {
             .margin({ left: 5, right: 5 })
           Text(this.data.msg).textOverflow({
             overflow: TextOverflow.Ellipsis
-          }).maxLines(2)
+          }).maxLines(1).fontColor('#fff').fontWeight(FontWeight.Bold).fontSize(18)
         }
-        .padding(5)
-        .border({ color: 0xF95A2C, width: { bottom: 2 } })
+        .padding({ bottom: 5, top: 5 })
+        .border({ color: '#fff', width: { bottom: 0.5 } })
 
-        Row() {
-          Text(redPacketName[this.data.interface]).fontColor(0xF0D35E)
-          Flex() {
+        Flex({
+          justifyContent: FlexAlign.SpaceBetween,
+          alignItems: ItemAlign.Center
+        }) {
+          Text(redPacketName[this.data.type]).fontColor('#ffd991').width('50%').fontSize(12)
+          Flex({
+            justifyContent: FlexAlign.End,
+            alignItems: ItemAlign.Center,
+            space: { main: LengthMetrics.px(5) }
+          }) {
             Icon({
               icon: $r('app.media.money'),
               color: null,
               stroke: null,
-              iconSize: 15,
+              iconSize: 13,
             })
-            Text(this.data.money.toString()).fontColor(0xffffff)
-          }
-        }.justifyContent(FlexAlign.SpaceBetween)
-      }.backgroundColor(0xFF9900)
-    }.backgroundColor(0xF95A2C).border({
-      color: 0xF95A2C,
-      width: 1,
-    }).padding({ bottom: 5 })
+            Text(this.data.money.toString()).fontColor($r('sys.color.white')).fontSize(12)
+          }.width('50%')
+        }.width('100%').padding(2)
+      }
+      .borderRadius(10)
+      .padding({
+        top: 5,
+        left: 8,
+        right: 8,
+        bottom: 2
+      })
+      .backgroundColor('#FF9900')
+      .width('100%')
+    }
+    .border({
+      color: '#F95A2C',
+      width: 1
+    })
+    .backgroundColor('#F95A2C')
     .borderRadius(10)
-    .clip(true)
-    .width('auto')
+    .padding({ bottom: 5 })
+    .width('80%')
+    .constraintSize({
+      maxWidth: 250
+    })
+    .margin({ bottom: 5 })
+
   }
 }
