@@ -34,7 +34,7 @@ export struct ChatRoom {
   aboutToAppear(): void {
     this.fishpi.chatroom.history(1, ChatContentType.Markdown).then((res) => {
       res.reverse();
-      this.messages.push(...res.map(item => (new ChatRoomMessageData(item.type,item))));
+      this.messages.push(...res.map(item => (new ChatRoomMessageData(item.type, item))));
       setTimeout(() => {
         this.msgScroller.scrollToIndex(this.messages.length - 1)
       }, 100);
@@ -52,7 +52,9 @@ export struct ChatRoom {
       if (res.type == ChatRoomMessageType.redPacketStatus) {
         return;
       }
-      if (res.type == ChatRoomMessageType.msg) res.message.content = res.message.md;
+      if (res.type == ChatRoomMessageType.msg) {
+        res.message.content = res.message.md;
+      }
       const isAtEnd = this.msgScroller.isAtEnd();
       this.messages.push(res);
       if (isAtEnd) {
@@ -94,12 +96,15 @@ export struct ChatRoom {
             this.messageBoxExpose?.blur()
           })
         }
+
         MessageBox({
           onExpose: (expose) => {
             this.messageBoxExpose = expose;
           },
           onSend: async (msg) => {
-            return await this.fishpi.chatroom.send(msg).then(() => true).catch(() => false)
+            return await this.fishpi.chatroom.send(msg)
+              .then(() => true)
+              .catch(() => false)
           },
           redpack: true,
           onRedpack: () => {
@@ -108,6 +113,7 @@ export struct ChatRoom {
         })
       }
       .backgroundColor('#FFF')
+
       Row() {
         Text('')
       }.width('100%')
