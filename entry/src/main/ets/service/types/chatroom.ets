@@ -552,3 +552,50 @@ export interface IMuteItem {
   userNickname: string;
 }
 
+export interface IMusicMsg {
+  type: 'music';
+  /**
+   * 音乐标题
+   */
+  title: string;
+  /**
+   * 来源
+   */
+  form: string;
+  /**
+   * 音乐封面
+   */
+  coverURL: string;
+  /**
+   * 音乐链接
+   */
+  source: string;
+}
+
+export interface IWeatherMsg {
+  type: 'weather';
+  /**
+   * 天气城市
+   */
+  t: string;
+  /**
+   * 天气
+   */
+  st: string;
+  /**
+   * 日期
+   */
+  date: string;
+  /**
+   * 最低温
+   */
+  min: string;
+  /**
+   * 最高温
+   */
+  max: string;
+  /**
+   * 天气代码
+   */
+  weatherCode: string;
+}

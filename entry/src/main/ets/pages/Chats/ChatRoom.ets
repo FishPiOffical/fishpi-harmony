@@ -36,19 +36,23 @@ export struct ChatRoom {
   }
 
   load(page: number) {
-    this.fishpi.chatroom.history(page, ChatContentType.Markdown).then((res) => {
+    return this.fishpi.chatroom.history(page, ChatContentType.Markdown).then((res) => {
       res.reverse();
-      this.messages.push(...res.map(item => (new ChatRoomMessageData(item.type, item))));
-      setTimeout(() => {
-        this.msgScroller.scrollToIndex(this.messages.length - 1)
-      }, 100);
+      this.messages.unshift(...res.map(item => (new ChatRoomMessageData(item.type, item))));
     })
   }
 
+  async init() {
+    await this.load(1);
+    await this.load(2);
+    await this.load(3);
+    setTimeout(() => {
+      this.msgScroller.scrollToIndex(this.messages.length - 1)
+    }, 100);
+  }
+
   aboutToAppear(): void {
-    this.load(1);
-    this.load(2);
-    this.load(3);
+    this.init();
     this.fishpi.chatroom.addListener((res) => {
       if (res.type == ChatRoomMessageType.online) {
         return;

@@ -1,10 +1,15 @@
-import { IRedPacketMessage, redPacketName } from "../../service/types/redpacket";
+import { IRedPacketMessage, redPacketName, RedPacketType } from "../../service/types/redpacket";
 import { Icon } from "../Icon";
 import { LengthMetrics } from "@kit.ArkUI";
 
 @ComponentV2
 export struct RedPacketRender {
   @Require @Param data: IRedPacketMessage;
+
+  @Computed
+  get isRockPaperScissors() {
+    return this.data.type == RedPacketType.RockPaperScissors;
+  }
 
   build() {
     Flex() {

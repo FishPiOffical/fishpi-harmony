@@ -27,25 +27,11 @@ export function RedPacketOpenBuilder(name: string, param: IRedPacketOpen) {
 export struct RedPacketOpen {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
   @Require @Param oId: string;
-  @Param type: RedPacketType = RedPacketType.Random;
   @Require @Param gestureType: GestureType;
+  @Param type: RedPacketType = RedPacketType.Random;
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Local data: RedPacketInfo = new RedPacketInfo();
   @Local date: Date = new Date();
-  redPacketTypes: string[] = [
-    RedPacketType.Random,
-    RedPacketType.Average,
-    RedPacketType.Specify,
-    RedPacketType.Heartbeat,
-    RedPacketType.RockPaperScissors,
-  ]
-  redPacketNames: string[] = [
-    redPacketName[RedPacketType.Random],
-    redPacketName[RedPacketType.Average],
-    redPacketName[RedPacketType.Specify],
-    redPacketName[RedPacketType.Heartbeat],
-    redPacketName[RedPacketType.RockPaperScissors],
-  ]
 
   @Computed
   get current() {
