@@ -1,10 +1,14 @@
 import { Header, HeaderAction } from "../../layout/main/header";
 import { AppStorageV2 } from "@kit.ArkUI";
 import Fishpi from "../../service/fishpi";
-import { ChatContentType, ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom";
+import { ChatContentType,
+  ChatRoomMessage,
+  ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom";
 import { ChatMsg } from "./ChatMsg";
 import { MessageBox, MessageBoxExpose } from "./MessageBox";
 import { MessageRender } from "../../components/Message";
+import { IRedPacketOpen } from "../RedPacket/Open";
+import { IRedPacketMessage } from "../../service/types/redpacket";
 
 @Builder
 export function ChatRoomBuilder(name: string, param: Object) {
@@ -31,14 +35,20 @@ export struct ChatRoom {
     }).height('100%')
   }
 
-  aboutToAppear(): void {
-    this.fishpi.chatroom.history(1, ChatContentType.Markdown).then((res) => {
+  load(page: number) {
+    this.fishpi.chatroom.history(page, ChatContentType.Markdown).then((res) => {
       res.reverse();
       this.messages.push(...res.map(item => (new ChatRoomMessageData(item.type, item))));
       setTimeout(() => {
         this.msgScroller.scrollToIndex(this.messages.length - 1)
       }, 100);
     })
+  }
+
+  aboutToAppear(): void {
+    this.load(1);
+    this.load(2);
+    this.load(3);
     this.fishpi.chatroom.addListener((res) => {
       if (res.type == ChatRoomMessageType.online) {
         return;
@@ -77,7 +87,10 @@ export struct ChatRoom {
             ForEach(this.messages, (data: ChatRoomMessageData) => {
               ListItem() {
                 MessageRender({
-                  data
+                  data,
+                  openRedPacket: (msg: ChatRoomMessage) => {
+                    this.pathStack.pushPathByName('RedPacketOpen', { oId: msg.oId, type: msg.redPacket?.type } as IRedPacketOpen)
+                  }
                 })
               }
             })

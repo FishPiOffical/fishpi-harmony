@@ -15,7 +15,14 @@
       "data": {
         "description": "发红包"
       }
+    },
+    {
+      "name": "RedPacketOpen",
+      "pageSourceFile": "src/main/ets/pages/RedPacket/Open.ets",
+      "buildFunction": "RedPacketOpenBuilder",
+      "data": {
+        "description": "开红包"
+      }
     }
-
   ]
 }

@@ -6,6 +6,7 @@ import { IUserInfo, Metal, ILiveness, ICheckIn, ICollectedYesterdayLivenessRewar
 
 export class User {
   private token: string = '';
+  private user?: IUserInfo;
 
   constructor(token?: string) {
     if (!token) return;
@@ -14,6 +15,11 @@ export class User {
 
   setToken(token: string) {
     this.token = token;
+    return this.info().then(user => this.user = user);
+  }
+
+  get me() {
+    return this.user;
   }
 
   /**

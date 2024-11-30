@@ -204,7 +204,7 @@ export class RedPacketInfo {
   constructor(data?: IRedPacketRsp) {
     this.count = data?.info.count || 0;
     this.gesture = data?.info.gesture;
-    this.got = data?.info.who.length || 0;
+    this.got = data?.who.length || 0;
     this.msg = data?.info.msg || '';
     this.userName = data?.info.userName || '';
     this.userAvatarURL = data?.info.userAvatarURL || '';
