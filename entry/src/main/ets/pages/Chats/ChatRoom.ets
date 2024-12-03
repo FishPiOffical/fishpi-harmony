@@ -8,7 +8,7 @@ import { ChatMsg } from "./ChatMsg";
 import { MessageBox, MessageBoxExpose } from "./MessageBox";
 import { MessageRender } from "../../components/Message";
 import { IRedPacketOpen } from "../RedPacket/Open";
-import { IRedPacketMessage } from "../../service/types/redpacket";
+import { GestureType, IRedPacketMessage } from "../../service/types/redpacket";
 
 @Builder
 export function ChatRoomBuilder(name: string, param: Object) {
@@ -92,8 +92,8 @@ export struct ChatRoom {
               ListItem() {
                 MessageRender({
                   data,
-                  openRedPacket: (msg: ChatRoomMessage) => {
-                    this.pathStack.pushPathByName('RedPacketOpen', { oId: msg.oId, type: msg.redPacket?.type } as IRedPacketOpen)
+                  openRedPacket: (msg: ChatRoomMessage, gesture?: GestureType) => {
+                    this.pathStack.pushPathByName('RedPacketOpen', { oId: msg.oId, type: msg.redPacket?.type, gesture } as IRedPacketOpen)
                   }
                 })
               }

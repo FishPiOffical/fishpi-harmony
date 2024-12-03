@@ -114,7 +114,7 @@ export interface IRedPacketMessage {
   /**
    * 消息类型，固定为 redPacket
    */
-  msgType: string;
+  msgType: 'redPacket';
 
   /**
    * 红包数

@@ -137,7 +137,7 @@ export struct RedPacket {
                         this.controller.stopEditing();
                       })
                   }
-                  .justifyContent(FlexAlign.SpaceBetween);
+                  .justifyContent(FlexAlign.SpaceBetween).width('100%').padding({ left: 10, right: 10 });
                 } else if (this.redPacket.type == RedPacketType.Specify) {
                   Field({
                     label: '发给谁',

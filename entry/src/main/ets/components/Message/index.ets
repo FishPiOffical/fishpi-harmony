@@ -1,5 +1,5 @@
 import { ChatRoomMessage, ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom"
-import { IRedPacketMessage } from "../../service/types/redpacket";
+import { IRedPacketMessage, GestureType } from "../../service/types/redpacket";
 import { CircleIcon } from "../CircleIcon";
 import { MsgContent } from "./Content";
 import { RedPacketRender } from "./RedPacket";
@@ -9,7 +9,7 @@ import { LengthMetrics } from "@kit.ArkUI";
 export struct MessageRender {
   @Require @Param data: ChatRoomMessageData;
   @Local date: Date = new Date();
-  @Event openRedPacket: (msg: ChatRoomMessage) => void = (_: ChatRoomMessage) => { };
+  @Event openRedPacket: (msg: ChatRoomMessage, gesture?: GestureType) => void = (_: ChatRoomMessage, gesture?: GestureType) => { };
 
   @Computed
   get isMessage() {
@@ -89,9 +89,10 @@ export struct MessageRender {
           }
           if (this.data.type == ChatRoomMessageType.redPacket) {
             RedPacketRender({
-              data: this.data.message.extends as IRedPacketMessage
-            }).onClick(() => {
-              this.openRedPacket(this.data.message);
+              data: this.data.message.extends as IRedPacketMessage,
+              onOpen: (gesture?: GestureType) => {
+                this.openRedPacket(this.data.message, gesture);
+              }
             })
           }
           Text(this.time.replaceAll(this.today, ''))

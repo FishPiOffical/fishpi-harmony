@@ -98,7 +98,7 @@ export interface IChatVia {
   version: string;
 }
 
-export type ExtendsType = IRedPacketMessage;
+export type ExtendsType = IRedPacketMessage | IWeatherMsg | IMusicMsg;
 
 export class ChatRoomMessage implements IChatRoomMessageRsp {
   /**
@@ -553,7 +553,7 @@ export interface IMuteItem {
 }
 
 export interface IMusicMsg {
-  type: 'music';
+  msgType: 'music';
   /**
    * 音乐标题
    */
@@ -573,7 +573,7 @@ export interface IMusicMsg {
 }
 
 export interface IWeatherMsg {
-  type: 'weather';
+  msgType: 'weather';
   /**
    * 天气城市
    */
