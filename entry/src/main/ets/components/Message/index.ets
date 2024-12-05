@@ -1,9 +1,10 @@
-import { ChatRoomMessage, ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom"
+import { ChatRoomMessage, ChatRoomMessageData, ChatRoomMessageType, IWeatherMsg } from "../../service/types/chatroom"
 import { IRedPacketMessage, GestureType } from "../../service/types/redpacket";
 import { CircleIcon } from "../CircleIcon";
 import { MsgContent } from "./Content";
 import { RedPacketRender } from "./RedPacket";
 import { LengthMetrics } from "@kit.ArkUI";
+import { WeatherRender } from "./Weather";
 
 @ComponentV2
 export struct MessageRender {
@@ -93,6 +94,11 @@ export struct MessageRender {
               onOpen: (gesture?: GestureType) => {
                 this.openRedPacket(this.data.message, gesture);
               }
+            })
+          }
+          if (this.data.type == ChatRoomMessageType.weather) {
+            WeatherRender({
+              data: this.data.message.extends as IWeatherMsg,
             })
           }
           Text(this.time.replaceAll(this.today, ''))
