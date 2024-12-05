@@ -1,10 +1,13 @@
-import { ChatRoomMessage, ChatRoomMessageData, ChatRoomMessageType, IWeatherMsg } from "../../service/types/chatroom"
+import { ChatRoomMessage, ChatRoomMessageData, ChatRoomMessageType,
+  IMusicMsg,
+  IWeatherMsg } from "../../service/types/chatroom"
 import { IRedPacketMessage, GestureType } from "../../service/types/redpacket";
 import { CircleIcon } from "../CircleIcon";
 import { MsgContent } from "./Content";
 import { RedPacketRender } from "./RedPacket";
 import { LengthMetrics } from "@kit.ArkUI";
 import { WeatherRender } from "./Weather";
+import { MusicRender } from "./Music";
 
 @ComponentV2
 export struct MessageRender {
@@ -99,6 +102,11 @@ export struct MessageRender {
           if (this.data.type == ChatRoomMessageType.weather) {
             WeatherRender({
               data: this.data.message.extends as IWeatherMsg,
+            })
+          }
+          if (this.data.type == ChatRoomMessageType.music) {
+            MusicRender({
+              data: this.data.message.extends as IMusicMsg,
             })
           }
           Text(this.time.replaceAll(this.today, ''))

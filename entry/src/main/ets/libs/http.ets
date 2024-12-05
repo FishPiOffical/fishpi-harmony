@@ -63,7 +63,7 @@ export class defHttp {
     });
 
     const response: AxiosResponse = await axiosInstance.request({
-      url: `${defHttp.protocol}://${defHttp.domain}${url}`,
+      url: url.includes('http') ? url : `${defHttp.protocol}://${defHttp.domain}${url}`,
       method: options.method,
       data: options.data,
       headers: {
@@ -78,7 +78,7 @@ export class defHttp {
     }
     const res: IResponseData = response.data;
     const code: number | undefined = res.code || res.result;
-    if (code != undefined && code != 0) throw new Error(res.msg);
+    if (code != undefined && code != 0 && code != 200) throw new Error(res.msg);
     if (res.data != undefined) return res.data;
     return res;
   }
