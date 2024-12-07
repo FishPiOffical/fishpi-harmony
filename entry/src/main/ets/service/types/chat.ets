@@ -81,9 +81,9 @@ interface IChatNotice {
 export class ChatNotice implements IChatNotice {
   command: string;
   userId: string;
-  preview?: string;
-  senderAvatar?: string;
-  senderUserName?: string;
+  preview: string;
+  senderAvatar: string;
+  senderUserName: string;
 
   constructor(data?: IChatNotice) {
     this.command = data?.command || '';
@@ -169,6 +169,21 @@ export class ChatMsg {
       this.type = ChatMsgType.data;
       this.msg = new ChatData(data as IChatData);
     }
+  }
+
+  get notice() {
+    if (this.type != ChatMsgType.notice) return null;
+    return this.msg as ChatNotice;
+  }
+
+  get chat() {
+    if (this.type != ChatMsgType.data) return null;
+    return this.msg as ChatData;
+  }
+
+  get revoke() {
+    if (this.type != ChatMsgType.revoke) return null;
+    return this.msg as IChatRevoke;
   }
 }
 
