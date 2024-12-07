@@ -9,6 +9,14 @@
       }
     },
     {
+      "name": "Chat",
+      "pageSourceFile": "src/main/ets/pages/Chats/ChatPrivate.ets",
+      "buildFunction": "ChatBuilder",
+      "data": {
+        "description": "私聊"
+      }
+    },
+    {
       "name": "RedPacket",
       "pageSourceFile": "src/main/ets/pages/RedPacket/Index.ets",
       "buildFunction": "RedPacketBuilder",

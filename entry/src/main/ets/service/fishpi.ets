@@ -13,13 +13,13 @@ import {
   ILoginRsp,
   IPageParam,
   IRegisterUserId,
-  IUserQuery,
   PreRegisterInfo,
   RegisterInfo,
   Report,
   IUploadInfo,
   UserLite,
-  UploadInfo
+  UploadInfo,
+  IToken
 } from './types/fishpi';
 import { IUserInfo, Metal } from './types/user';
 import User from './user';
@@ -116,10 +116,10 @@ export class Fishpi {
    * @returns 用户信息
    */
   getUser(username: string) {
-    return defHttp.get<IUserInfo>('/api/getUserInfo', {
+    return defHttp.get<IUserInfo>('/user/' + username, {
       params: {
-        username
-      } as IUserQuery
+        apiKey: this.token
+      } as IToken
     }).then(res => {
       res.metalList = Metal.toMetal(res.sysMetal);
       return res;

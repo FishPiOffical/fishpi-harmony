@@ -1,14 +1,13 @@
 import { Header, HeaderAction } from "../../layout/main/header";
 import { AppStorageV2 } from "@kit.ArkUI";
 import Fishpi from "../../service/fishpi";
-import { ChatContentType,
-  ChatRoomMessage,
-  ChatRoomMessageData, ChatRoomMessageType } from "../../service/types/chatroom";
-import { ChatMsg } from "./ChatMsg";
 import { MessageBox, MessageBoxExpose } from "./MessageBox";
 import { MessageRender } from "../../components/Message";
 import { IRedPacketOpen } from "../RedPacket/Open";
-import { GestureType, IRedPacketMessage } from "../../service/types/redpacket";
+import { ChatData, IChatData } from "../../service/types/chat";
+import { IUserInfo } from "../../service/types/user";
+import { ChatRender } from "../../components/Message/Chat";
+import { toast } from "../../libs/utils";
 
 export interface IChatParam {
   name: string;
@@ -16,22 +15,26 @@ export interface IChatParam {
 
 @Builder
 export function ChatBuilder(name: string, param: IChatParam) {
-  Chat()
+  Chat({
+    user: param.name
+  })
 }
 
 @ComponentV2
 export struct Chat {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
+  @Require @Param user: string;
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
-  @Local messages: ChatRoomMessageData[] = [];
+  @Local messages: IChatData[] = [];
   @Local msgScroller: Scroller = new Scroller();
   @Local newMsgSize: number = 0;
   @Local messageBoxExpose?: MessageBoxExpose;
+  @Local talk?: IUserInfo;
 
   @Builder
   titleBuilder() {
     Header({
-      title: '聊天室',
+      title: this.talk?.userNickname || this.user,
       leftAction: new HeaderAction($r('app.media.back'), () => {
         const stack = this.pathStack.pop()
         console.log('stack', stack)
@@ -41,16 +44,26 @@ export struct Chat {
 
 
   load(page: number) {
-    return this.fishpi.chatroom.history(page, ChatContentType.Markdown).then((res) => {
+    return this.fishpi.chat.history({
+      user: this.user,
+      page,
+      size: 30,
+      autoRead: true
+    }).then((res) => {
       res.reverse();
-      this.messages.unshift(...res.map(item => (new ChatRoomMessageData(item.type, item))));
+      this.messages.unshift(...res);
+    }).catch((err: Error) => {
+      toast(err.message)
     })
   }
 
   async init() {
     await this.load(1);
-    await this.load(2);
-    await this.load(3);
+    await this.fishpi.getUser(this.user)
+      .then(res => this.talk = res)
+      .catch((err: Error) => {
+        console.error(err.message)
+      });
     setTimeout(() => {
       this.msgScroller.scrollToIndex(this.messages.length - 1)
     }, 100);
@@ -58,30 +71,16 @@ export struct Chat {
 
   aboutToAppear(): void {
     this.init();
-    this.fishpi.chatroom.addListener((res) => {
-      if (res.type == ChatRoomMessageType.online) {
-        return;
-      }
-      if (res.type == ChatRoomMessageType.discussChanged) {
-        return;
-      }
-      if (res.type == ChatRoomMessageType.revoke) {
-        return;
-      }
-      if (res.type == ChatRoomMessageType.redPacketStatus) {
-        return;
-      }
-      if (res.type == ChatRoomMessageType.msg) {
-        res.message.content = res.message.md;
-      }
+    this.fishpi.chat.addListener((res) => {
+      if (!res.chat) return;
       const isAtEnd = this.msgScroller.isAtEnd();
-      this.messages.push(res);
+      this.messages.push(res.chat);
       if (isAtEnd) {
         this.msgScroller.scrollToIndex(this.messages.length - 1);
       } else {
         this.newMsgSize++;
       }
-    })
+    }, this.user)
   }
 
   build() {
@@ -93,19 +92,17 @@ export struct Chat {
           alignContent: Alignment.Bottom,
         }) {
           List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
-            ForEach(this.messages, (data: ChatRoomMessageData) => {
+            ForEach(this.messages, (data: IChatData) => {
               ListItem() {
-                MessageRender({
-                  data,
-                  openRedPacket: (msg: ChatRoomMessage, gesture?: GestureType) => {
-                    this.pathStack.pushPathByName('RedPacketOpen', { oId: msg.oId, type: msg.redPacket?.type, gesture } as IRedPacketOpen)
-                  }
+                ChatRender({
+                  data
                 })
               }
             })
           }
           .width('100%')
           .height('100%')
+          .alignListItem(ListItemAlign.End)
           .listDirection(Axis.Vertical) // 排列方向
           .friction(0.6)
           .edgeEffect(EdgeEffect.Spring)
@@ -124,7 +121,7 @@ export struct Chat {
             this.messageBoxExpose = expose;
           },
           onSend: async (msg) => {
-            return await this.fishpi.chatroom.send(msg)
+            return await this.fishpi.chat.send(this.user, msg)
               .then(() => true)
               .catch(() => false)
           },

@@ -48,3 +48,7 @@ export class RedPacketMessage implements IRedPacket {
     } as IRedPacket;
   }
 }
+
+export class ChatMessage {
+
+}

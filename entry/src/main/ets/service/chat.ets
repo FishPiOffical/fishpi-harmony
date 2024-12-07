@@ -6,7 +6,7 @@ import { IToken } from "./types/fishpi";
 interface IHistory extends IToken {
   toUser: string
   page: number
-  size: number
+  pageSize: number
 }
 
 interface IMarkRead extends IToken {
@@ -47,12 +47,12 @@ export class Chat {
    * @returns 私聊消息列表
    */
   history(param: IChatQuery) {
-    return defHttp.get<IChatData[]>('/chat/get-history', {
+    return defHttp.get<IChatData[]>('/chat/get-message', {
       params: {
         apiKey: this.token,
         toUser: param.user,
         page: param.page || 1,
-        size: param.size || 20,
+        pageSize: param.size || 20,
       } as IHistory
     }).then(res => {
       if (param.autoRead || param.autoRead === undefined) {
@@ -108,8 +108,8 @@ export class Chat {
    */
   removeListener(user:string = '', wsCallback: ChatListener) {
     if (wsCallback == null) this.wsCallbacks.delete(user);
-    if (!this.wsCallbacks[user] || this.wsCallbacks[user].indexOf(wsCallback) < 0) return;
-    this.wsCallbacks[user].splice(this.wsCallbacks[user].indexOf(wsCallback), 1);
+    if (!this.wsCallbacks.has(user) || !this.wsCallbacks.get(user)?.includes(wsCallback)) return;
+    this.wsCallbacks.get(user)?.splice(this.wsCallbacks[user].indexOf(wsCallback), 1);
   }
 
   /**
@@ -118,13 +118,14 @@ export class Chat {
    * @param user 指定为用户消息监听函数，空为新信息监听
    */
   async addListener(wsCallback: ChatListener, user:string = '') {
-    if (this.rwsList[user]) {
-      if (this.wsCallbacks[user].indexOf(wsCallback) < 0)
-        this.wsCallbacks[user].push(wsCallback);
+    if (this.rwsList.has(user)) {
+      if (!this.wsCallbacks.get(user)?.includes(wsCallback))
+        this.wsCallbacks.get(user)?.push(wsCallback);
       return;
     }
-    this.wsCallbacks[user] = this.wsCallbacks[user] || []
-    this.wsCallbacks[user].push(wsCallback);
+    if (this.wsCallbacks.has(user))
+      this.wsCallbacks.get(user)?.push(wsCallback);
+    else this.wsCallbacks.set(user, [wsCallback]);
     this.connect(user);
   }
 
@@ -135,30 +136,31 @@ export class Chat {
    */
   connect(user:string, timeout = 10): Promise<boolean | void> {
     return new Promise(async (resolve, reject) => {
-      if (this.rwsList[user]) return resolve(this.rwsList[user].reconnect());
-      this.rwsList[user] = new ReconnectingWebSocket(user ?
+      if (this.rwsList.has(user)) return resolve(this.rwsList[user].reconnect());
+      const rws = new ReconnectingWebSocket(user ?
         `wss://fishpi.cn/chat-channel?apiKey=${this.token}&toUser=${user}`
         : `wss://fishpi.cn/user-channel?apiKey=${this.token}`, {
         connectionTimeout:  1000 * timeout,
       });
-
-      this.rwsList.get(user)!.onopen = (e) => {
+      rws.onopen = (e) => {
         if (e) {
           reject(e);
         } else {
           resolve(true);
         }
       };
-      this.rwsList.get(user)!.onmessage = async (_err, msgData: Message) => {
+      rws.onmessage = async (_err, msgData: Message) => {
         let data: IChatMsg = JSON.parse(msgData.toString());
         this.wsCallbacks.get(user)?.forEach(call => call(new ChatMsg(data)));
       };
-      this.rwsList.get(user)!.onerror = (e) => {
+      rws.onerror = (e) => {
         reject(e);
       };
-      this.rwsList.get(user)!.onclose = ((e) => {
+      rws.onclose = ((e) => {
         console.log(`[Chat] ${user} 连接已关闭`, e);
       });
+
+      this.rwsList.set(user, rws);
     })
   }
 
@@ -171,7 +173,7 @@ export class Chat {
       this.rwsList.get(user)?.close();
       this.rwsList.delete(user);
     }
-    if (this.wsCallbacks[user])
+    if (this.wsCallbacks.has(user))
       this.wsCallbacks.delete(user);
   }
 
