@@ -14,6 +14,7 @@ export interface MessageBoxExpose {
 @ComponentV2
 export struct MessageBox {
   @Param redpack: boolean = false;
+  @Param barrage: boolean = false;
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Local controller: TextAreaController = new TextAreaController();
   @Local text: string = '';
@@ -22,6 +23,7 @@ export struct MessageBox {
   @Event onSend: (text: string) => boolean | Promise<boolean> = () => true;
   @Event onExpose: (expose: MessageBoxExpose) => void = () => { };
   @Event onRedpack: () => void = () => { };
+  @Event onBarrage: (text: string) => boolean | Promise<boolean> = () => true;
 
   aboutToAppear(): void {
     this.onExpose({
@@ -116,6 +118,21 @@ export struct MessageBox {
           //     this.expandFeature = !this.expandFeature;
           //   })
         } else {
+          if (this.barrage) {
+            Icon({
+              icon: $r('app.media.barrage'),
+              color: null,
+              stroke: null,
+              iconSize: 30,
+            })
+              .margin({ left: 5, right: 5 })
+              .onClick(async () => {
+                if (!await this.onBarrage(this.text)) {
+                  return;
+                }
+                this.text = '';
+              })
+          }
           Icon({
             icon: $r('app.media.send'),
             color: '#000000',

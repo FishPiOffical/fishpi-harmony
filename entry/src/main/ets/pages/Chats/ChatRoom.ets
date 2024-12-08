@@ -9,6 +9,7 @@ import { MessageBox, MessageBoxExpose } from "./MessageBox";
 import { MessageRender } from "../../components/Message";
 import { IRedPacketOpen } from "../RedPacket/Open";
 import { GestureType, IRedPacketMessage } from "../../service/types/redpacket";
+import { toast } from "../../libs/utils";
 
 @Builder
 export function ChatRoomBuilder(name: string, param: Object) {
@@ -121,12 +122,24 @@ export struct ChatRoom {
           onSend: async (msg) => {
             return await this.fishpi.chatroom.send(msg)
               .then(() => true)
-              .catch(() => false)
+              .catch((err: Error) => {
+                toast(err.message)
+                return false
+              })
           },
           redpack: true,
           onRedpack: () => {
             this.pathStack.pushPathByName('RedPacket', null)
-          }
+          },
+          barrage: true,
+          onBarrage: async (msg: string) => {
+            return await this.fishpi.chatroom.barrage(msg)
+              .then(() => true)
+              .catch((err: Error) => {
+                toast(err.message)
+                return false
+              })
+          },
         })
       }
       .backgroundColor('#FFF')
