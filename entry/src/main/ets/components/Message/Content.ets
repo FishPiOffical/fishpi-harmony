@@ -24,7 +24,7 @@ export struct MsgContent {
       bottomRight: 10
     })
     .padding(10)
-    .backgroundColor('#fff')
+    .backgroundColor(this.isSelf ? '#F0D35E' : '#fff')
     .width('auto')
   }
 

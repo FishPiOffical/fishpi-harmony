@@ -5,15 +5,28 @@ import { IRedPacketMessage, GestureType } from "../../service/types/redpacket";
 import { CircleIcon } from "../CircleIcon";
 import { MsgContent } from "./Content";
 import { RedPacketRender } from "./RedPacket";
-import { LengthMetrics } from "@kit.ArkUI";
+import { AppStorageV2, LengthMetrics } from "@kit.ArkUI";
 import { WeatherRender } from "./Weather";
 import { MusicRender } from "./Music";
+import Fishpi from "../../service/fishpi";
 
 @ComponentV2
 export struct MessageRender {
+  @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Require @Param data: ChatRoomMessageData;
   @Local date: Date = new Date();
   @Event openRedPacket: (msg: ChatRoomMessage, gesture?: GestureType) => void = (_: ChatRoomMessage, gesture?: GestureType) => { };
+
+  @Computed get me() {
+    return this.fishpi.user.me
+  }
+
+  @Computed get isSelf() {
+    if (this.isMessage) {
+      return this.data.message.userName == this.me?.userName
+    }
+    return false
+  }
 
   @Computed
   get isMessage() {
@@ -69,12 +82,15 @@ export struct MessageRender {
   }
 
   build() {
-    Flex() {
+    Flex({
+      alignItems: ItemAlign.Start,
+      direction: this.isSelf ? FlexDirection.RowReverse : FlexDirection.Row
+    }) {
       if (this.isMessage) {
         CircleIcon({
           icon: this.avatar,
         }).width(48)
-          .margin({ right: 5, top: 20 })
+          .margin({ right: this.isSelf ? 0 : 5, top: 2, left: this.isSelf ? 5 : 0 })
         Column() {
           Row() {
             Text(this.user)
@@ -87,7 +103,8 @@ export struct MessageRender {
 
           if (this.data.type == ChatRoomMessageType.msg) {
             MsgContent({
-              message: this.message
+              message: this.message,
+              isSelf: this.isSelf
             })
               .margin({ bottom: 5 })
           }
@@ -114,8 +131,8 @@ export struct MessageRender {
             .fontSize(12)
             .margin({ left: 5, bottom: 2 })
         }
+        .alignItems(this.isSelf ? HorizontalAlign.End : HorizontalAlign.Start)
         .justifyContent(FlexAlign.Start)
-        .alignItems(HorizontalAlign.Start)
         .margin({ left: 10 })
         .width('100%')
       } else if (this.data.type === ChatRoomMessageType.barrager) {

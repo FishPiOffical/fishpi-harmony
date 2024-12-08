@@ -31,6 +31,10 @@ export struct Chat {
   @Local messageBoxExpose?: MessageBoxExpose;
   @Local talk?: IUserInfo;
 
+  @Computed get me() {
+    return this.fishpi.user.me
+  }
+
   @Builder
   titleBuilder() {
     Header({
@@ -95,7 +99,8 @@ export struct Chat {
             ForEach(this.messages, (data: IChatData) => {
               ListItem() {
                 ChatRender({
-                  data
+                  data,
+                  isSelf: this.me?.userName == data.senderUserName
                 })
               }
             })
@@ -124,10 +129,6 @@ export struct Chat {
             return await this.fishpi.chat.send(this.user, msg)
               .then(() => true)
               .catch(() => false)
-          },
-          redpack: true,
-          onRedpack: () => {
-            this.pathStack.pushPathByName('RedPacket', null)
           }
         })
       }
