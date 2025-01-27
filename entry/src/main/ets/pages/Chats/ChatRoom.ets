@@ -62,6 +62,11 @@ export struct ChatRoom {
         return;
       }
       if (res.type == ChatRoomMessageType.revoke) {
+        const oId = res.revoke;
+        const index = this.messages.findIndex((item) => item.message.oId == oId);
+        if (index >= 0) {
+          this.messages.splice(index, 1);
+        }
         return;
       }
       if (res.type == ChatRoomMessageType.redPacketStatus) {
