@@ -1,0 +1,292 @@
+export const baseCss = `
+
+.vditor-reset {
+    color: #24292e;
+    font-variant-ligatures: no-common-ligatures;
+    font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans","Hiragino Sans GB","Microsoft Yahei",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
+    word-wrap: break-word;
+    overflow: auto;
+    line-height: 1.5;
+    font-size: 3rem;
+    word-break: break-word;
+    padding: 0 20px;
+}
+
+.vditor-reset--anchor {
+    padding-left: 20px
+}
+
+.vditor-reset--error {
+    color: #d23f31;
+    font-size: 12px;
+    display: block;
+    line-height: 16px
+}
+
+.vditor-reset ul ul ul {
+    list-style-type: square
+}
+
+.vditor-reset ul ul {
+    list-style-type: circle
+}
+
+.vditor-reset ul {
+    list-style-type: disc
+}
+
+.vditor-reset ul,.vditor-reset ol {
+    padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.vditor-reset li+li {
+    margin-top: .25em
+}
+
+.vditor-reset audio {
+    max-width: 100%
+}
+
+.vditor-reset audio:focus {
+    outline: none
+}
+
+.vditor-reset video {
+    max-height: 90vh;
+    max-width: 100%
+}
+
+.vditor-reset img {
+    max-width: 100%
+}
+
+.vditor-reset img.emoji {
+    cursor: auto;
+    max-width: 1.5em;
+    vertical-align: sub;
+}
+
+.vditor-reset h1,.vditor-reset h2,.vditor-reset h3,.vditor-reset h4,.vditor-reset h5,.vditor-reset h6 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.vditor-reset h1::before,.vditor-reset h2::before,.vditor-reset h3::before,.vditor-reset h4::before,.vditor-reset h5::before,.vditor-reset h6::before {
+    content: "";
+    display: inline-block;
+    height: 0.8em;
+    position: relative;
+    top: 0.05em;
+    margin-right: 0.2em;
+    background-color: #000;
+    width: 1rem;
+}
+
+.vditor-reset h1:hover .vditor-anchor svg,.vditor-reset h2:hover .vditor-anchor svg,.vditor-reset h3:hover .vditor-anchor svg,.vditor-reset h4:hover .vditor-anchor svg,.vditor-reset h5:hover .vditor-anchor svg,.vditor-reset h6:hover .vditor-anchor svg {
+    visibility: visible
+}
+
+.vditor-reset h1 {
+    font-size: 1.75em
+}
+
+.vditor-reset h2 {
+    font-size: 1.55em
+}
+
+.vditor-reset h3 {
+    font-size: 1.38em
+}
+
+.vditor-reset h4 {
+    font-size: 1.25em
+}
+
+.vditor-reset h5 {
+    font-size: 1.13em
+}
+
+.vditor-reset h6 {
+    font-size: 1em
+}
+
+.vditor-reset hr {
+    height: 0.5rem;
+    padding: 0;
+    margin: 2em 0;
+    background-color: #eaecef;
+    border: 0
+}
+
+.vditor-reset p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.vditor-reset blockquote {
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: .25em solid #eaecef;
+    margin: 0 0 1em 0
+}
+
+.vditor-reset blockquote>:first-child {
+    margin-top: 0
+}
+
+.vditor-reset blockquote>:last-child {
+    margin-bottom: 0
+}
+
+.vditor-reset ins>iframe {
+    border: 0
+}
+
+.vditor-reset iframe {
+    border: 1px solid #d1d5da;
+    max-width: 100%;
+    box-sizing: border-box
+}
+
+.vditor-reset iframe.iframe__video {
+    min-width: 80%;
+    min-height: 36vh
+}
+
+.vditor-reset table {
+    border-collapse: collapse;
+    empty-cells: show;
+    margin-bottom: 1em;
+    overflow: auto;
+    border-spacing: 0;
+    display: block;
+    word-break: keep-all;
+    width: 100%
+}
+
+.vditor-reset table tr {
+    background-color: #fafbfc;
+    border-top: 1px solid #c6cbd1
+}
+
+.vditor-reset table td,.vditor-reset table th {
+    padding: 0.5em 1em;
+    border: 1px solid #dfe2e5;
+    word-break: normal;
+    white-space: nowrap
+}
+
+.vditor-reset table td:first-child::after,.vditor-reset table th:first-child::after {
+    content: "";
+    display: inline-block;
+    vertical-align: top;
+    min-height: 2em;
+}
+
+.vditor-reset table th {
+    font-weight: 600
+}
+
+.vditor-reset table tbody tr:nth-child(2n) {
+    background-color: #fff
+}
+
+.vditor-reset code:not(.hljs):not(.highlight-chroma) {
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    border-radius: 0.2em;
+    font-family: mononoki,Consolas,"Liberation Mono",Menlo,Courier,monospace,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
+    word-break: break-word;
+    background-size: 20px 20px;
+    white-space: pre-wrap
+}
+
+.vditor-reset pre {
+    margin: 1em 0
+}
+
+.vditor-reset pre>code {
+    margin: 0;
+    font-size: 85%;
+    padding: .5em;
+    border-radius: 0.2em;
+    display: block;
+    overflow: auto;
+    white-space: pre;
+    font-family: mononoki,Consolas,"Liberation Mono",Menlo,Courier,monospace,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
+    background-size: 2em 2em;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8AgMAAABHkjHhAAAACVBMVEWAgIBaWlo+Pj7rTFvWAAAAA3RSTlMHCAw+VhR4AAAA+klEQVQoz4WSMW7EQAhFPxKWNh2FCx+HkaZI6RRb5DYbyVfIJXLKDCFoMbaTKSw/8ZnPAPjaH2xgZcUNUDADD7D9LtDBCLZ45fbkvo/30K8yeI64pPwl6znd/3n/Oe93P3ho9qeh72btTFzqkz0rsJle8Zr81OLEwZ1dv/713uWqvu2pl+k0fy7MWtj9r/tN5q/02z89qa/L4Dc2LvM93kezPfXlME/O86EbY/V9GB9ePX8G1/6W+/9h1dq/HGfTfzT3j/xNo7522Bfnqe5jO/fvhVthlfk434v3iO9zG/UOphyPeinPl1J8Gtaa7xPTa/Dk+RIs4deMvwGvcGsmsCvJ0AAAAABJRU5ErkJggg==);
+    word-break: initial;
+    word-wrap: normal
+}
+
+.vditor-reset pre:hover div.vditor-copy {
+    display: block
+}
+
+.vditor-reset .language-math,.vditor-reset .language-echarts,.vditor-reset .language-mindmap,.vditor-reset .language-plantuml,.vditor-reset .language-mermaid,.vditor-reset .language-abc,.vditor-reset .language-flowchart,.vditor-reset .language-graphviz {
+    margin-bottom: 1em
+}
+
+.vditor-reset .language-math mjx-container:focus {
+    outline: none;
+    cursor: context-menu
+}
+
+.vditor-reset .language-echarts,.vditor-reset .language-mindmap {
+    overflow: hidden;
+    height: 30em;
+}
+
+.vditor-reset .language-mermaid,.vditor-reset .language-flowchart,.vditor-reset .language-graphviz {
+    text-align: center
+}
+
+.vditor-reset .language-graphviz parsererror {
+    overflow: auto
+}
+
+.vditor-reset kbd {
+    display: inline-block;
+    padding: 0.1em 0.2em;
+    font: 11px Consolas,"Liberation Mono",Menlo,Courier,monospace;
+    line-height: 10px;
+    color: #24292e;
+    vertical-align: middle;
+    background-color: #fafbfc;
+    border: solid 1px #d1d5da;
+    border-radius: 0.1em;
+    box-shadow: inset 0 -1px 0 #d1d5da
+}
+
+.vditor-reset summary {
+    cursor: pointer
+}
+
+.vditor-reset summary:focus {
+    outline: none
+}
+
+.vditor-reset svg {
+    height: auto;
+    width: auto;
+    stroke-width: initial
+}
+
+.vditor-reset p:last-child,.vditor-reset blockquote:last-child,.vditor-reset pre:last-child,.vditor-reset ul:last-child,.vditor-reset ol:last-child,.vditor-reset hr:last-child {
+    margin-bottom: 0
+}
+
+input {
+    font: inherit;
+}
+input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+}
+`

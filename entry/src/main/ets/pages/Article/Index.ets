@@ -3,6 +3,7 @@ import Fishpi from "../../service/fishpi";
 import { AppStorageV2 } from "@kit.ArkUI";
 import { ArticleListType, IArticleDetail, IArticleQuery, IArticleTag } from "../../service/types/article";
 import { ArticleItem } from "./ArticleItem";
+import { IArticleParam } from "./ArticleDetail";
 
 @ObservedV2
 class ArticleQuery implements IArticleQuery {
@@ -60,6 +61,8 @@ export struct Article {
               }).margin({
                 top: i == 0 ? 20 : 0,
                 bottom: i == this.articleList.length - 1 ? 20 : 0
+              }).onClick(() => {
+                this.pathStack.pushPathByName('Article', { id: data.oId } as IArticleParam)
               })
             }
           })

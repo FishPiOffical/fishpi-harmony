@@ -31,6 +31,14 @@
       "data": {
         "description": "开红包"
       }
+    },
+    {
+      "name": "Article",
+      "pageSourceFile": "src/main/ets/pages/Article/ArticleDetail.ets",
+      "buildFunction": "ArticleBuilder",
+      "data": {
+        "description": "文章详情"
+      }
     }
   ]
 }

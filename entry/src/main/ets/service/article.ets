@@ -87,7 +87,7 @@ export class Article {
    * @returns 文章详情
    */
   detail(id: string, p: number = 1) {
-    return defHttp.get<IArticleDetailRsp>(`/api/article/${id}&p=${p}&apiKey=${this.token}`).then((res) => res.article);
+    return defHttp.get<IArticleDetailRsp>(`/api/article/${id}?p=${p}&apiKey=${this.token}`).then((res) => res.article);
   }
 
   /**
