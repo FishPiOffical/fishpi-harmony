@@ -390,6 +390,8 @@ export class ChatRoomMessageData {
 
 export type MessageData = IOnlineMsg[] | discussMsg | RevokeMsg | ChatRoomMessage | IRedPacketStatusMsg | IBarragerMsg | ICustomMsg;
 
+export type ChatroomListener = (data: ChatRoomMessageData) => void;
+
 export interface IMessageEvent extends IRedPacketStatusMsg, IBarragerMsg {
   /**
    * 消息类型，
@@ -598,4 +600,21 @@ export interface IWeatherMsg {
    * 天气代码
    */
   weatherCode: string;
+}
+export interface IChatroomNode {
+  node: string;
+  name: string;
+  weight?: number;
+  online?: number;
+}
+
+export interface IChatroomNodeData {
+  data: string;
+  msg: string;
+  avaliable: IChatroomNode[];
+}
+
+export interface IChatroomNodeInfo {
+  recommend: IChatroomNode;
+  avaliable: IChatroomNode[];
 }

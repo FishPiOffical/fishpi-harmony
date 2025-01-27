@@ -7,6 +7,7 @@ import { Chats } from './Chats/Index';
 
 import { webSocket } from '@kit.NetworkKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { Article } from './Article/Index';
 
 
 PersistenceV2.notifyOnError((key: string, reason: string, msg: string) => {
@@ -74,7 +75,7 @@ struct Index {
             }.tabBar(this.getTabBarStyle($r('app.media.chats'), '聊天'))
 
             TabContent() {
-              Column().width('100%').height('100%').border({ width: { bottom: 2 }, color: '#000' })
+              Article()
             }.tabBar(this.getTabBarStyle($r('app.media.article'), '文章'))
 
             TabContent() {

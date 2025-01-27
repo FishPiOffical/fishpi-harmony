@@ -14,7 +14,10 @@ import {
   ChatRoomMessage,
   ChatMessageMode,
   IMuteItem,
-  ChatRoomMessageType
+  ChatRoomMessageType,
+  IChatroomNodeData,
+  IChatroomNodeInfo,
+  ChatroomListener
 } from "./types/chatroom";
 import { IRedPacketStatusMsg } from "./types/redpacket";
 import { bundleManager } from "@kit.AbilityKit";
@@ -150,17 +153,37 @@ export class Chatroom {
   }
 
   /**
+   * 获取聊天室节点
+   * @returns 返回节点地址
+   */
+  async getNode():Promise<IChatroomNodeInfo> {
+    return defHttp.get<IChatroomNodeData>(`/chat-room/node/get?apiKey=${this.token}`).then((res) => {
+      return {
+        recommend: {
+          node: res.data,
+          name: res.msg,
+          online: res.avaliable.find((n) => n.node === res.data)?.online || 0,
+          weight: res.avaliable.find((n) => n.node === res.data)?.weight || 0
+        },
+        avaliable: res.avaliable,
+      } as IChatroomNodeInfo
+    });
+  }
+
+  /**
    * 连接聊天室
    * @param timeout 超时时间
    * @returns 连接是否成功
    */
-  connect(timeout = 10): Promise<boolean | void> {
-    return new Promise(async (resolve, reject) => {
+  async connect(url: string, timeout = 10): Promise<boolean | void> {
+    if (!url) url = await this.getNode().then((rsp) => rsp.recommend.node).catch(() => `wss://fishpi.cn/chat-room-channel?apiKey=${this.token}`);
+    if (!url.includes('apiKey=')) url += `${url.includes('?') ? '&' : '?'}apiKey=${this.token}`;
 
+    return new Promise(async (resolve, reject) => {
       if (this.rws) {
         return resolve(this.rws.reconnect());
       }
-      this.rws = new ReconnectingWebSocket(`wss://fishpi.cn/chat-room-channel?apiKey=${this.token}`, {
+      this.rws = new ReconnectingWebSocket(url, {
         connectionTimeout: 1000 * timeout,
       });
       this.rws.onopen = (e) => {
@@ -230,10 +253,10 @@ export class Chatroom {
         this.wsCallbacks.forEach(call => call(new ChatRoomMessageData(msg.type, data)));
       }
       this.rws.onerror = ((e) => {
-        console.error(e.message);
+        console.error(e?.message);
       });
       this.rws.onclose = ((e) => {
-        console.log(e.message);
+        console.log(e?.message);
       });
     });
   }
@@ -264,7 +287,20 @@ export class Chatroom {
    * @param error 错误回调
    * @param close 关闭回调
    */
-  async addListener(wsCallback: (msg: ChatRoomMessageData) => void, timeout = 10) {
+  async addListener(url: string, wsCallback: (msg: ChatRoomMessageData) => void)
+  async addListener(url: string, wsCallback: (msg: ChatRoomMessageData) => void, timeout: number)
+  async addListener(wsCallback: ChatroomListener)
+  async addListener(wsCallback: ChatroomListener, timeout: number)
+  async addListener(urlOrWsCallback: string | ChatroomListener, callbackOrTimeout: ChatroomListener | number | void, timeout: number | void) {
+    let wsCallback: ChatroomListener;
+    let url: string = '';
+    if (typeof urlOrWsCallback === 'string') {
+      url = urlOrWsCallback;
+      wsCallback = callbackOrTimeout as ChatroomListener;
+    } else {
+      wsCallback = urlOrWsCallback;
+      timeout = callbackOrTimeout as number;
+    }
     if (this.rws !== undefined) {
       if (this.wsCallbacks.indexOf(wsCallback) < 0) {
         this.wsCallbacks.push(wsCallback);
@@ -272,6 +308,6 @@ export class Chatroom {
       return;
     }
     this.wsCallbacks.push(wsCallback);
-    await this.connect(timeout);
+    await this.connect(url, timeout || 10);
   }
 }

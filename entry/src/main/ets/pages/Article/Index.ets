@@ -53,14 +53,22 @@ export struct Article {
       }
       Column() {
         List({ space: 20, initialIndex: 0 }) {
-          ForEach(this.articleList, (data: IArticleDetail) => {
+          ForEach(this.articleList, (data: IArticleDetail, i) => {
             ListItem() {
               ArticleItem({
                 item: data,
+              }).margin({
+                top: i == 0 ? 20 : 0,
+                bottom: i == this.articleList.length - 1 ? 20 : 0
               })
             }
           })
         }
+        .width('100%')
+        .height('100%')
+        .listDirection(Axis.Vertical) // 排列方向
+        .friction(0.6)
+        .edgeEffect(EdgeEffect.Spring)
       }
     }
   }

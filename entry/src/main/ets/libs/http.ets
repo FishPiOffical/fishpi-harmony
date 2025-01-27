@@ -79,6 +79,9 @@ export class defHttp {
     const res: IResponseData = response.data;
     const code: number | undefined = res.code || res.result;
     if (code != undefined && code != 0 && code != 200) throw new Error(res.msg);
+    if (res.data != undefined && keys.length > 3) {
+      return res;
+    }
     if (res.data != undefined) return res.data;
     return res;
   }
