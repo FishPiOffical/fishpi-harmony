@@ -1,10 +1,12 @@
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { IArticleDetail, IArticleTag } from "../../service/types/article";
+import { IArticleListParam } from "./Index";
 
 @ComponentV2
 export struct ArticleItem {
   @Require @Param item: IArticleDetail;
+  @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
 
   build() {
     Column() {
@@ -48,6 +50,9 @@ export struct ArticleItem {
                   .padding(5)
                   .borderRadius(5)
                   .fontColor('#c4c4c4')
+                  .onClick(() => {
+                    this.pathStack.pushPathByName('ArticleList', { tag: tag.tagURI } as IArticleListParam)
+                  })
               })
             }
 

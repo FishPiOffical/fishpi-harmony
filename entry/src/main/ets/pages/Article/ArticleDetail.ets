@@ -6,6 +6,7 @@ import { Header, HeaderAction } from "../../layout/main/header";
 import Fishpi from "../../service/fishpi";
 import { IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
 import { RichView } from "../../components/RichView";
+import { IArticleListParam } from "./Index";
 
 export interface IArticleParam {
   id: string;
@@ -184,6 +185,9 @@ export struct ArticleDetail {
                     })
                     .borderRadius(15)
                     .margin({ top: 5, right: 5 })
+                    .onClick(() => {
+                      this.pathStack.pushPathByName('ArticleList', { tag: tag.tagURI } as IArticleListParam)
+                    })
                 })
               }.padding(10)
             }
