@@ -1,15 +1,14 @@
 export const baseCss = `
-
 .vditor-reset {
-    color: #24292e;
+    color: rgb(35 36 37);
     font-variant-ligatures: no-common-ligatures;
     font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans","Hiragino Sans GB","Microsoft Yahei",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
     word-wrap: break-word;
     overflow: auto;
     line-height: 1.5;
-    font-size: 3rem;
     word-break: break-word;
-    padding: 0 20px;
+    padding: 0 10px;
+    font-size: 14px;
 }
 
 .vditor-reset--anchor {
@@ -17,147 +16,147 @@ export const baseCss = `
 }
 
 .vditor-reset--error {
-    color: #d23f31;
+    color: rgb(210 63 49);
     font-size: 12px;
     display: block;
     line-height: 16px
 }
 
-.vditor-reset ul ul ul {
+ul ul ul {
     list-style-type: square
 }
 
-.vditor-reset ul ul {
+ul ul {
     list-style-type: circle
 }
 
-.vditor-reset ul {
+ul {
     list-style-type: disc
 }
 
-.vditor-reset ul,.vditor-reset ol {
+ul,ol {
     padding-left: 2em;
     margin-top: 0;
     margin-bottom: 1em;
 }
 
-.vditor-reset li+li {
+li+li {
     margin-top: .25em
 }
 
-.vditor-reset audio {
+audio {
     max-width: 100%
 }
 
-.vditor-reset audio:focus {
+audio:focus {
     outline: none
 }
 
-.vditor-reset video {
+video {
     max-height: 90vh;
     max-width: 100%
 }
 
-.vditor-reset img {
+img {
     max-width: 100%
 }
 
-.vditor-reset img.emoji {
+img.emoji {
     cursor: auto;
     max-width: 1.5em;
     vertical-align: sub;
 }
 
-.vditor-reset h1,.vditor-reset h2,.vditor-reset h3,.vditor-reset h4,.vditor-reset h5,.vditor-reset h6 {
-    margin-top: 2em;
-    margin-bottom: 1em;
+h1,h2,h3,h4,h5,h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
     font-weight: 600;
     line-height: 1.25;
 }
 
-.vditor-reset h1::before,.vditor-reset h2::before,.vditor-reset h3::before,.vditor-reset h4::before,.vditor-reset h5::before,.vditor-reset h6::before {
+h1::before,h2::before,h3::before,h4::before,h5::before,h6::before {
     content: "";
     display: inline-block;
     height: 0.8em;
     position: relative;
     top: 0.05em;
-    margin-right: 0.2em;
-    background-color: #000;
-    width: 1rem;
+    margin-right: 5px;
+    background-color: black;
+    width: 5px;
 }
 
-.vditor-reset h1:hover .vditor-anchor svg,.vditor-reset h2:hover .vditor-anchor svg,.vditor-reset h3:hover .vditor-anchor svg,.vditor-reset h4:hover .vditor-anchor svg,.vditor-reset h5:hover .vditor-anchor svg,.vditor-reset h6:hover .vditor-anchor svg {
+h1:hover .vditor-anchor svg,h2:hover .vditor-anchor svg,h3:hover .vditor-anchor svg,h4:hover .vditor-anchor svg,h5:hover .vditor-anchor svg,h6:hover .vditor-anchor svg {
     visibility: visible
 }
 
-.vditor-reset h1 {
+h1 {
     font-size: 1.75em
 }
 
-.vditor-reset h2 {
+h2 {
     font-size: 1.55em
 }
 
-.vditor-reset h3 {
+h3 {
     font-size: 1.38em
 }
 
-.vditor-reset h4 {
+h4 {
     font-size: 1.25em
 }
 
-.vditor-reset h5 {
+h5 {
     font-size: 1.13em
 }
 
-.vditor-reset h6 {
+h6 {
     font-size: 1em
 }
 
-.vditor-reset hr {
+hr {
     height: 0.5rem;
     padding: 0;
     margin: 2em 0;
-    background-color: #eaecef;
+    background-color: rgb(234 236 239);
     border: 0
 }
 
-.vditor-reset p {
+p {
     margin-top: 0;
     margin-bottom: 1em;
 }
 
-.vditor-reset blockquote {
+blockquote {
     padding: 0 1em;
-    color: #6a737d;
-    border-left: .25em solid #eaecef;
+    color: rgb(106 115 125);
+    border-left: .25em solid rgb(234 236 239);
     margin: 0 0 1em 0
 }
 
-.vditor-reset blockquote>:first-child {
+blockquote>:first-child {
     margin-top: 0
 }
 
-.vditor-reset blockquote>:last-child {
+blockquote>:last-child {
     margin-bottom: 0
 }
 
-.vditor-reset ins>iframe {
+ins>iframe {
     border: 0
 }
 
-.vditor-reset iframe {
-    border: 1px solid #d1d5da;
+iframe {
+    border: 1px solid rgb(209 213 218);
     max-width: 100%;
     box-sizing: border-box
 }
 
-.vditor-reset iframe.iframe__video {
+iframe.iframe__video {
     min-width: 80%;
     min-height: 36vh
 }
 
-.vditor-reset table {
+table {
     border-collapse: collapse;
     empty-cells: show;
     margin-bottom: 1em;
@@ -168,34 +167,34 @@ export const baseCss = `
     width: 100%
 }
 
-.vditor-reset table tr {
-    background-color: #fafbfc;
-    border-top: 1px solid #c6cbd1
+table tr {
+    background-color: rgb(250 251 252);
+    border-top: 1px solid rgb(198 203 209)
 }
 
-.vditor-reset table td,.vditor-reset table th {
+table td,table th {
     padding: 0.5em 1em;
-    border: 1px solid #dfe2e5;
+    border: 1px solid rgb(223, 226, 229);
     word-break: normal;
     white-space: nowrap
 }
 
-.vditor-reset table td:first-child::after,.vditor-reset table th:first-child::after {
+table td:first-child::after,table th:first-child::after {
     content: "";
     display: inline-block;
     vertical-align: top;
     min-height: 2em;
 }
 
-.vditor-reset table th {
+table th {
     font-weight: 600
 }
 
-.vditor-reset table tbody tr:nth-child(2n) {
-    background-color: #fff
+table tbody tr:nth-child(2n) {
+    background-color: white;
 }
 
-.vditor-reset code:not(.hljs):not(.highlight-chroma) {
+code:not(.hljs):not(.highlight-chroma) {
     padding: .2em .4em;
     margin: 0;
     font-size: 85%;
@@ -206,11 +205,11 @@ export const baseCss = `
     white-space: pre-wrap
 }
 
-.vditor-reset pre {
+pre {
     margin: 1em 0
 }
 
-.vditor-reset pre>code {
+pre>code {
     margin: 0;
     font-size: 85%;
     padding: .5em;
@@ -225,60 +224,59 @@ export const baseCss = `
     word-wrap: normal
 }
 
-.vditor-reset pre:hover div.vditor-copy {
+pre:hover div.vditor-copy {
     display: block
 }
 
-.vditor-reset .language-math,.vditor-reset .language-echarts,.vditor-reset .language-mindmap,.vditor-reset .language-plantuml,.vditor-reset .language-mermaid,.vditor-reset .language-abc,.vditor-reset .language-flowchart,.vditor-reset .language-graphviz {
+.language-math,.language-echarts,.language-mindmap,.language-plantuml,.language-mermaid,.language-abc,.language-flowchart,.language-graphviz {
     margin-bottom: 1em
 }
 
-.vditor-reset .language-math mjx-container:focus {
+.language-math mjx-container:focus {
     outline: none;
     cursor: context-menu
 }
 
-.vditor-reset .language-echarts,.vditor-reset .language-mindmap {
+.language-echarts,.language-mindmap {
     overflow: hidden;
     height: 30em;
 }
 
-.vditor-reset .language-mermaid,.vditor-reset .language-flowchart,.vditor-reset .language-graphviz {
+.language-mermaid,.language-flowchart,.language-graphviz {
     text-align: center
 }
 
-.vditor-reset .language-graphviz parsererror {
+.language-graphviz parsererror {
     overflow: auto
 }
 
-.vditor-reset kbd {
+kbd {
     display: inline-block;
     padding: 0.1em 0.2em;
-    font: 11px Consolas,"Liberation Mono",Menlo,Courier,monospace;
     line-height: 10px;
-    color: #24292e;
+    color: rgb(36, 41, 46);
     vertical-align: middle;
-    background-color: #fafbfc;
-    border: solid 1px #d1d5da;
+    background-color: rgb(250, 251, 252);
+    border: solid 1px rgb(209, 213, 218);
     border-radius: 0.1em;
-    box-shadow: inset 0 -1px 0 #d1d5da
+    box-shadow: inset 0 -1px 0 rgb(209, 213, 218);
 }
 
-.vditor-reset summary {
+summary {
     cursor: pointer
 }
 
-.vditor-reset summary:focus {
+summary:focus {
     outline: none
 }
 
-.vditor-reset svg {
+svg {
     height: auto;
     width: auto;
     stroke-width: initial
 }
 
-.vditor-reset p:last-child,.vditor-reset blockquote:last-child,.vditor-reset pre:last-child,.vditor-reset ul:last-child,.vditor-reset ol:last-child,.vditor-reset hr:last-child {
+p:last-child,blockquote:last-child,pre:last-child,ul:last-child,ol:last-child,hr:last-child {
     margin-bottom: 0
 }
 
@@ -288,5 +286,9 @@ input {
 input[type="checkbox"] {
     width: 1em;
     height: 1em;
+}
+
+a {
+    font: inherit;
 }
 `

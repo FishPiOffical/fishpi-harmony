@@ -1,17 +1,18 @@
 import { AppStorageV2 } from "@kit.ArkUI";
+import { lvMarkdownIn } from "@luvi/lv-markdown-in";
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { Header, HeaderAction } from "../../layout/main/header";
 import Fishpi from "../../service/fishpi";
-import { IArticleDetail, VoteStatus } from "../../service/types/article";
-import { baseCss } from "./baseCss";
+import { IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
+import { RichView } from "../../components/RichView";
 
 export interface IArticleParam {
   id: string;
 }
 
 @Builder
-export function ArticleBuilder(name: string, param: IArticleParam) {
+export function ArticleBuilder(_name: string, param: IArticleParam) {
   ArticleDetail({
     oId: param.id
   })
@@ -24,14 +25,32 @@ export struct ArticleDetail {
   @Require @Param oId: string;
   @Local detail?: IArticleDetail;
 
-  @Computed get me() {
+  @Computed
+  get me() {
     return this.fishpi.user.me
   }
 
   aboutToAppear(): void {
     this.fishpi.article.detail(this.oId).then((res) => {
-      this.detail = res
+      this.detail = res;
     })
+  }
+
+  @Builder
+  rewardBackground() {
+    Column() {
+      Image($r('app.media.r'))
+        .objectFit(ImageFit.None)
+        .width('100%')
+        .height('100%')
+        .objectRepeat(ImageRepeat.XY)
+        .borderRadius(10)
+    }
+    .width('100%')
+    .height('100%')
+    .padding(10)
+    .borderRadius(10)
+    .opacity(0.8)
   }
 
   @Builder
@@ -52,43 +71,125 @@ export struct ArticleDetail {
         justifyContent: FlexAlign.SpaceBetween,
       }) {
         if (this.detail) {
-          Column() {
+          Scroll() {
             Column() {
-              Text(this.detail.articleTitle)
-                .fontSize(24)
-                .fontWeight(FontWeight.Bolder)
-                .fontColor('#474A57')
-                .margin({ top: 10, bottom: 10 })
-                .width('100%')
-              Row() {
-                Text(this.detail.articleAuthorName)
-                  .fontSize(14)
-                  .fontColor('#9FA4B4')
-                Text('·')
-                  .margin({ right: 5, left: 5 })
+              Column() {
+                Text(this.detail.articleTitle)
+                  .fontSize(24)
                   .fontWeight(FontWeight.Bolder)
-                  .fontColor('#9FA4B4')
-                Text(this.detail.timeAgo)
-                  .fontSize(14)
-                  .fontColor('#9FA4B4')
-                Text('·')
-                  .margin({ right: 5, left: 5 })
-                  .fontWeight(FontWeight.Bolder)
-                  .fontColor('#9FA4B4')
-                Text(this.detail.articleViewCount + ' 人看过')
-                  .fontSize(14)
-                  .fontColor('#9FA4B4')
-                  .margin({ right: 10 })
-              }
+                  .fontColor('#232425')
+                  .margin({ top: 10, bottom: 10 })
+                  .width('100%')
+                Row() {
+                  Text(this.detail.articleAuthorName)
+                    .fontSize(14)
+                    .fontColor('#9FA4B4')
+                  Text('·')
+                    .margin({ right: 5, left: 5 })
+                    .fontWeight(FontWeight.Bolder)
+                    .fontColor('#9FA4B4')
+                  Text(this.detail.timeAgo)
+                    .fontSize(14)
+                    .fontColor('#9FA4B4')
+                  Text('·')
+                    .margin({ right: 5, left: 5 })
+                    .fontWeight(FontWeight.Bolder)
+                    .fontColor('#9FA4B4')
+                  Text(this.detail.articleViewCount + ' 人看过')
+                    .fontSize(14)
+                    .fontColor('#9FA4B4')
+                    .margin({ right: 10 })
+                }
                 .justifyContent(FlexAlign.End)
                 .width('100%')
-            }.padding(10)
-            RichText(`<div class="vditor-reset article-content">${this.detail.articleContent}</div><style>${baseCss}</style>`)
-              .size({ width: '100%' })
-              .layoutWeight(1)
+              }.padding(10)
+
+              RichView({
+                html: this.detail!.articleContent,
+              })
+
+              if (this.detail!.articleRewardPoint) {
+                Stack({
+                  alignContent: Alignment.BottomEnd
+                }) {
+                  Flex({
+                    direction: FlexDirection.Column,
+                    justifyContent: FlexAlign.SpaceBetween,
+                  }) {
+                    if (this.detail.rewarded) {
+                      lvMarkdownIn({ text: this.detail.articleRewardContent })
+                    } else {
+                      Row() {
+                        Text('打赏').fontColor('#ED8F26').fontSize(14).fontWeight(FontWeight.Bold)
+                        Text(' ' + this.detail.articleRewardPoint + ' 积分后可见')
+                          .fontSize(14)
+                          .fontWeight(FontWeight.Bold)
+                      }.width('100%')
+                    }
+
+                    Row() {
+                      Text(this.detail.rewardedCnt + ' 打赏').fontColor('#ED8F26').fontSize(14)
+                    }.justifyContent(FlexAlign.End).width('100%')
+                  }
+                  .width('100%')
+                  .padding(15)
+                  .onClick(() => {
+                    if (this.detail!.rewarded) {
+                      return
+                    }
+                    AlertDialog.show({
+                      title: '打赏',
+                      message: '是否花费 ' + this.detail!.articleRewardPoint + ' 积分打赏该文章？',
+                      autoCancel: false,
+                      secondaryButton: {
+                        value: '取消',
+                        fontColor: '#b4b4b4',
+                        action: () => {
+                          console.info('取消');
+                        }
+                      },
+                      primaryButton: {
+                        value: '确定',
+                        fontColor: '#f0d35e',
+                        action: () => {
+                          this.fishpi.article.reward(this.oId).then(() => {
+                            this.fishpi.article.detail(this.oId).then((res) => {
+                              this.detail = res
+                            })
+                          })
+                        }
+                      }
+                    })
+                  })
+                }
+                .height(this.detail.rewarded ? 'auto' : 80)
+                .background(this.rewardBackground)
+              }
+
+              Flex() {
+                ForEach(this.detail.articleTagObjs, (tag: IArticleTag) => {
+                  Text('# ' + tag.tagTitle)
+                    .fontSize(12)
+                    .fontColor('#757575')
+                    .fontWeight(FontWeight.Bold)
+                    .padding({
+                      top: 3,
+                      bottom: 3,
+                      left: 10,
+                      right: 10
+                    })
+                    .border({
+                      width: 2,
+                      color: '#757575'
+                    })
+                    .borderRadius(15)
+                    .margin({ top: 5, right: 5 })
+                })
+              }.padding(10)
+            }
+            .backgroundColor($r('sys.color.white'))
+            .width('100%')
           }
-          .backgroundColor($r('sys.color.white'))
-          .width('100%')
 
           Row() {
             Row() {
@@ -136,17 +237,20 @@ export struct ArticleDetail {
               if (this.detail.articleCommentable) {
                 Icon({
                   icon: $r('app.media.comment_fill'),
-                  color: this.detail.articleComments?.some(c => c.commentAuthorName == this.me?.userName) ? '#F95A2C' : '#686A8A',
+                  color: this.detail.articleComments?.some(c => c.commentAuthorName == this.me?.userName) ? '#F95A2C' :
+                    '#686A8A',
                   iconSize: 20
                 }).margin({ right: 5, left: 10 })
                 Text(this.detail.thankedCnt + '')
                   .fontSize(16)
-                  .fontColor(this.detail.articleComments?.some(c => c.commentAuthorName == this.me?.userName) ? '#F95A2C' : '#686A8A')
+                  .fontColor(this.detail.articleComments?.some(c => c.commentAuthorName == this.me?.userName) ?
+                    '#F95A2C' : '#686A8A')
                   .fontWeight(FontWeight.Bold)
               }
             }
             .alignItems(VerticalAlign.Center)
-          }.justifyContent(FlexAlign.SpaceBetween)
+          }
+          .justifyContent(FlexAlign.SpaceBetween)
           .padding(5)
           .backgroundColor('#FFF4CC')
           .width('100%')
@@ -158,6 +262,7 @@ export struct ArticleDetail {
       }
       .backgroundColor($r('sys.color.white'))
       .width('100%')
+
       Row() {
         Text('')
       }.width('100%')
