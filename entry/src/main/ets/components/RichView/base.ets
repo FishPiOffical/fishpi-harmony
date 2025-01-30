@@ -291,4 +291,38 @@ input[type="checkbox"] {
 a {
     font: inherit;
 }
+`;
+
+export const baseScript = `
+var h5Port;
+window.addEventListener('message', function(event) {
+  if(event.ports[0] != null) {
+    h5Port = event.ports[0]; // 1. 保存从ets侧发送过来的端口
+    h5Port.onmessage = function(event) {
+      console.log(event.data);
+    }
+  }
+});
+function sendData(data) {
+    if (h5Port) {
+        console.log("In html send string message");
+        h5Port.postMessage(JSON.stringify(data));
+        console.log("In html send string message end");
+    } else {
+        console.error("In html h5port is null, please init first");
+    }
+}
+document.addEventListener('click', function(event) {
+    var target = event.target;
+    if (target.nodeName.toLowerCase() === 'a') {
+        event.preventDefault();
+        var href = target.href;
+        if (href) {
+            sendData({
+                type: 'openWindow',
+                data: href
+            });
+        }
+    }
+});
 `

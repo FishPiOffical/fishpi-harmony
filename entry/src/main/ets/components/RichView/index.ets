@@ -1,12 +1,22 @@
 import { webview } from "@kit.ArkWeb";
-import { baseCss } from "./baseCss";
+import { baseCss, baseScript } from "./base";
 import { promptAction } from "@kit.ArkUI";
+import { BusinessError } from "@kit.BasicServicesKit";
+import { startBrowsableAbility, toast } from "../../libs/utils";
+import { common } from "@kit.AbilityKit";
 
+interface IMessage {
+  type: 'openWindow';
+  data: string;
+}
 
 @ComponentV2
 export struct RichView {
   @Require @Param html: string;
+  @Event onOpenWindow: (url: string) => void = () => { };
   controller: webview.WebviewController = new webview.WebviewController();
+  ports: webview.WebMessagePort[] = [];
+  nativePort: webview.WebMessagePort | null = null;
 
   build() {
     Web({
@@ -29,15 +39,40 @@ export struct RichView {
                         <div class="vditor-reset article-content">
                         ${this.html}
                         </div>
+                        <script lang="javascript">
+                          ${baseScript}
+                        </script>
                       </body>
                       </html>`;
           this.controller.loadData(code, 'text/html', 'utf-8')
         } catch (e) {
-          promptAction.showToast({
-            message: e.message,
-            duration: 2000
-          });
+          toast(e.message);
         }
+      })
+      .onPageEnd(() => {
+        console.log("In ArkTS side message onPageEnd init message channel");
+        this.ports = this.controller.createWebMessagePorts(true);
+        this.controller.postMessage("InitWebMessagePort", [this.ports[1]], "*");
+        this.nativePort = this.ports[0];
+        this.nativePort.onMessageEventExt((result) => {
+          console.log("In ArkTS side got message");
+          try {
+            let type = result.getType();
+            console.log("In ArkTS side getType:" + type);
+            switch (type) {
+              case webview.WebMessageType.STRING: {
+                const msg: IMessage = JSON.parse(result.getString());
+                if (msg.type == 'openWindow') {
+                  this.onOpenWindow(msg.data);
+                }
+                break;
+              }
+            }
+          }
+          catch (error) {
+            console.error(`ErrorCode: ${(error as BusinessError).code},  Message: ${(error as BusinessError).message}`);
+          }
+        });
       })
   }
 }

@@ -7,6 +7,8 @@ import Fishpi from "../../service/fishpi";
 import { IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
 import { RichView } from "../../components/RichView";
 import { IArticleListParam } from "./Index";
+import { common } from "@kit.AbilityKit";
+import { pushToAppUrl, startBrowsableAbility } from "../../libs/utils";
 
 export interface IArticleParam {
   id: string;
@@ -107,6 +109,10 @@ export struct ArticleDetail {
 
               RichView({
                 html: this.detail!.articleContent,
+                onOpenWindow: (url) => {
+                  if (!pushToAppUrl(url, this.pathStack))
+                    startBrowsableAbility(url, getContext(this) as common.UIAbilityContext);
+                }
               })
 
               if (this.detail!.articleRewardPoint) {
