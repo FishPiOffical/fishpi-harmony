@@ -62,7 +62,7 @@ export struct MessageBox {
     }) {
       Flex({
         justifyContent: FlexAlign.Center,
-        alignItems: ItemAlign.End,
+        alignItems: ItemAlign.Center,
       }) {
         Icon({
           icon: $r('app.media.face'),
@@ -76,6 +76,7 @@ export struct MessageBox {
           })
         TextArea({ placeholder: "说点什么", text: $$this.text, controller: this.controller })
           .margin({ left: 5, right: 5 })
+          .height(35)
           .onClick(() => {
             this.emojiShow = false;
           })
@@ -147,7 +148,7 @@ export struct MessageBox {
               this.text = '';
             })
         }
-      }
+      }.width('100%')
       if (this.emojiShow) {
         EmojiPicker({
           onPick: (emoji) => {
@@ -157,15 +158,8 @@ export struct MessageBox {
         })
       }
     }
-    .padding({
-      left: 10,
-      right: 5,
-      bottom: 5,
-      top: 5
-    })
+    .padding(5)
     .width('100%')
-    .gridSpan(2)
-    .backgroundColor('#AAffffff')
     .height('auto')
   }
 }

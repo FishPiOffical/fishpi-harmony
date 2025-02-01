@@ -1,4 +1,4 @@
-import { AppStorageV2 } from "@kit.ArkUI";
+import { AppStorageV2, ComponentContent, OverlayManager } from "@kit.ArkUI";
 import { lvMarkdownIn } from "@luvi/lv-markdown-in";
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
@@ -9,9 +9,13 @@ import { RichView } from "../../components/RichView";
 import { IArticleListParam } from "./Index";
 import { common } from "@kit.AbilityKit";
 import { pushToAppUrl, startBrowsableAbility } from "../../libs/utils";
+import { ArticleComment } from "./ArticleComment";
 
 export interface IArticleParam {
   id: string;
+}
+export interface IArticleCommentParam {
+  detail: IArticleDetail;
 }
 
 @Builder
@@ -21,12 +25,24 @@ export function ArticleBuilder(_name: string, param: IArticleParam) {
   })
 }
 
+@Builder
+export function CommentBuilder(param: IArticleCommentParam) {
+  ArticleComment({
+    comments: param.detail.articleComments || [],
+    oId: param.detail.oId,
+    count: param.detail.articleCommentCount
+  })
+}
+
 @ComponentV2
 export struct ArticleDetail {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Require @Param oId: string;
   @Local detail?: IArticleDetail;
+  private uiContext: UIContext = this.getUIContext()
+  private overlayNode: OverlayManager = this.uiContext.getOverlayManager()
+  private commentContent?: ComponentContent<IArticleCommentParam>;
 
   @Computed
   get me() {
@@ -65,6 +81,19 @@ export struct ArticleDetail {
         console.log('stack', stack)
       }),
     }).height('100%')
+  }
+
+  openComment() {
+    if (!this.commentContent) {
+      let componentContent = new ComponentContent(
+        this.uiContext, wrapBuilder<[IArticleCommentParam]>(CommentBuilder),
+        { detail: this.detail! } as IArticleCommentParam
+      )
+      this.commentContent = componentContent
+      this.overlayNode.addComponentContent(this.commentContent, 0)
+    } else {
+      this.overlayNode.showComponentContent(this.commentContent)
+    }
   }
 
   build() {
@@ -250,8 +279,10 @@ export struct ArticleDetail {
                   color: this.detail.articleComments?.some(c => c.commentAuthorName == this.me?.userName) ? '#F95A2C' :
                     '#686A8A',
                   iconSize: 20
-                }).margin({ right: 5, left: 10 })
-                Text(this.detail.thankedCnt + '')
+                }).margin({ right: 5, left: 10 }).onClick(() => {
+                  this.openComment()
+                })
+                Text(this.detail.articleCommentCount + '')
                   .fontSize(16)
                   .fontColor(this.detail.articleComments?.some(c => c.commentAuthorName == this.me?.userName) ?
                     '#F95A2C' : '#686A8A')

@@ -89,6 +89,8 @@ export struct ChatRoom {
     NavDestination() {
       Flex({
         direction: FlexDirection.Column,
+        justifyContent: FlexAlign.SpaceBetween,
+        alignItems: ItemAlign.Center,
       }) {
         Stack({
           alignContent: Alignment.Bottom,
@@ -119,6 +121,8 @@ export struct ChatRoom {
             this.messageBoxExpose?.blur()
           })
         }
+        .width('100%')
+        .height('100%')
 
         MessageBox({
           onExpose: (expose) => {
@@ -148,6 +152,7 @@ export struct ChatRoom {
         })
       }
       .backgroundColor('#FFF')
+      .width('100%')
 
       Row() {
         Text('')

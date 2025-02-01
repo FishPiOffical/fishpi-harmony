@@ -752,7 +752,7 @@ export interface IArticleDetail {
   /**
    * 文章的评论
    */
-  articleComments?: Array<IArticleComment>,
+  articleComments?: IArticleComment[],
   /**
    * 文章最佳评论
    */
