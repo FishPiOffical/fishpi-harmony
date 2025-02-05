@@ -9,6 +9,7 @@ import { webSocket } from '@kit.NetworkKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { ArticleList } from './Article/Index';
 import { BreezeList } from './Breezemoon/Index';
+import { Profile } from './Profile/Index';
 
 
 PersistenceV2.notifyOnError((key: string, reason: string, msg: string) => {
@@ -84,7 +85,7 @@ struct Index {
             }.tabBar(this.getTabBarStyle($r('app.media.leaf'), '清风明月'))
 
             TabContent() {
-              Column().width('100%').height('100%').border({ width: { bottom: 2 }, color: '#000' })
+              Profile()
             }.tabBar(this.getTabBarStyle($r('app.media.profile'), '我的'))
           }
           .backgroundColor('#F0D35E')
