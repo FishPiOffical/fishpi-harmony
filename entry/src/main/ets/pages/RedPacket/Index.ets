@@ -174,7 +174,7 @@ export struct RedPacket {
                 Field({
                   label: this.redPacket.type == RedPacketType.Average ? '单个积分' : '总积分',
                   value: this.redPacket.money!!,
-                  icon: $r('app.media.coin'),
+                  icon: $r('app.media.point'),
                   controller: this.controller,
                 })
                 Field({
