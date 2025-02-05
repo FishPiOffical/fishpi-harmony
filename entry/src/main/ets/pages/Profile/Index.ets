@@ -3,6 +3,8 @@ import Fishpi from "../../service/fishpi";
 import { AppStorageV2 } from "@kit.ArkUI";
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
+import { ListButton } from "./ListButton";
+import { IArticleListParam } from "../Article/Index";
 
 
 @ComponentV2
@@ -57,9 +59,15 @@ export struct Profile {
           }
         }.width('100%').padding(16).justifyContent(FlexAlign.SpaceBetween)
       }
-      Column() {
-
-      }
+      ListButton({
+        items: [{
+          icon: $r('app.media.article'),
+          name: '我的文章',
+          action: () => {
+            this.pathStack.pushPathByName('ArticleList', { user: this.me.userName } as IArticleListParam)
+          }
+        }]
+      })
     }
   }
 }

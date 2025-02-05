@@ -7,16 +7,19 @@ import { IArticleParam } from "./ArticleDetail";
 import { Header, HeaderAction } from "../../layout/main/header";
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
+import { IUserInfo } from "../../service/types/user";
 
 
 export interface IArticleListParam {
-  tag: string;
+  tag?: string;
+  user?: string;
 }
 
 @Builder
 export function ArticleListBuilder(_name: string, param: IArticleListParam) {
   ArticleList({
-    tag: param.tag
+    tag: param.tag,
+    user: param.user,
   })
 }
 
@@ -51,11 +54,17 @@ export struct ArticleList {
   @Local query: ArticleQuery = new ArticleQuery();
   @Local articleList: IArticleDetail[] = [];
   @Local articleTag?: IArticleTag;
+  @Local articleUser?: IUserInfo;
   @Param tag: string = '';
+  @Param user: string = '';
 
   aboutToAppear(): void {
     if (this.tag) {
       this.query.tag = this.tag;
+    }
+    if (this.user) {
+      this.query.user = this.user;
+      this.fishpi.getUser(this.user).then(user => this.articleUser = user);
     }
     this.fishpi.article.list(this.query.toJSON())
       .then((res) => {
@@ -93,6 +102,15 @@ export struct ArticleList {
         }
       }.width('100%').padding({ top: 10, left: 20, right: 20, bottom: 5 }).justifyContent(FlexAlign.SpaceBetween)
     }
+    if (this.articleUser) {
+      Row() {
+        CircleIcon({
+          icon: this.articleUser.userAvatarURL
+        })
+        Text(this.articleUser.userNickname || this.articleUser.userName).fontSize(20).fontWeight(FontWeight.Bold)
+        Text(' 的文章列表').fontSize(20).fontWeight(FontWeight.Bold)
+      }.width('100%').padding({ top: 10, left: 20, right: 20, bottom: 5 })
+    }
     Column() {
       List({ space: 20, initialIndex: 0 }) {
         ForEach(this.articleList, (data: IArticleDetail, i) => {
@@ -114,7 +132,7 @@ export struct ArticleList {
       .friction(0.6)
       .edgeEffect(EdgeEffect.Spring)
     }
-    if (this.tag) {
+    if (this.tag || this.user) {
       Row() {
         Text(' ')
       }.width('100%')
