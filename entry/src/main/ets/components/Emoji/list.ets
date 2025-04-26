@@ -34,5 +34,6 @@ export struct EmojiList {
       bottom: 20,
       top: 5
     })
+    .width('100%')
   }
 }

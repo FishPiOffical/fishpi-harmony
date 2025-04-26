@@ -4,7 +4,7 @@ import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { Header, HeaderAction } from "../../layout/main/header";
 import Fishpi from "../../service/fishpi";
-import { IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
+import { IArticleComment, IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
 import { RichView } from "../../components/RichView";
 import { IArticleListParam } from "./Index";
 import { common } from "@kit.AbilityKit";
@@ -52,6 +52,7 @@ export struct ArticleDetail {
   aboutToAppear(): void {
     this.fishpi.article.detail(this.oId).then((res) => {
       this.detail = res;
+      this.detail.articleComments?.reverse();
     })
   }
 

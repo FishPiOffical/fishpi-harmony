@@ -123,36 +123,42 @@ export struct ChatRoom {
         }
         .width('100%')
         .height('100%')
-
-        MessageBox({
-          onExpose: (expose) => {
-            this.messageBoxExpose = expose;
-          },
-          onSend: async (msg) => {
-            return await this.fishpi.chatroom.send(msg)
-              .then(() => true)
-              .catch((err: Error) => {
-                toast(err.message)
-                return false
-              })
-          },
-          redpack: true,
-          onRedpack: () => {
-            this.pathStack.pushPathByName('RedPacket', null)
-          },
-          barrage: true,
-          onBarrage: async (msg: string) => {
-            return await this.fishpi.chatroom.barrage(msg)
-              .then(() => true)
-              .catch((err: Error) => {
-                toast(err.message)
-                return false
-              })
-          },
+        Column() {
+          MessageBox({
+            onExpose: (expose) => {
+              this.messageBoxExpose = expose;
+            },
+            onSend: async (msg) => {
+              return await this.fishpi.chatroom.send(msg)
+                .then(() => true)
+                .catch((err: Error) => {
+                  toast(err.message)
+                  return false
+                })
+            },
+            redpack: true,
+            onRedpack: () => {
+              this.pathStack.pushPathByName('RedPacket', null)
+            },
+            barrage: true,
+            onBarrage: async (msg: string) => {
+              return await this.fishpi.chatroom.barrage(msg)
+                .then(() => true)
+                .catch((err: Error) => {
+                  toast(err.message)
+                  return false
+                })
+            },
+          })
+        }
+        .width('100%')
+        .padding({
+          left: 5
         })
-      }
+        .backgroundColor('#FFF')
+      }.width('100%')
       .backgroundColor('#FFF')
-      .width('100%')
+
 
       Row() {
         Text('')

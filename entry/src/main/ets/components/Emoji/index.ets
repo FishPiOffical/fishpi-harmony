@@ -47,6 +47,6 @@ export struct EmojiPicker {
             })
           }
         }.tabBar(this.getTabBarStyle($r('app.media.thank')))
-      }
+      }.width('100%')
     }
 }

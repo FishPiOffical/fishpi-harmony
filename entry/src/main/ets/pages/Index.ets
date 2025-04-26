@@ -113,7 +113,7 @@ struct Index {
     })
     .menus(this.titleBuilder)
     .titleMode(NavigationTitleMode.Mini)
-    .mode(NavigationMode.Stack)
+    .mode(NavigationMode.Auto)
     .ignoreLayoutSafeArea([LayoutSafeAreaType.SYSTEM], [LayoutSafeAreaEdge.BOTTOM])
   }
 }

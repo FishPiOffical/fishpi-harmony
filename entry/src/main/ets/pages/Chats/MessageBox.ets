@@ -2,7 +2,7 @@ import { EmojiPicker } from "../../components/Emoji";
 import { Icon } from "../../components/Icon";
 import { photoAccessHelper } from "@kit.MediaLibraryKit";
 import { BusinessError } from "@kit.BasicServicesKit";
-import { AppStorageV2 } from "@kit.ArkUI";
+import { AppStorageV2, LengthMetrics } from "@kit.ArkUI";
 import Fishpi from "../../service/fishpi";
 import { toast } from "../../libs/utils";
 
@@ -63,13 +63,15 @@ export struct MessageBox {
       Flex({
         justifyContent: FlexAlign.Center,
         alignItems: ItemAlign.Center,
+        space: {
+          main: LengthMetrics.px(20)
+        }
       }) {
         Icon({
           icon: $r('app.media.face'),
           color: '#000000',
           iconSize: 30,
         })
-          .margin({ left: 5 })
           .onClick(() => {
             this.emojiShow = !this.emojiShow;
             this.controller.stopEditing();
@@ -93,7 +95,6 @@ export struct MessageBox {
             color: '#000000',
             iconSize: 30,
           })
-            .margin({ left: 5, right: 5 })
             .onClick(() => {
               this.sendImage();
             })
@@ -104,7 +105,6 @@ export struct MessageBox {
               stroke: null,
               iconSize: 30,
             })
-              .margin({ left: 5, right: 5 })
               .onClick(() => {
                 this.onRedpack();
               })
@@ -126,7 +126,6 @@ export struct MessageBox {
               stroke: null,
               iconSize: 30,
             })
-              .margin({ left: 5, right: 5 })
               .onClick(async () => {
                 if (!await this.onBarrage(this.text)) {
                   return;
@@ -139,7 +138,6 @@ export struct MessageBox {
             color: '#000000',
             iconSize: 30,
           })
-            .margin({ left: 5, right: 5 })
             .transform({ rotate: 45 })
             .onClick(async () => {
               if (!await this.onSend(this.text)) {

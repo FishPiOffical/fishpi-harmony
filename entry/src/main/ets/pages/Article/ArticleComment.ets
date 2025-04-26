@@ -23,7 +23,7 @@ export struct ArticleComment {
           .fontColor('#333333')
           .fontWeight(FontWeight.Bold)
           .width('100%')
-          .margin({ bottom: 10 })
+          .margin({ bottom: 20 })
         List({ space: 1, initialIndex: 0 }) {
           ForEach(this.comments, (comment: IArticleComment) => {
             ListItem() {
@@ -82,6 +82,9 @@ export struct ArticleComment {
         .listDirection(Axis.Vertical) // 排列方向
         .friction(0.6)
         .edgeEffect(EdgeEffect.Spring)
+        .onClick(() => {
+          this.messageBoxExpose?.blur()
+        })
         MessageBox({
           onExpose: (expose) => {
             this.messageBoxExpose = expose;
