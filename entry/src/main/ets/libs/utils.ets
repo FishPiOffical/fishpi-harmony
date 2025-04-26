@@ -3,9 +3,6 @@ import { common, Want } from "@kit.AbilityKit";
 import { BusinessError } from "@kit.BasicServicesKit";
 import { IArticleParam } from "../pages/Article/ArticleDetail";
 import { IArticleListParam } from "../pages/Article/Index";
-import dayjs, { ConfigType } from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 
 export function htmlToText(html: string, userName?: string): string {
   return html
@@ -53,7 +50,4 @@ export function pushToAppUrl(url: string, pathStack: NavPathStack) {
     return true;
   }
   return false;
-}
-export function formatRelative(date: ConfigType): string {
-  return dayjs(date).fromNow(true);
 }

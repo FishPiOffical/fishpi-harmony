@@ -1,6 +1,6 @@
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
-import { formatRelative } from "../../libs/utils";
+import { htmlToText } from "../../libs/utils";
 import { IBreezemoonContent } from "../../service/types/breezemoon";
 
 @ComponentV2
@@ -18,13 +18,14 @@ export struct BreezemoonItem {
             Row() {
               CircleIcon({
                 icon: this.item.breezemoonAuthorThumbnailURL48,
-              }).width(48)
+                iconSize: 32,
+              }).width(32)
               Text(this.item.breezemoonAuthorName)
-                .fontSize(18)
+                .fontSize(25)
                 .fontWeight(FontWeight.Bold)
                 .margin({ left: 10 })
             }
-            Text(formatRelative(this.item.breezemoonCreateTime))
+            Text(this.item.timeAgo)
               .fontSize(14)
               .fontWeight(FontWeight.Bold)
               .fontColor('#C4C4C4')
@@ -36,12 +37,15 @@ export struct BreezemoonItem {
           bottom: 5
         }).width('100%')
         Column() {
-          Text(this.item.breezemoonContent)
+          Text(htmlToText(this.item.breezemoonContent))
             .fontSize(18)
             .fontWeight('bold')
             .lineHeight(20)
             .margin({ top: 5, bottom: 5 })
+            .textAlign(TextAlign.Start)
         }.alignItems(HorizontalAlign.Start)
+         .width('100%')
+         .padding(10)
         Row() {
           Icon({
             icon: $r('app.media.location'),
@@ -51,6 +55,7 @@ export struct BreezemoonItem {
             .fontSize(16)
             .margin({ left: 5 })
         }.width('100%')
+        .padding(10)
         .justifyContent(FlexAlign.End)
       }
       .border({
