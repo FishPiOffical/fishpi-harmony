@@ -11,6 +11,7 @@ export struct ArticleComment {
   @Require @Param oId: string;
   @Require @Param comments: IArticleComment[];
   @Require @Param count: number;
+  @Event onExist: () => void;
   @Local messageBoxExpose?: MessageBoxExpose;
 
   build() {
@@ -114,7 +115,7 @@ export struct ArticleComment {
     .height('100%')
     .width('100%')
     .onClick(() => {
-
+      this.onExist?.() // 点击空白区域关闭评论
     })
   }
 }

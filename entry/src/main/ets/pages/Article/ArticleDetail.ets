@@ -16,6 +16,7 @@ export interface IArticleParam {
 }
 export interface IArticleCommentParam {
   detail: IArticleDetail;
+  exist: () => void;
 }
 
 @Builder
@@ -30,7 +31,10 @@ export function CommentBuilder(param: IArticleCommentParam) {
   ArticleComment({
     comments: param.detail.articleComments || [],
     oId: param.detail.oId,
-    count: param.detail.articleCommentCount
+    count: param.detail.articleCommentCount,
+    onExist: () => {
+      param.exist()
+    },
   })
 }
 
@@ -88,7 +92,11 @@ export struct ArticleDetail {
     if (!this.commentContent) {
       let componentContent = new ComponentContent(
         this.uiContext, wrapBuilder<[IArticleCommentParam]>(CommentBuilder),
-        { detail: this.detail! } as IArticleCommentParam
+        {
+          detail: this.detail!, exist: () => {
+            this.overlayNode.hideComponentContent(this.commentContent!);
+          }
+        } as IArticleCommentParam
       )
       this.commentContent = componentContent
       this.overlayNode.addComponentContent(this.commentContent, 0)
