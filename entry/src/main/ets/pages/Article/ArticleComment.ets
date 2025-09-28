@@ -12,6 +12,7 @@ export struct ArticleComment {
   @Require @Param comments: IArticleComment[];
   @Require @Param count: number;
   @Event onExist: () => void;
+  @Event onSend: (msg: string, replyId?: string) => void;
   @Local messageBoxExpose?: MessageBoxExpose;
 
   build() {
@@ -91,7 +92,7 @@ export struct ArticleComment {
             this.messageBoxExpose = expose;
           },
           onSend: async (msg) => {
-            // TODO
+            this.onSend(msg);
             return true;
           }
         })

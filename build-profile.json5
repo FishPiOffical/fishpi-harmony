@@ -6,12 +6,12 @@
         "type": "HarmonyOS",
         "material": {
           "certpath": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.cer",
-          "storePassword": "0000001B49CD8D52276609E64C8FBF3FE2EFD3CEE2B92A1F2B96D8AA5C9D8B1807A2481A50ED990A5896D0",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BEDFB062B409F68403869D72F3F5C24741303680B28050DD9BACCCD497D32907C45C4D45F480CCD",
+          "keyPassword": "0000001AED9B4C666745F263F980990C4C60856C2941B86F2414C37FEBD9E5165493DFC71C62BE946000",
           "profile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p12"
+          "storeFile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p12",
+          "storePassword": "0000001A271FE47F427E02EAC02D447AD822A785FE08E90445E9E606CFF8FE83AE8ED74A73EE22FF0984"
         }
       }
     ],
@@ -26,7 +26,8 @@
             "caseSensitiveCheck": true,
             "useNormalizedOHMUrl": true
           }
-        }
+        },
+        "targetSdkVersion": "5.0.0(12)"
       }
     ],
     "buildModeSet": [

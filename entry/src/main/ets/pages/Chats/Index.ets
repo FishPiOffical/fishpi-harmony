@@ -46,6 +46,7 @@ export struct Chats {
   }
 
   async aboutToAppear() {
+    if (!this.fishpi.isLogin) return;
     this.fishpi.chatroom.history().then((res) => {
       this.chatroom.time = res[0].time;
       this.chatroom.content = htmlToText(res[0].content);
@@ -86,7 +87,8 @@ export struct Chats {
             time: this.chatroom.time,
             content: this.chatroom.content,
             onTap: () => {
-              this.pathStack.pushPathByName('ChatRoom', null)
+              if (this.pathStack.getAllPathName().pop() != 'ChatRoom')
+                this.pathStack.replacePathByName('ChatRoom', null)
             }
           })
         }
@@ -98,7 +100,8 @@ export struct Chats {
               time: chat.time,
               content: chat.content,
               onTap: () => {
-                this.pathStack.pushPathByName('Chat', { name: chat.name } as IChatParam)
+                if (this.pathStack.getAllPathName().pop() != 'Chat' || (this.pathStack.getParamByName('Chat').pop() as IChatParam)?.name != chat.name)
+                  this.pathStack.replacePathByName('Chat', { name: chat.name } as IChatParam)
               }
             })
           }

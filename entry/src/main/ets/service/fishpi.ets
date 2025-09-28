@@ -1,4 +1,5 @@
 import defHttp, { IKeyVal, IResponseData } from '../libs/http';
+import { Comment } from './comment';
 import { Article } from './article';
 import { Breezemoon } from './breezemoon';
 import { Chat } from './chat';
@@ -34,12 +35,17 @@ export class Fishpi {
   breezemoon: Breezemoon = new Breezemoon();
   notice: Notice = new Notice();
   article: Article = new Article();
+  comment: Comment = new Comment();
 
   constructor(token?: string) {
     if (!token) {
       return;
     }
     this.setToken(token);
+  }
+
+  get isLogin() {
+    return !!this.token;
   }
 
   setToken(token: string) {
@@ -52,6 +58,7 @@ export class Fishpi {
     this.breezemoon.setToken(token);
     this.notice.setToken(token);
     this.article.setToken(token);
+    this.comment.setToken(token);
     return token
   }
 

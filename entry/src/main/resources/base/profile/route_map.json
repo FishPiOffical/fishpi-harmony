@@ -34,7 +34,7 @@
     },
     {
       "name": "ArticleList",
-      "pageSourceFile": "src/main/ets/pages/Article/Index.ets",
+      "pageSourceFile": "src/main/ets/pages/Article/List.ets",
       "buildFunction": "ArticleListBuilder",
       "data": {
         "description": "文章列表"

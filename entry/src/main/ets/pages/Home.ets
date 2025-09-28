@@ -41,7 +41,7 @@ struct Index {
     Header({
       title: this.title,
       leftAction: new HeaderAction($r('app.media.scan'), () => {
-        promptAction.showToast({
+        this.getUIContext().getPromptAction().showToast({
           message: '扫一扫',
           duration: 2000
         });
@@ -114,7 +114,6 @@ struct Index {
     .menus(this.titleBuilder)
     .titleMode(NavigationTitleMode.Mini)
     .mode(NavigationMode.Auto)
-    .navBarWidth(300)
     .ignoreLayoutSafeArea([LayoutSafeAreaType.SYSTEM], [LayoutSafeAreaEdge.BOTTOM])
   }
 }

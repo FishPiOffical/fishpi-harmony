@@ -154,16 +154,10 @@ export struct ArticleList {
   }
 
   build() {
-    if (this.tag) {
-      NavDestination() {
-        this.mainBuilder()
-      }.menus(this.titleBuilder)
-      .backgroundColor('#EEEFF4')
-      .title('文章列表')
-    } else {
-      MainLayout() {
-        this.mainBuilder()
-      }
-    }
+    NavDestination() {
+      this.mainBuilder()
+    }.menus(this.titleBuilder)
+    .backgroundColor('#EEEFF4')
+    .title('文章列表')
   }
 }

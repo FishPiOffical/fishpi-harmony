@@ -17,6 +17,7 @@ export interface IArticleParam {
 export interface IArticleCommentParam {
   detail: IArticleDetail;
   exist: () => void;
+  send: (msg: string, replyId?: string) => void;
 }
 
 @Builder
@@ -35,6 +36,9 @@ export function CommentBuilder(param: IArticleCommentParam) {
     onExist: () => {
       param.exist()
     },
+    onSend: (msg: string, replyId?: string) => {
+      param.send(msg, replyId)
+    }
   })
 }
 
@@ -54,6 +58,10 @@ export struct ArticleDetail {
   }
 
   aboutToAppear(): void {
+    this.loadComments();
+  }
+
+  loadComments() {
     this.fishpi.article.detail(this.oId).then((res) => {
       this.detail = res;
       this.detail.articleComments?.reverse();
@@ -95,6 +103,19 @@ export struct ArticleDetail {
         {
           detail: this.detail!, exist: () => {
             this.overlayNode.hideComponentContent(this.commentContent!);
+          }, send: (msg: string, replyId?: string) => {
+            this.fishpi.comment.send({
+              articleId: this.oId,
+              commentContent: msg,
+              commentAnonymous: false,
+              commentVisible: false,
+              commentOriginalCommentId: replyId,
+            }).then(() => {
+              this.fishpi.article.detail(this.oId).then((res) => {
+                this.detail = res
+                this.detail.articleComments?.reverse();
+              })
+            })
           }
         } as IArticleCommentParam
       )
