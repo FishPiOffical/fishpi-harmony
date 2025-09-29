@@ -45,6 +45,7 @@ export struct MessageBox {
       uris = photoSelectResult.photoUris;
       console.info('photoViewPicker.select to file succeed and uris are:' + uris);
       this.fishpi.upload(uris).then((res) => {
+        if (!res) return;
         const message = res.succFiles.map((item) => `![${item.name}](${item.url})`).join('  \n');
         this.onSend(message);
       }).catch((err: Error) => {
@@ -72,12 +73,13 @@ export struct MessageBox {
           color: '#000000',
           iconSize: 30,
         })
+          .margin({ left: 5 })
           .onClick(() => {
             this.emojiShow = !this.emojiShow;
             this.controller.stopEditing();
           })
         TextArea({ placeholder: "说点什么", text: $$this.text, controller: this.controller })
-          .margin({ left: 5, right: 5 })
+          .margin({ left: 0, right: 5 })
           .height(35)
           .onClick(() => {
             this.emojiShow = false;

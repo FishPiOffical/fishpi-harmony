@@ -20,11 +20,16 @@ export struct RedPacketRender {
     return this.data.count == this.data.got || this.data.who?.some(w => w.userName == this.fishpi.user.me?.userName);
   }
 
+  @Computed get isSelf() {
+    return this.fishpi.user.me?.oId == this.data.senderId
+  }
+
   build() {
     Row() {
       Flex({
         alignItems: ItemAlign.Center
-      }) {
+      })
+      {
         Flex({
           direction: FlexDirection.Column,
         }) {
@@ -98,7 +103,7 @@ export struct RedPacketRender {
       })
       .margin({ bottom: 5 })
 
-      if (this.isRockPaperScissors && !this.isRead) {
+      if (this.isRockPaperScissors && !this.isRead && !this.isSelf) {
         Stack({
           alignContent: Alignment.Start
         }) {
@@ -137,7 +142,6 @@ export struct RedPacketRender {
         }
         .width("20%")
       }
-    }
-
+    }.reverse(this.isSelf)
   }
 }

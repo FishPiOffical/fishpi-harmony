@@ -86,12 +86,13 @@ export class defHttp {
     return res;
   }
 
-  static upload<T>(url: string, files: IKeyVal[], data: Record<string, string>, method = 'POST'): Promise<T> {
+  static upload<T>(url: string, files: IKeyVal[], data: Record<string, string>, method = 'POST'): Promise<T | null> {
+    if (files.length == 0) return Promise.resolve(null);
     const formData = new FormData();
 
     for (let file of files) {
-        const fileInstance = fs.openSync(file.value, 0o2);
-        const stat = fs.lstatSync(file.value);
+        const fileInstance = fs.openSync(file.value, 0o0);
+        const stat = fs.statSync(fileInstance.fd);
         const fileBuffer = new ArrayBuffer(stat.size);
         fs.readSync(fileInstance.fd, fileBuffer); // Read data from the stream file in synchronous mode.
         fs.fsyncSync(fileInstance.fd);

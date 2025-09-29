@@ -6,14 +6,14 @@ export struct EmojiList {
 
   build() {
     GridRow({
-      columns: 5,
+      columns: { xs: 5, sm: 6, md: 7, lg: 8, xl: 9, xxl: 10 },
       gutter: { x: 5, y: 10 },
       breakpoints: { value: ["400vp", "600vp", "800vp"],
         reference: BreakpointsReference.WindowSize },
       direction: GridRowDirection.Row
     }) {
       ForEach(this.emojis, (item: string) => {
-        GridCol({ span: { xs: 1, sm: 2, md: 3, lg: 4 }, offset: 0, order: 0 }) {
+        GridCol({ span: 1, offset: 0, order: 0 }) {
           Column()
             {
               Image(item)
@@ -25,6 +25,8 @@ export struct EmojiList {
             this.onSend(item)
           })
         }
+        .width(50)
+        .height(50)
       }, (item: string) => item)
     }
     .alignItems(ItemAlign.Start)

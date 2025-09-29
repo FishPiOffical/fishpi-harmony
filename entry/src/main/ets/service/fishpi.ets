@@ -189,7 +189,7 @@ export class Fishpi {
   upload(files: string[]) {
     return defHttp.upload<IUploadInfo>('/upload', files.map((file) => ({ key: 'file[]', value: file } as IKeyVal)), {
       'apiKey': this.token
-    }).then(res => new UploadInfo(res));
+    }).then(res => res && new UploadInfo(res));
   }
 }
 

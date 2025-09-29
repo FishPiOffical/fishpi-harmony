@@ -36,7 +36,9 @@ export struct EmojiPicker {
               }
             })
           }
-        }.tabBar(this.getTabBarStyle($r('app.media.emoji')))
+          .height('100%')
+        }
+        .tabBar(this.getTabBarStyle($r('app.media.emoji')))
         TabContent() {
           Scroll() {
             EmojiList({
@@ -46,7 +48,8 @@ export struct EmojiPicker {
               }
             })
           }
-        }.tabBar(this.getTabBarStyle($r('app.media.thank')))
+        }
+        .tabBar(this.getTabBarStyle($r('app.media.thank')))
       }.width('100%')
     }
 }
