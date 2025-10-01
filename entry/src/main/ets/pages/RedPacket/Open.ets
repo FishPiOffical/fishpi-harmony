@@ -114,8 +114,8 @@ export struct RedPacketOpen {
         LogUtil.info('redPacket.open', this.oId)
       })
       .catch((err: Error) => {
-        LogUtil.error('redPacket.open', err.message)
-        toast(err.message)
+        LogUtil.error('redPacket.open', err.message);
+        toast(err.message, this.getUIContext());
         this.pathStack.pop(false);
       })
   }

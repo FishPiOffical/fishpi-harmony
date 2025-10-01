@@ -56,6 +56,13 @@ export class Chatroom {
 
   setToken(token: string) {
     this.token = token;
+    if (!token) {
+      this.wsCallbacks = [];
+      this.rws?.close();
+      this.rws = undefined;
+      this._onlineList = [];
+      this._discusse = '';
+    }
   }
 
   /**

@@ -19,6 +19,7 @@ export struct CircleIcon {
         Image(this.icon)
           .width(this.iconSize)
           .height(this.iconSize)
+          .objectFit(ImageFit.Contain)
         if (this.needBadge) {
           if (typeof this.badge === 'number') {
             Text(this.badge.toString())

@@ -74,10 +74,12 @@ export class Article {
    */
   list(query: IArticleQuery) {
     return query.user ?
-    defHttp.get<IArticleList>(`/api/user/${query.user}articles?p=${query.page || 1}&size=${query.size ||
-      20}&apiKey=${this.token}`).then((res) => res) :
-    defHttp.get<IArticleList>(`/api/articles/${query.tag !== undefined ? `tag/${query.tag}` :
-      'recent'}${query.type}?p=${query.page || 1}&size=${query.size || 20}&apiKey=${this.token}`).then((res) => res);
+      defHttp.get<IArticleList>(`/api/user/${query.user}/articles?p=${query.page || 1}&size=${query.size ||
+        20}&apiKey=${this.token}`).then((res) => {
+        return res
+      }) :
+      defHttp.get<IArticleList>(`/api/articles/${query.tag !== undefined ? `tag/${query.tag}` :
+        'recent'}${query.type}?p=${query.page || 1}&size=${query.size || 20}&apiKey=${this.token}`).then((res) => res);
   }
 
   /**

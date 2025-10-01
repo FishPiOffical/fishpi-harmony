@@ -12,11 +12,15 @@ export function htmlToText(html: string, userName?: string): string {
     .replace(/<\/*\w+[^>]*?>/g, '');
 }
 
-export function toast(message: string | Resource) {
-  promptAction.showToast({
-    message: message,
-    duration: 2000
-  });
+export function toast(message: string | Resource, context: UIContext): void {
+  try {
+    context.getPromptAction().showToast({
+      message: message,
+      duration: 2000
+    });
+  } catch (error) {
+    // TODO: Implement error handling.
+  }
 }
 
 export function startBrowsableAbility(url: string, context: common.UIAbilityContext): void {

@@ -27,6 +27,13 @@ export class Chat {
 
   setToken(token: string) {
     this.token = token;
+    if (!this.token) {
+      this.wsCallbacks = new Map();
+      for (const rws of this.rwsList.values()) {
+        rws.close();
+      }
+      this.rwsList = new Map();
+    }
   }
 
   /**

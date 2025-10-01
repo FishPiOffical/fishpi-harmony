@@ -14,6 +14,7 @@ export struct BreezemoonItem {
         Column() {
           Flex({
             justifyContent: FlexAlign.SpaceBetween,
+            alignItems: ItemAlign.Center,
           }) {
             Row() {
               CircleIcon({
@@ -21,7 +22,7 @@ export struct BreezemoonItem {
                 iconSize: 32,
               }).width(32)
               Text(this.item.breezemoonAuthorName)
-                .fontSize(25)
+                .fontSize(20)
                 .fontWeight(FontWeight.Bold)
                 .margin({ left: 10 })
             }
@@ -46,17 +47,19 @@ export struct BreezemoonItem {
         }.alignItems(HorizontalAlign.Start)
          .width('100%')
          .padding(10)
-        Row() {
-          Icon({
-            icon: $r('app.media.location'),
-            iconSize: 20,
-          })
-          Text(this.item.breezemoonCity)
-            .fontSize(16)
-            .margin({ left: 5 })
-        }.width('100%')
-        .padding(10)
-        .justifyContent(FlexAlign.End)
+        if (this.item.breezemoonCity) {
+          Row() {
+            Icon({
+              icon: $r('app.media.location'),
+              iconSize: 20,
+            })
+            Text(this.item.breezemoonCity)
+              .fontSize(16)
+              .margin({ left: 5 })
+          }.width('100%')
+          .padding(10)
+          .justifyContent(FlexAlign.End)
+        }
       }
       .border({
         color: '#18191F',

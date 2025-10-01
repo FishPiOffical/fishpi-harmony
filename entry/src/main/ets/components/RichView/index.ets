@@ -46,7 +46,7 @@ export struct RichView {
                       </html>`;
           this.controller.loadData(code, 'text/html', 'utf-8')
         } catch (e) {
-          toast(e.message);
+          toast(e.message, this.getUIContext());
         }
       })
       .onPageEnd(() => {

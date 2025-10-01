@@ -49,10 +49,10 @@ export struct MessageBox {
         const message = res.succFiles.map((item) => `![${item.name}](${item.url})`).join('  \n');
         this.onSend(message);
       }).catch((err: Error) => {
-        toast('上传失败: ' + err.message);
+        toast('上传失败: ' + err.message, this.getUIContext());
       });
     }).catch((err: BusinessError) => {
-      toast(err.message);
+      toast(err.message, this.getUIContext());
     })
   }
 
@@ -78,19 +78,26 @@ export struct MessageBox {
             this.emojiShow = !this.emojiShow;
             this.controller.stopEditing();
           })
-        TextArea({ placeholder: "说点什么", text: $$this.text, controller: this.controller })
-          .margin({ left: 0, right: 5 })
-          .height(35)
-          .onClick(() => {
-            this.emojiShow = false;
-          })
-          .onFocus(() => {
-            this.isFocus = true;
-            this.emojiShow = false;
-          })
-          .onBlur(() => {
-            this.isFocus = false;
-          })
+        Row() {
+          TextArea({ placeholder: "说点什么", text: $$this.text, controller: this.controller })
+            .margin({ left: 0, right: 5 })
+            .height(35)
+            .backgroundColor(Color.Transparent)
+            .onClick(() => {
+              this.emojiShow = false;
+            })
+            .onFocus(() => {
+              this.isFocus = true;
+              this.emojiShow = false;
+            })
+            .onBlur(() => {
+              this.isFocus = false;
+            })
+        }.border({
+          width: 2,
+          color: '#18191F',
+          radius: 20,
+        })
         if (!this.isFocus) {
           Icon({
             icon: $r('app.media.image_send'),
@@ -111,15 +118,6 @@ export struct MessageBox {
                 this.onRedpack();
               })
           }
-          // Icon({
-          //   icon: $r('app.media.plus_circle'),
-          //   stroke: '#000000',
-          //   iconSize: 30,
-          // })
-          //   .margin({ left: 5, right: 5 })
-          //   .onClick(() => {
-          //     this.expandFeature = !this.expandFeature;
-          //   })
         } else {
           if (this.barrage) {
             Icon({
@@ -129,6 +127,10 @@ export struct MessageBox {
               iconSize: 30,
             })
               .onClick(async () => {
+                if (!this.text) {
+                  toast('写点什么再发弹幕', this.getUIContext());
+                  return;
+                }
                 if (!await this.onBarrage(this.text)) {
                   return;
                 }

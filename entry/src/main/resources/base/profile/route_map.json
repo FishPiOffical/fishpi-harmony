@@ -34,10 +34,18 @@
     },
     {
       "name": "ArticleList",
-      "pageSourceFile": "src/main/ets/pages/Article/List.ets",
+      "pageSourceFile": "src/main/ets/pages/Article/Index.ets",
       "buildFunction": "ArticleListBuilder",
       "data": {
         "description": "文章列表"
+      }
+    },
+    {
+      "name": "BreezeList",
+      "pageSourceFile": "src/main/ets/pages/Breezemoon/Index.ets",
+      "buildFunction": "BreezemoonListBuilder",
+      "data": {
+        "description": "清风明月"
       }
     },
     {
@@ -46,6 +54,14 @@
       "buildFunction": "ArticleBuilder",
       "data": {
         "description": "文章详情"
+      }
+    },
+    {
+      "name": "Privacy",
+      "pageSourceFile": "src/main/ets/pages/Profile/Privacy.ets",
+      "buildFunction": "PrivacyBuilder",
+      "data": {
+        "description": "隐私政策"
       }
     }
   ]

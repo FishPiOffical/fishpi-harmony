@@ -154,7 +154,7 @@ export struct ArticleList {
   }
 
   build() {
-    if (this.tag) {
+    if (this.tag || this.user) {
       NavDestination() {
         this.mainBuilder()
       }.menus(this.titleBuilder)

@@ -207,7 +207,7 @@ export struct RedPacket {
                   this.fishpi.redPacket.send(this.redPacket.toJSON()).then(() => {
                     this.pathStack.pop();
                   }).catch((e: Error) => {
-                    toast(e.message)
+                    toast(e.message, this.getUIContext())
                   })
                 })
                 .margin(10)

@@ -39,6 +39,8 @@ export struct Header {
   @Require @Param title: string;
   @Param leftAction: HeaderAction | null = null;
   @Param rightAction: HeaderAction | null = null;
+  @Param bgColor: ResourceColor = '#EEEFF4';
+  @Param noBorder: boolean = false;
 
   build() {
     Row() {
@@ -70,7 +72,7 @@ export struct Header {
     .height('100%')
     .width('100%')
     .alignItems(VerticalAlign.Center)
-    .backgroundColor('#EEEFF4')
-    .border({ width: { bottom: 2 }, color: '#000' })
+    .backgroundColor(this.bgColor)
+    .border({ width: { bottom: this.noBorder ? 0 : 2 }, color: '#000' })
   }
 }

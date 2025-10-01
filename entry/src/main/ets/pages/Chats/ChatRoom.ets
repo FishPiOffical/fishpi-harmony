@@ -132,7 +132,7 @@ export struct ChatRoom {
               return await this.fishpi.chatroom.send(msg)
                 .then(() => true)
                 .catch((err: Error) => {
-                  toast(err.message)
+                  toast(err.message, this.getUIContext())
                   return false
                 })
             },
@@ -145,7 +145,7 @@ export struct ChatRoom {
               return await this.fishpi.chatroom.barrage(msg)
                 .then(() => true)
                 .catch((err: Error) => {
-                  toast(err.message)
+                  toast(err.message, this.getUIContext())
                   return false
                 })
             },

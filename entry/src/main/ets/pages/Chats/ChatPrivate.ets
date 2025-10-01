@@ -57,7 +57,7 @@ export struct Chat {
       res.reverse();
       this.messages.unshift(...res);
     }).catch((err: Error) => {
-      toast(err.message)
+      toast(err.message, this.getUIContext())
     })
   }
 
