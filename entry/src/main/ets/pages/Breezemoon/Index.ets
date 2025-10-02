@@ -5,8 +5,8 @@ import { Header, HeaderAction } from "../../layout/main/header";
 import { IBreezemoonContent, IBreezemoonQuery } from "../../service/types/breezemoon";
 import { BreezemoonItem } from "./BreezemoonItem";
 import { IUserInfo } from "../../service/types/user";
-import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
+import { Avatar } from "../../components/Avatar/Index";
 
 @ObservedV2
 class BreezemoonQuery implements IBreezemoonQuery {
@@ -67,8 +67,9 @@ export struct BreezeList {
   mainBuilder() {
     if (this.userInfo) {
       Row() {
-        CircleIcon({
-          icon: this.userInfo.userAvatarURL
+        Avatar({
+          avatar: this.userInfo.userAvatarURL,
+          user: this.userInfo.userName,
         })
         Text(this.userInfo.userNickname || this.userInfo.userName).fontSize(20).fontWeight(FontWeight.Bold)
         Text(' 的清风明月').fontSize(20).fontWeight(FontWeight.Bold)

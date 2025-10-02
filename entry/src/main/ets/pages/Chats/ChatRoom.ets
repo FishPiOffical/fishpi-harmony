@@ -159,7 +159,6 @@ export struct ChatRoom {
       }.width('100%')
       .backgroundColor('#FFF')
 
-
       Row() {
         Text('')
       }.width('100%')

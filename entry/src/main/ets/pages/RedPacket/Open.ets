@@ -11,6 +11,7 @@ import {
 import { CircleIcon } from "../../components/CircleIcon";
 import { toast } from "../../libs/utils";
 import { LogUtil } from "@pura/harmony-utils";
+import { Avatar } from "../../components/Avatar/Index";
 
 export interface IRedPacketOpen {
   oId: string;
@@ -211,8 +212,9 @@ export struct RedPacketOpen {
                     Flex({
                       alignItems: ItemAlign.Center
                     }) {
-                      CircleIcon({
-                        icon: who.avatar,
+                      Avatar({
+                        avatar: who.avatar,
+                        user: who.userName,
                         iconSize: 50
                       }).flexBasis(50)
                       Flex({

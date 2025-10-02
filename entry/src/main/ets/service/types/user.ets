@@ -10,9 +10,10 @@ function analyzeMetalAttr(m: Metal): Metal {
     const keyVal = a.split('=');
     if (keyVal[0] == 'backcolor') (m.attr as MetalAttr).backcolor = keyVal[1];
     if (keyVal[0] == 'fontcolor') (m.attr as MetalAttr).fontcolor = keyVal[1];
+    if (keyVal[0] == 'url') (m.attr as MetalAttr).url = keyVal[1];
   })
-  m.url = `https://fishpi.cn/gen?txt=${m.description}&url=${src}`;
-  m.icon = `https://fishpi.cn/gen?txt=&${src}`;
+  m.url = `https://fishpi.cn/gen?txt=${m.description}&${src}`;
+  m.icon = (m.attr as MetalAttr).url;
   return m;
 }
 

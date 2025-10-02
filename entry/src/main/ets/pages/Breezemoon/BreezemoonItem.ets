@@ -1,4 +1,4 @@
-import { CircleIcon } from "../../components/CircleIcon";
+import { Avatar } from "../../components/Avatar/Index";
 import { Icon } from "../../components/Icon";
 import { htmlToText } from "../../libs/utils";
 import { IBreezemoonContent } from "../../service/types/breezemoon";
@@ -17,8 +17,9 @@ export struct BreezemoonItem {
             alignItems: ItemAlign.Center,
           }) {
             Row() {
-              CircleIcon({
-                icon: this.item.breezemoonAuthorThumbnailURL48,
+              Avatar({
+                avatar: this.item.breezemoonAuthorThumbnailURL48,
+                user: this.item.breezemoonAuthorName,
                 iconSize: 32,
               }).width(32)
               Text(this.item.breezemoonAuthorName)

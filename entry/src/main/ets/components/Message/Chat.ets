@@ -1,14 +1,6 @@
-import { ChatRoomMessage, ChatRoomMessageData, ChatRoomMessageType,
-  IMusicMsg,
-  IWeatherMsg } from "../../service/types/chatroom"
-import { IRedPacketMessage, GestureType } from "../../service/types/redpacket";
-import { CircleIcon } from "../CircleIcon";
 import { MsgContent } from "./Content";
-import { RedPacketRender } from "./RedPacket";
-import { LengthMetrics } from "@kit.ArkUI";
-import { WeatherRender } from "./Weather";
-import { MusicRender } from "./Music";
 import { IChatData } from "../../service/types/chat";
+import { Avatar } from "../Avatar/Index";
 
 @ComponentV2
 export struct ChatRender {
@@ -41,8 +33,9 @@ export struct ChatRender {
       alignItems: ItemAlign.Start,
       direction: this.isSelf ? FlexDirection.RowReverse : FlexDirection.Row
     }) {
-      CircleIcon({
-          icon: this.avatar,
+        Avatar({
+          avatar: this.avatar,
+          user: this.data.senderUserName,
         }).width(48)
           .margin({ right: this.isSelf ? 0 : 5, top: 2, left: this.isSelf ? 5 : 0 })
         Column() {

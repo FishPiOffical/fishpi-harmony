@@ -1,4 +1,4 @@
-import { CircleIcon } from "../../components/CircleIcon";
+import { Avatar } from "../../components/Avatar/Index";
 import { Icon } from "../../components/Icon";
 import { IArticleDetail, IArticleTag } from "../../service/types/article";
 import { IArticleListParam } from "./Index";
@@ -38,8 +38,9 @@ export struct ArticleItem {
                 .fontColor('#474A57')
                 .maxLines(2)
             }.alignItems(HorizontalAlign.Start)
-            CircleIcon({
-              icon: this.item.articleAuthorThumbnailURL210,
+            Avatar({
+              avatar: this.item.articleAuthorThumbnailURL210,
+              user: this.item.articleAuthorName,
             }).width(48)
           }.width('100%')
           Row() {

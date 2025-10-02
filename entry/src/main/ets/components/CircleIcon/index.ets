@@ -17,9 +17,7 @@ export struct CircleIcon {
         alignContent: Alignment.TopEnd
       }) {
         Image(this.icon)
-          .width(this.iconSize)
-          .height(this.iconSize)
-          .objectFit(ImageFit.Contain)
+          .objectFit(ImageFit.Auto)
         if (this.needBadge) {
           if (typeof this.badge === 'number') {
             Text(this.badge.toString())

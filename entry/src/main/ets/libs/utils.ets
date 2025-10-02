@@ -1,8 +1,10 @@
-import { promptAction } from "@kit.ArkUI";
+
 import { common, Want } from "@kit.AbilityKit";
 import { BusinessError } from "@kit.BasicServicesKit";
 import { IArticleParam } from "../pages/Article/ArticleDetail";
 import { IArticleListParam } from "../pages/Article/Index";
+import { http } from '@kit.NetworkKit';
+import { image } from "@kit.ImageKit";
 
 export function htmlToText(html: string, userName?: string): string {
   return html
@@ -54,4 +56,30 @@ export function pushToAppUrl(url: string, pathStack: NavPathStack) {
     return true;
   }
   return false;
+}
+
+export async function fetchImageSize(url: string) {
+  try {
+    // 创建HTTP请求对象
+    const httpRequest = http.createHttp();
+
+    // 发起网络请求获取图片数据
+    const response = await httpRequest.request(url);
+    const imageData = response.result as ArrayBuffer;
+
+    // 创建ImageSource并生成PixelMap
+    const imageSource = image.createImageSource(imageData);
+    const pixelMap = await imageSource.createPixelMap();
+
+    // 获取图片原始尺寸
+    const imageInfo = await pixelMap.getImageInfo();
+
+    // 释放资源
+    imageSource.release();
+    return imageInfo.size;
+  } catch (error) {
+    const err = error as BusinessError;
+    console.error(`错误码：${err.code}，错误信息：${err.message}`);
+    return { width: 0, height: 0 } as Size;
+  }
 }

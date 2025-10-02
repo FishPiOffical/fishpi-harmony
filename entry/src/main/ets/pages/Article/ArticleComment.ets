@@ -1,9 +1,9 @@
 import { lvMarkdownIn } from "@luvi/lv-markdown-in";
-import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { IArticleComment, VoteStatus } from "../../service/types/article";
 import { LengthMetrics } from "@kit.ArkUI";
 import { MessageBox, MessageBoxExpose } from "../Chats/MessageBox";
+import { Avatar } from "../../components/Avatar/Index";
 
 
 @ComponentV2
@@ -35,8 +35,9 @@ export struct ArticleComment {
                 space: { main: LengthMetrics.px(40) }
               }) {
                 Row() {
-                  CircleIcon({
-                    icon: comment.commenter.userAvatarURL,
+                  Avatar({
+                    avatar: comment.commenter.userAvatarURL,
+                    user: comment.commentAuthorName,
                     iconSize: 40,
                   })
                 }
@@ -46,7 +47,7 @@ export struct ArticleComment {
                     Row({
                       space: 5,
                     }) {
-                      Text(comment.commenter.userNickname + `(${comment.commentAuthorName})`)
+                      Text(comment.commenter.userNickname ? comment.commenter.userNickname + `(${comment.commentAuthorName})` : comment.commentAuthorName)
                         .fontSize(14)
                         .fontColor('#333333')
                       Text(comment.timeAgo)

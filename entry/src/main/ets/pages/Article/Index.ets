@@ -8,6 +8,7 @@ import { Header, HeaderAction } from "../../layout/main/header";
 import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { IUserInfo } from "../../service/types/user";
+import { Avatar } from "../../components/Avatar/Index";
 
 
 export interface IArticleListParam {
@@ -104,8 +105,9 @@ export struct ArticleList {
     }
     if (this.articleUser) {
       Row() {
-        CircleIcon({
-          icon: this.articleUser.userAvatarURL
+        Avatar({
+          avatar: this.articleUser.userAvatarURL,
+          user: this.articleUser.userName,
         })
         Text(this.articleUser.userNickname || this.articleUser.userName).fontSize(20).fontWeight(FontWeight.Bold)
         Text(' 的文章列表').fontSize(20).fontWeight(FontWeight.Bold)

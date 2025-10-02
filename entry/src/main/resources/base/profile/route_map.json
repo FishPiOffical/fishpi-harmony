@@ -63,6 +63,14 @@
       "data": {
         "description": "隐私政策"
       }
+    },
+    {
+      "name": "User",
+      "pageSourceFile": "src/main/ets/pages/User/Index.ets",
+      "buildFunction": "UserBuilder",
+      "data": {
+        "description": "用户"
+      }
     }
   ]
 }

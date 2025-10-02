@@ -1,6 +1,4 @@
-import { DateUtil } from '@pura/harmony-utils';
-import { CircleIcon } from '../../components/CircleIcon';
-import { ChatRoomMessageData } from '../../service/types/chatroom';
+import { Avatar } from '../../components/Avatar/Index';
 import { ChatContent } from './ChatContent'
 
 @ComponentV2
@@ -18,8 +16,9 @@ export struct ChatMsg {
 
   build() {
     Flex() {
-      CircleIcon({
-        icon: this.avatar,
+      Avatar({
+        user: this.user,
+        avatar: this.avatar,
       }).width(48)
         .margin({ right: 5, top: 20 })
       Column() {

@@ -1,15 +1,15 @@
-import { AppStorageV2, ComponentContent, OverlayManager } from "@kit.ArkUI";
+import { AppStorageV2 } from "@kit.ArkUI";
 import { lvMarkdownIn } from "@luvi/lv-markdown-in";
-import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { Header, HeaderAction } from "../../layout/main/header";
 import Fishpi from "../../service/fishpi";
-import { IArticleComment, IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
+import { IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
 import { RichView } from "../../components/RichView";
 import { IArticleListParam } from "./Index";
 import { common } from "@kit.AbilityKit";
 import { pushToAppUrl, startBrowsableAbility } from "../../libs/utils";
 import { ArticleComment } from "./ArticleComment";
+import { Avatar } from "../../components/Avatar/Index";
 
 export interface IArticleParam {
   id: string;
@@ -219,8 +219,9 @@ export struct ArticleDetail {
 
             Row() {
               Row() {
-                CircleIcon({
-                  icon: this.detail.articleAuthorThumbnailURL48,
+                Avatar({
+                  avatar: this.detail.articleAuthorThumbnailURL48,
+                  user: this.detail.articleAuthorName,
                   iconSize: 24,
                   strokeSize: 1,
                 })
