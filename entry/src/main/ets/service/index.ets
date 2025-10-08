@@ -1,3 +1,5 @@
+import { ArticleListType, IArticleQuery } from "./types/article";
+import { IBreezemoonQuery } from "./types/breezemoon";
 import { GestureType, IRedPacket, RedPacketType } from "./types/redpacket";
 
 @ObservedV2
@@ -51,4 +53,46 @@ export class RedPacketMessage implements IRedPacket {
 
 export class ChatMessage {
 
+}
+
+@ObservedV2
+export class ArticleQuery implements IArticleQuery {
+  @Trace
+  page: number = 1;
+  @Trace
+  size: number = 10;
+  @Trace
+  user?: string;
+  @Trace
+  tag?: string;
+  @Trace
+  type: ArticleListType = ArticleListType.Recent;
+
+  toJSON(): IArticleQuery {
+    return {
+      page: this.page,
+      size: this.size,
+      user: this.user,
+      tag: this.tag,
+      type: this.type
+    }
+  }
+}
+
+@ObservedV2
+export class BreezemoonQuery implements IBreezemoonQuery {
+  @Trace
+  page: number = 1;
+  @Trace
+  size: number = 10;
+  @Trace
+  user?: string;
+
+  toJSON(): IBreezemoonQuery {
+    return {
+      page: this.page,
+      size: this.size,
+      user: this.user,
+    }
+  }
 }

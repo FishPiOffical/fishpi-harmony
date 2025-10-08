@@ -83,3 +83,31 @@ export async function fetchImageSize(url: string) {
     return { width: 0, height: 0 } as Size;
   }
 }
+
+export function shortTime(minute: number) {
+  let time = '';
+  const year = Math.floor(minute / 525600);
+  minute = minute % 525600;
+  const month = Math.floor(minute / 43200);
+  minute = minute % 43200;
+  const day = Math.floor(minute / 1440);
+  minute = minute % 1440;
+  const hour = Math.floor(minute / 60);
+  minute = minute % 60;
+  if (year > 0) {
+    time += year + '年';
+  }
+  if (month > 0) {
+    time += month + '个月';
+  }
+  if (day > 0) {
+    time += day + '天';
+  }
+  if (hour > 0) {
+    time += hour + '小时';
+  }
+  if (minute > 0) {
+    time += minute + '分钟';
+  }
+  return time;
+}

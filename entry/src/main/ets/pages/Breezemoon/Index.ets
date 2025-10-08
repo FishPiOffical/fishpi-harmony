@@ -2,29 +2,13 @@ import { MainLayout } from "../../layout/main";
 import Fishpi from "../../service/fishpi";
 import { AppStorageV2, LengthMetrics } from "@kit.ArkUI";
 import { Header, HeaderAction } from "../../layout/main/header";
-import { IBreezemoonContent, IBreezemoonQuery } from "../../service/types/breezemoon";
+import { IBreezemoonContent } from "../../service/types/breezemoon";
 import { BreezemoonItem } from "./BreezemoonItem";
 import { IUserInfo } from "../../service/types/user";
 import { Icon } from "../../components/Icon";
 import { Avatar } from "../../components/Avatar/Index";
+import { BreezemoonQuery } from "../../service";
 
-@ObservedV2
-class BreezemoonQuery implements IBreezemoonQuery {
-  @Trace
-  page: number = 1;
-  @Trace
-  size: number = 10;
-  @Trace
-  user?: string;
-
-  toJSON(): IBreezemoonQuery {
-    return {
-      page: this.page,
-      size: this.size,
-      user: this.user,
-    }
-  }
-}
 
 export interface IBreezemoonListParam {
   user?: string;

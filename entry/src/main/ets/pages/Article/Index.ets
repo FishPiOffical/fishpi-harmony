@@ -1,7 +1,7 @@
 import { MainLayout } from "../../layout/main";
 import Fishpi from "../../service/fishpi";
 import { AppStorageV2 } from "@kit.ArkUI";
-import { ArticleListType, IArticleDetail, IArticleQuery, IArticleTag } from "../../service/types/article";
+import { IArticleDetail, IArticleTag } from "../../service/types/article";
 import { ArticleItem } from "./ArticleItem";
 import { IArticleParam } from "./ArticleDetail";
 import { Header, HeaderAction } from "../../layout/main/header";
@@ -9,6 +9,7 @@ import { CircleIcon } from "../../components/CircleIcon";
 import { Icon } from "../../components/Icon";
 import { IUserInfo } from "../../service/types/user";
 import { Avatar } from "../../components/Avatar/Index";
+import { ArticleQuery } from "../../service";
 
 
 export interface IArticleListParam {
@@ -24,29 +25,6 @@ export function ArticleListBuilder(_name: string, param: IArticleListParam) {
   })
 }
 
-@ObservedV2
-class ArticleQuery implements IArticleQuery {
-  @Trace
-  page: number = 1;
-  @Trace
-  size: number = 10;
-  @Trace
-  user?: string;
-  @Trace
-  tag?: string;
-  @Trace
-  type: ArticleListType = ArticleListType.Recent;
-
-  toJSON(): IArticleQuery {
-    return {
-      page: this.page,
-      size: this.size,
-      user: this.user,
-      tag: this.tag,
-      type: this.type
-    }
-  }
-}
 
 @ComponentV2
 export struct ArticleList {

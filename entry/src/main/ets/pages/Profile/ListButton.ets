@@ -4,7 +4,9 @@ import { Icon } from "../../components/Icon";
 export interface IButtonItem {
   icon: string | Resource;
   name: string;
-  action: () => void;
+  action?: () => void;
+  content?: string;
+  color?: ResourceColor;
 }
 
 @ComponentV2
@@ -31,13 +33,17 @@ export struct ListButton {
               .fontSize(18)
               .fontWeight(FontWeight.Bold)
           }
-          Row() {
-            Icon({
-              icon: $r('app.media.right'),
-              iconSize: 20,
-              color: null,
-              stroke: '#000',
-            })
+          if (item.action) {
+            Row() {
+              Icon({
+                icon: $r('app.media.right'),
+                iconSize: 20,
+                color: null,
+                stroke: '#000',
+              })
+            }
+          } else if (item.content) {
+            Text(item.content).fontColor(item.color || Color.Black).align(Alignment.End)
           }
         }.width('100%').justifyContent(FlexAlign.SpaceBetween).onClick(item.action).padding({ left: 20, right: 20, top: 12, bottom: 12 })
       })

@@ -7,6 +7,9 @@ import { Header, HeaderAction } from "../../layout/main/header";
 import { IUserInfo, Metal } from "../../service/types/user";
 import { Avatar } from "../../components/Avatar/Index";
 import { fetchImageSize } from "../../libs/utils";
+import { UserArticle } from "./article";
+import { UserBreezemoon } from "./breezemoon";
+import { MoreMenu } from "./menu";
 
 
 export interface IUserParam {
@@ -28,6 +31,7 @@ export struct User {
   @Local info?: IUserInfo;
   @Local viewWidth: Length = 0;
   @Local cardSize: Size = { width: 0, height: 0 };
+  @Local currentTab: number = 0;
 
   aboutToAppear(): void {
     this.fishpi.getUser(this.user).then((user) => {
@@ -82,6 +86,7 @@ export struct User {
               Image(this.info.cardBg)
                 .objectFit(ImageFit.Cover)
             }.height('100%')
+
             Flex({
               direction: FlexDirection.Column,
               justifyContent: FlexAlign.SpaceBetween,
@@ -102,9 +107,16 @@ export struct User {
                     }.alignItems(VerticalAlign.Center)
                   }.backgroundColor('#fff')
                   .border({ color: '#000', width: 2 })
-                  .padding(5)
+                  .padding({ left: 10, right: 10, top: 5, bottom: 5 })
                 }
-              }.padding({ top: 5, bottom: 5, left: 10, right: 10 })
+              }
+              .padding({
+                top: 5,
+                bottom: 5,
+                left: 10,
+                right: 10
+              })
+
               Stack({
                 alignContent: Alignment.Top
               }) {
@@ -118,19 +130,20 @@ export struct User {
                         .fontSize(24)
 
                       if (this.info.userNickname && this.info.userNickname !== this.info.userName) {
-                          Text(this.info.userName)
-                            .fontSize(14)
-                            .fontWeight(FontWeight.Bold)
-                            .fontColor('#9FA4B4')
+                        Text(this.info.userName)
+                          .fontSize(14)
+                          .fontWeight(FontWeight.Bold)
+                          .fontColor('#867777')
                       }
                     }.width('100%').alignItems(VerticalAlign.Bottom)
                   }
 
                   Row() {
-                    Text(this.me.userIntro)
+                    Text(this.info.userIntro)
                       .fontSize(14)
                       .fontColor(0x474f57)
                   }.width('100%').alignItems(VerticalAlign.Bottom)
+
                   Flex({
                     justifyContent: FlexAlign.SpaceBetween
                   }) {
@@ -144,7 +157,11 @@ export struct User {
                           color: null,
                           stroke: null,
                         })
-                        Text(this.info.userCity).fontSize(14).fontColor('#000').margin({ right: 3 }).fontWeight(FontWeight.Bold)
+                        Text(this.info.userCity)
+                          .fontSize(14)
+                          .fontColor('#000')
+                          .margin({ right: 3 })
+                          .fontWeight(FontWeight.Bold)
                       }
                       Icon({
                         icon: $r('app.media.coin_line'),
@@ -154,6 +171,7 @@ export struct User {
                       })
                       Text(this.info.userPoint + '').fontSize(14).fontColor('#000').fontWeight(FontWeight.Bold)
                     }
+
                     Row({ space: 3 }) {
                       ForEach(this.info.metalList, (metal: Metal) => {
                         Image(metal.icon).width(16).borderRadius(8).shadow({ color: '#33000000', radius: 2 })
@@ -161,6 +179,7 @@ export struct User {
                     }
                   }.margin({ top: 5 })
                 }
+
                 Avatar({
                   avatar: this.info.userAvatarURL,
                   user: this.info.userName,
@@ -175,18 +194,44 @@ export struct User {
               .padding(10)
             }
             .width('100%')
-
           }.height(this.panelHeight)
           .onAreaChange((_, size) => {
             this.viewWidth = size.width;
           })
         }
-        .borderRadius({
-          bottomLeft: 16,
-          bottomRight: 16,
+        .border({
+          color: '#18191F',
+          width: { bottom: 5 }
         })
-      }
+        .clip(true)
+        .borderRadius({ bottomLeft: 16, bottomRight: 16 })
+        .width('100%')
 
+        Column({ space: 10 }) {
+          Row({ space: 10 }) {
+            Button() {
+              Text('TA 的文章').fontSize(16).fontWeight(FontWeight.Bold)
+            }.backgroundColor(this.currentTab == 0 ? '#00C6AE' : Color.White).border({ width: 2 }).padding({ left: 10, right: 10, top: 5, bottom: 5 })
+            .onClick(() => this.currentTab = 0)
+            Button() {
+              Text('TA 的清风明月').fontSize(16).fontWeight(FontWeight.Bold)
+            }.backgroundColor(this.currentTab == 1 ? '#00C6AE' : Color.White).border({ width: 2 }).padding({ left: 10, right: 10, top: 5, bottom: 5 })
+            .onClick(() => this.currentTab = 1)
+            Button() {
+              Text('更多').fontSize(16).fontWeight(FontWeight.Bold)
+            }.backgroundColor(this.currentTab == 2 ? '#00C6AE' : Color.White).border({ width: 2 }).padding({ left: 10, right: 10, top: 5, bottom: 5 })
+            .onClick(() => this.currentTab = 2)
+          }
+
+          if (this.currentTab == 0) {
+            UserArticle({ user: this.user })
+          } else if (this.currentTab == 1) {
+            UserBreezemoon({ user: this.user })
+          } else {
+            MoreMenu({ user: this.info })
+          }
+        }.padding(10)
+      }
       Row() {
         Text('')
       }.width('100%')
