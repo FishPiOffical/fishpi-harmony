@@ -80,161 +80,188 @@ export struct User {
   build() {
     NavDestination() {
       if (this.info) {
-        Flex({
-          direction: FlexDirection.Column,
-        }) {
-          Column() {
-            Stack() {
-              Column() {
-                Image(this.info.cardBg)
-                  .objectFit(ImageFit.Cover)
-              }.height('100%')
+        Column() {
+          Stack() {
+            Column() {
+              Image(this.info.cardBg)
+                .objectFit(ImageFit.Cover)
+            }.height('100%')
 
-              Flex({
-                direction: FlexDirection.Column,
-                justifyContent: FlexAlign.SpaceBetween,
+            Flex({
+              direction: FlexDirection.Column,
+              justifyContent: FlexAlign.SpaceBetween,
+            }) {
+              Column() {
+                if (!this.isSelf) {
+                  Button() {
+                    Row({
+                      space: 2
+                    }) {
+                      Icon({
+                        icon: this.info.canFollow == 'no' ? $r('app.media.stared') : $r('app.media.star'),
+                        color: null,
+                        stroke: null,
+                        iconSize: 14
+                      })
+                      Text(this.info.canFollow == 'no' ? '取消关注' : '关注').fontSize(14).fontWeight(FontWeight.Bold)
+                    }.alignItems(VerticalAlign.Center)
+                  }.backgroundColor('#fff')
+                  .border({ color: '#000', width: 2 })
+                  .padding({
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 5
+                  })
+                }
+              }
+              .padding({
+                top: 5,
+                bottom: 5,
+                left: 10,
+                right: 10
+              })
+
+              Stack({
+                alignContent: Alignment.Top
               }) {
                 Column() {
-                  if (!this.isSelf) {
-                    Button() {
-                      Row({
-                        space: 2
-                      }) {
-                        Icon({
-                          icon: this.info.canFollow == 'no' ? $r('app.media.stared') : $r('app.media.star'),
-                          color: null,
-                          stroke: null,
-                          iconSize: 14
-                        })
-                        Text(this.info.canFollow == 'no' ? '取消关注' : '关注').fontSize(14).fontWeight(FontWeight.Bold)
-                      }.alignItems(VerticalAlign.Center)
-                    }.backgroundColor('#fff')
-                    .border({ color: '#000', width: 2 })
-                    .padding({ left: 10, right: 10, top: 5, bottom: 5 })
-                  }
-                }
-                .padding({
-                  top: 5,
-                  bottom: 5,
-                  left: 10,
-                  right: 10
-                })
-
-                Stack({
-                  alignContent: Alignment.Top
-                }) {
                   Column() {
-                    Column() {
-                      Row({
-                        space: 2
-                      }) {
-                        Text(this.info.userNickname || this.info.userName)
-                          .fontWeight(FontWeight.Bolder)
-                          .fontSize(24)
-
-                        if (this.info.userNickname && this.info.userNickname !== this.info.userName) {
-                          Text(this.info.userName)
-                            .fontSize(14)
-                            .fontWeight(FontWeight.Bold)
-                            .fontColor('#867777')
-                        }
-                      }.width('100%').alignItems(VerticalAlign.Bottom)
-                    }
-
-                    Row() {
-                      Text(this.info.userIntro)
-                        .fontSize(14)
-                        .fontColor(0x474f57)
-                    }.width('100%').alignItems(VerticalAlign.Bottom)
-
-                    Flex({
-                      justifyContent: FlexAlign.SpaceBetween
+                    Row({
+                      space: 2
                     }) {
-                      Row({
-                        space: 5
-                      }) {
-                        if (this.info.userCity) {
-                          Icon({
-                            icon: $r('app.media.location'),
-                            iconSize: 15,
-                            color: null,
-                            stroke: null,
-                          })
-                          Text(this.info.userCity)
-                            .fontSize(14)
-                            .fontColor('#000')
-                            .margin({ right: 3 })
-                            .fontWeight(FontWeight.Bold)
-                        }
+                      Text(this.info.userNickname || this.info.userName)
+                        .fontWeight(FontWeight.Bolder)
+                        .fontSize(24)
+
+                      if (this.info.userNickname && this.info.userNickname !== this.info.userName) {
+                        Text(this.info.userName)
+                          .fontSize(14)
+                          .fontWeight(FontWeight.Bold)
+                          .fontColor('#867777')
+                      }
+                    }.width('100%').alignItems(VerticalAlign.Bottom)
+                  }
+
+                  Row() {
+                    Text(this.info.userIntro)
+                      .fontSize(14)
+                      .fontColor(0x474f57)
+                  }.width('100%').alignItems(VerticalAlign.Bottom)
+
+                  Flex({
+                    justifyContent: FlexAlign.SpaceBetween
+                  }) {
+                    Row({
+                      space: 5
+                    }) {
+                      if (this.info.userCity) {
                         Icon({
-                          icon: $r('app.media.coin_line'),
+                          icon: $r('app.media.location'),
                           iconSize: 15,
                           color: null,
                           stroke: null,
                         })
-                        Text(this.info.userPoint + '').fontSize(14).fontColor('#000').fontWeight(FontWeight.Bold)
+                        Text(this.info.userCity)
+                          .fontSize(14)
+                          .fontColor('#000')
+                          .margin({ right: 3 })
+                          .fontWeight(FontWeight.Bold)
                       }
+                      Icon({
+                        icon: $r('app.media.coin_line'),
+                        iconSize: 15,
+                        color: null,
+                        stroke: null,
+                      })
+                      Text(this.info.userPoint + '').fontSize(14).fontColor('#000').fontWeight(FontWeight.Bold)
+                    }
 
-                      Row({ space: 3 }) {
-                        ForEach(this.info.metalList, (metal: Metal) => {
-                          Image(metal.icon).width(16).borderRadius(8).shadow({ color: '#33000000', radius: 2 })
-                        })
-                      }
-                    }.margin({ top: 5 })
-                  }
-
-                  Avatar({
-                    avatar: this.info.userAvatarURL,
-                    user: this.info.userName,
-                    badge: this.info.userOnlineFlag ? '#56F92C' : '#C4C4C4',
-                    iconSize: 60
-                  }).position({
-                    top: -30,
-                    right: 20,
-                  }).width(60).height(60)
+                    Row({ space: 3 }) {
+                      ForEach(this.info.metalList, (metal: Metal) => {
+                        Image(metal.icon).width(16).borderRadius(8).shadow({ color: '#33000000', radius: 2 })
+                      })
+                    }
+                  }.margin({ top: 5 })
                 }
-                .backgroundColor('#AAFFFFFF')
-                .padding(10)
+
+                Avatar({
+                  avatar: this.info.userAvatarURL,
+                  user: this.info.userName,
+                  badge: this.info.userOnlineFlag ? '#56F92C' : '#C4C4C4',
+                  iconSize: 60
+                }).position({
+                  top: -30,
+                  right: 20,
+                }).width(60).height(60)
               }
-              .width('100%')
-            }.height(this.panelHeight)
-            .onAreaChange((_, size) => {
-              this.viewWidth = size.width;
-            })
-          }
-          .border({
-            color: '#18191F',
-            width: { bottom: 5 }
+              .backgroundColor('#AAFFFFFF')
+              .padding(10)
+            }
+            .width('100%')
+          }.height(this.panelHeight)
+          .onAreaChange((_, size) => {
+            this.viewWidth = size.width;
           })
-          .clip(true)
-          .borderRadius({ bottomLeft: 16, bottomRight: 16 })
-          .width('100%')
-
-          Column({ space: 10 }) {
-            Row({ space: 10 }) {
-              Button() {
-                Text('TA 的文章').fontSize(16).fontWeight(FontWeight.Bold)
-              }.backgroundColor(this.currentTab == 0 ? '#00C6AE' : Color.White).border({ width: 2 }).padding({ left: 10, right: 10, top: 5, bottom: 5 })
-              .onClick(() => this.currentTab = 0)
-              Button() {
-                Text('TA 的清风明月').fontSize(16).fontWeight(FontWeight.Bold)
-              }.backgroundColor(this.currentTab == 1 ? '#00C6AE' : Color.White).border({ width: 2 }).padding({ left: 10, right: 10, top: 5, bottom: 5 })
-              .onClick(() => this.currentTab = 1)
-              Button() {
-                Text('更多').fontSize(16).fontWeight(FontWeight.Bold)
-              }.backgroundColor(this.currentTab == 2 ? '#00C6AE' : Color.White).border({ width: 2 }).padding({ left: 10, right: 10, top: 5, bottom: 5 })
-              .onClick(() => this.currentTab = 2)
-            }
-
-            if (this.currentTab == 0) {
-              UserArticle({ user: this.user })
-            } else if (this.currentTab == 1) {
-              UserBreezemoon({ user: this.user })
-            } else {
-              MoreMenu({ user: this.info })
-            }
-          }.padding(10)
         }
+        .border({
+          color: '#18191F',
+          width: { bottom: 5 }
+        })
+        .clip(true)
+        .borderRadius({ bottomLeft: 16, bottomRight: 16 })
+        .width('100%')
+
+        Column({ space: 10 }) {
+          Row({ space: 10 }) {
+            Button() {
+              Text('TA 的文章').fontSize(16).fontWeight(FontWeight.Bold)
+            }
+            .backgroundColor(this.currentTab == 0 ? '#00C6AE' : Color.White)
+            .border({ width: 2 })
+            .padding({
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 5
+            })
+            .onClick(() => this.currentTab = 0)
+
+            Button() {
+              Text('TA 的清风明月').fontSize(16).fontWeight(FontWeight.Bold)
+            }
+            .backgroundColor(this.currentTab == 1 ? '#00C6AE' : Color.White)
+            .border({ width: 2 })
+            .padding({
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 5
+            })
+            .onClick(() => this.currentTab = 1)
+
+            Button() {
+              Text('更多').fontSize(16).fontWeight(FontWeight.Bold)
+            }
+            .backgroundColor(this.currentTab == 2 ? '#00C6AE' : Color.White)
+            .border({ width: 2 })
+            .padding({
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 5
+            })
+            .onClick(() => this.currentTab = 2)
+          }
+
+          if (this.currentTab == 0) {
+            UserArticle({ user: this.user })
+          } else if (this.currentTab == 1) {
+            UserBreezemoon({ user: this.user })
+          } else {
+            MoreMenu({ user: this.info })
+          }
+        }.padding(10)
       }
     }.menus(this.titleBuilder)
     .backgroundColor('#EEEFF4')

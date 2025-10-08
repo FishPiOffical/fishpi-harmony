@@ -47,6 +47,11 @@ export struct MoreMenu {
     }
   }
 
+  aboutToDisappear(): void {
+    this.overlayNode.removeComponentContent(this.payContent!)
+    this.payContent = undefined;
+  }
+
   build() {
     ListButton({
       items: [{
