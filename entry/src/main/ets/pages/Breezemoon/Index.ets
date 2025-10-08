@@ -31,19 +31,21 @@ export struct BreezeList {
   @Param user: string = '';
   @Local text: string = '';
   @Local controller: TextAreaController = new TextAreaController();
+  @Local refreshing: boolean = false;
 
   aboutToAppear(): void {
     if (this.user) {
       this.query.user = this.user;
       this.fishpi.getUser(this.user).then(user => this.userInfo = user);
     }
+    this.breezemoonList = [];
     this.load();
   }
 
   load() {
-    this.fishpi.breezemoon.list(this.query.toJSON())
+    return this.fishpi.breezemoon.list(this.query.toJSON())
       .then((res) => {
-        this.breezemoonList = res;
+        this.breezemoonList.push(...res);
       })
   }
 
@@ -57,7 +59,15 @@ export struct BreezeList {
         })
         Text(this.userInfo.userNickname || this.userInfo.userName).fontSize(20).fontWeight(FontWeight.Bold)
         Text(' 的清风明月').fontSize(20).fontWeight(FontWeight.Bold)
-      }.width('100%').padding({ top: 10, left: 20, right: 20, bottom: 5 })
+      }
+      .width('100%')
+      .padding({
+        top: 10,
+        left: 20,
+        right: 20,
+        bottom: 5
+      })
+      .backgroundColor('#EEEFF4')
     } else {
       Flex({
         justifyContent: FlexAlign.Center,
@@ -84,29 +94,58 @@ export struct BreezeList {
           .onClick(() => {
             this.fishpi.breezemoon.send(this.text);
             this.text = '';
+            this.breezemoonList = [];
+            this.controller.stopEditing();
+            this.query.page = 1;
             this.load();
           })
       }.width('100%')
-      .padding({ top: 10, left: 10, right: 10, bottom: 0 })
+      .padding({
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 0
+      })
     }
     Column() {
-      List({ space: 20, initialIndex: 0 }) {
-        ForEach(this.breezemoonList, (data: IBreezemoonContent, i) => {
-          ListItem() {
-            BreezemoonItem({
-              item: data,
-            }).margin({
-              top: i == 0 ? 20 : 0,
-              bottom: i == this.breezemoonList.length - 1 ? 20 : 0
-            })
+      Refresh({ refreshing: $$this.refreshing }) {
+        List({ space: 20, initialIndex: 0 }) {
+          ForEach(this.breezemoonList, (data: IBreezemoonContent, i) => {
+            ListItem() {
+              BreezemoonItem({
+                item: data,
+              }).margin({
+                top: i == 0 ? 20 : 0,
+                bottom: i == this.breezemoonList.length - 1 ? 20 : 0
+              })
+            }
+          })
+        }
+        .width('100%')
+        .height('100%')
+        .listDirection(Axis.Vertical) // 排列方向
+        .friction(0.6)
+        .edgeEffect(EdgeEffect.Spring)
+        .onScrollIndex((_, end) => {
+          if (end == this.breezemoonList.length - 3) {
+            this.query.page += 1;
+            this.fishpi.breezemoon.list(this.query.toJSON())
+              .then((res) => {
+                this.breezemoonList = this.breezemoonList.concat(res);
+              })
           }
         })
       }
       .width('100%')
       .height('100%')
-      .listDirection(Axis.Vertical) // 排列方向
-      .friction(0.6)
-      .edgeEffect(EdgeEffect.Spring)
+      .backgroundColor('#EEEFF4')
+      .onRefreshing(() => {
+        this.query.page = 1;
+        this.breezemoonList = [];
+        this.load().then(() => {
+          this.refreshing = false;
+        })
+      })
     }
   }
 

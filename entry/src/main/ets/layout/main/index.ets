@@ -11,7 +11,7 @@ export struct MainLayout {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#EFEFEF')
+    .backgroundColor('#EEEFF4')
     .border({ width: { bottom: 2 }, color: '#000' })
   }
 }

@@ -12,18 +12,24 @@ export struct UserArticle {
   @Require @Param user: string;
   @Local articleList: IArticleDetail[] = [];
   @Local query: ArticleQuery = new ArticleQuery();
+  @Local refreshing: boolean = false;
 
   aboutToAppear(): void {
     this.query.user = this.user;
-    this.fishpi.article.list(this.query.toJSON())
+    this.articleList = [];
+    this.load();
+  }
+
+  load () {
+    return this.fishpi.article.list(this.query.toJSON())
       .then((res) => {
-        this.articleList = res.articles;
+        this.articleList.push(...res.articles);
       })
   }
 
   build() {
     Column() {
-      Column() {
+      Refresh({ refreshing: $$this.refreshing }) {
         List({ space: 20, initialIndex: 0 }) {
           ForEach(this.articleList, (data: IArticleDetail, i) => {
             ListItem() {
@@ -33,8 +39,10 @@ export struct UserArticle {
                 top: i == 0 ? 20 : 0,
                 bottom: i == this.articleList.length - 1 ? 20 : 0
               }).onClick(() => {
-                if (this.pathStack.getAllPathName().pop() != 'Article' || (this.pathStack.getParamByName('Article').pop() as IArticleParam)?.id != data.oId)
+                if (this.pathStack.getAllPathName().pop() != 'Article' ||
+                  (this.pathStack.getParamByName('Article').pop() as IArticleParam)?.id != data.oId) {
                   this.pathStack.pushPathByName('Article', { id: data.oId } as IArticleParam)
+                }
               })
             }
           })
@@ -44,7 +52,23 @@ export struct UserArticle {
         .listDirection(Axis.Vertical) // 排列方向
         .friction(0.6)
         .edgeEffect(EdgeEffect.Spring)
+        .onScrollIndex((_, end) => {
+          if (end == this.articleList.length - 3) {
+            this.query.page = this.query.page + 1;
+            this.load();
+          }
+        })
       }
+      .width('100%')
+      .height('100%')
+      .backgroundColor('#EEEFF4')
+      .onRefreshing(() => {
+        this.query.page = 1;
+        this.articleList = [];
+        this.load().then(() => {
+          this.refreshing = false;
+        })
+      })
     }
   }
 }

@@ -107,7 +107,7 @@ export class Chatroom {
    * @returns
    */
   more(oId: string, mode: ChatMessageMode = ChatMessageMode.Before, type = ChatContentType.Markdown,
-    size: 25): Promise<ChatRoomMessage[]> {
+    size: number = 25): Promise<ChatRoomMessage[]> {
     return defHttp.get<ChatRoomMessage[]>(`/chat-room/getMessage`, {
       params: {
         apiKey: this.token,

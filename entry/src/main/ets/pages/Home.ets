@@ -41,21 +41,21 @@ export struct Home {
         Tabs({ barPosition: BarPosition.End, controller: this.controller }) {
           TabContent() {
             Chats()
-          }.tabBar(this.getTabBarStyle($r('app.media.chats'), '聊天'))
+          }.tabBar(this.getTabBarStyle($r('app.media.chats'), '聊天')).backgroundColor('#EEEFF4')
 
           TabContent() {
             ArticleList()
-          }.tabBar(this.getTabBarStyle($r('app.media.article'), '文章'))
+          }.tabBar(this.getTabBarStyle($r('app.media.article'), '文章')).backgroundColor('#EEEFF4')
 
           TabContent() {
             BreezeList()
-          }.tabBar(this.getTabBarStyle($r('app.media.leaf'), '清风明月'))
+          }.tabBar(this.getTabBarStyle($r('app.media.leaf'), '清风明月')).backgroundColor('#EEEFF4')
 
           TabContent() {
             Profile({
               onLogout: () => this.onLogout()
             })
-          }.tabBar(this.getTabBarStyle($r('app.media.profile'), '我的'))
+          }.tabBar(this.getTabBarStyle($r('app.media.profile'), '我的')).backgroundColor('#EEEFF4')
         }
         .backgroundColor('#F0D35E')
         .barHeight(60)

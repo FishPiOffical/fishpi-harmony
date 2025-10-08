@@ -30,8 +30,11 @@ export struct Chat {
   @Local newMsgSize: number = 0;
   @Local messageBoxExpose?: MessageBoxExpose;
   @Local talk?: IUserInfo;
+  @Local refreshing: boolean = false;
+  private currentPage: number = 1;
 
-  @Computed get me() {
+  @Computed
+  get me() {
     return this.fishpi.user.me
   }
 
@@ -46,23 +49,28 @@ export struct Chat {
     }).height('100%')
   }
 
-
   load(page: number) {
     return this.fishpi.chat.history({
       user: this.user,
       page,
       size: 30,
       autoRead: true
-    }).then((res) => {
-      res.reverse();
-      this.messages.unshift(...res);
-    }).catch((err: Error) => {
-      toast(err.message, this.getUIContext())
     })
+      .then((res) => {
+        res.reverse();
+        res = res.filter((r) => !this.messages.some(m => m.oId == r.oId));
+        this.messages.unshift(...res);
+        this.currentPage = page;
+        return res;
+      })
+      .catch((err: Error) => {
+        toast(err.message, this.getUIContext())
+        return [];
+      })
   }
 
   async init() {
-    await this.load(1);
+    await this.load(this.currentPage);
     await this.fishpi.getUser(this.user)
       .then(res => this.talk = res)
       .catch((err: Error) => {
@@ -76,7 +84,9 @@ export struct Chat {
   aboutToAppear(): void {
     this.init();
     this.fishpi.chat.addListener((res) => {
-      if (!res.chat) return;
+      if (!res.chat) {
+        return;
+      }
       const isAtEnd = this.msgScroller.isAtEnd();
       this.messages.push(res.chat);
       if (isAtEnd) {
@@ -95,29 +105,59 @@ export struct Chat {
         Stack({
           alignContent: Alignment.Bottom,
         }) {
-          List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
-            ForEach(this.messages, (data: IChatData) => {
-              ListItem() {
-                ChatRender({
-                  data,
-                  isSelf: this.me?.userName == data.senderUserName
-                })
+          Refresh({ refreshing: $$this.refreshing }) {
+            List({ space: 20, initialIndex: 0, scroller: this.msgScroller }) {
+              ForEach(this.messages, (data: IChatData) => {
+                ListItem() {
+                  ChatRender({
+                    data,
+                    isSelf: this.me?.userName == data.senderUserName
+                  })
+                }
+              })
+            }
+            .width('100%')
+            .height('100%')
+            .alignListItem(ListItemAlign.End)
+            .listDirection(Axis.Vertical) // 排列方向
+            .friction(0.6)
+            .edgeEffect(EdgeEffect.Spring)
+            .onScrollIndex(() => {
+              if (this.msgScroller.isAtEnd()) {
+                this.newMsgSize = 0;
               }
             })
+            .onClick(() => {
+              this.messageBoxExpose?.blur()
+            })
+
           }
           .width('100%')
           .height('100%')
-          .alignListItem(ListItemAlign.End)
-          .listDirection(Axis.Vertical) // 排列方向
-          .friction(0.6)
-          .edgeEffect(EdgeEffect.Spring)
-          .onScrollIndex(() => {
-            if (this.msgScroller.isAtEnd()) {
-              this.newMsgSize = 0;
-            }
+          .backgroundColor('#EEEFF4')
+          .onRefreshing(() => {
+            this.load(this.currentPage + 1).then((res) => {
+              this.refreshing = false;
+              this.msgScroller.scrollToIndex(res.length - 1)
+            });
           })
+
+          Button() {
+            Row() {
+              Text() {
+                SymbolSpan($r('sys.symbol.chevron_down'))
+              }.fontSize(14).fontColor('#FFFFFF')
+
+              Text(` ${this.newMsgSize}条新消息`).fontSize(14).fontColor('#FFFFFF')
+            }
+          }
+          .backgroundColor('#AAEB3805')
+          .padding(10)
+          .visibility(this.newMsgSize > 0 ? Visibility.Visible : Visibility.Hidden)
+          .position({ bottom: 10, right: 5 })
           .onClick(() => {
-            this.messageBoxExpose?.blur()
+            this.msgScroller.scrollToIndex(this.messages.length - 1);
+            this.newMsgSize = 0;
           })
         }
 
