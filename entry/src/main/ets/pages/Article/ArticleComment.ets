@@ -13,6 +13,7 @@ export struct ArticleComment {
   @Require @Param count: number;
   @Event onExist: () => void;
   @Event onSend: (msg: string, replyId?: string) => void;
+  @Event onNext: () => void;
   @Local messageBoxExpose?: MessageBoxExpose;
 
   build() {
@@ -87,6 +88,11 @@ export struct ArticleComment {
         .edgeEffect(EdgeEffect.Spring)
         .onClick(() => {
           this.messageBoxExpose?.blur()
+        })
+        .onScrollIndex((_, end) => {
+          if (end >= this.comments.length - 1) {
+            this.onNext?.();
+          }
         })
         MessageBox({
           onExpose: (expose) => {

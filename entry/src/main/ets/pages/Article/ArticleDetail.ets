@@ -3,7 +3,7 @@ import { lvMarkdownIn } from "@luvi/lv-markdown-in";
 import { Icon } from "../../components/Icon";
 import { Header, HeaderAction } from "../../layout/main/header";
 import Fishpi from "../../service/fishpi";
-import { IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
+import { IArticleComment, IArticleDetail, IArticleTag, VoteStatus } from "../../service/types/article";
 import { RichView } from "../../components/RichView";
 import { IArticleListParam } from "./Index";
 import { common } from "@kit.AbilityKit";
@@ -13,6 +13,8 @@ import { Avatar } from "../../components/Avatar/Index";
 
 export interface IArticleParam {
   id: string;
+  comment?: string;
+  page?: number;
 }
 export interface IArticleCommentParam {
   detail: IArticleDetail;
@@ -33,7 +35,9 @@ export struct ArticleDetail {
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Require @Param oId: string;
   @Local detail?: IArticleDetail;
+  @Local comments: IArticleComment[] = [];
   @Local showComments: boolean = false;
+  private page = 1;
   private uiContext: UIContext = this.getUIContext()
 
   @Computed
@@ -45,10 +49,15 @@ export struct ArticleDetail {
     this.loadComments();
   }
 
-  loadComments() {
-    this.fishpi.article.detail(this.oId).then((res) => {
+  loadComments(page = 1) {
+    if (page == 1) {
+      this.comments = [];
+    }
+    this.fishpi.article.detail(this.oId, page).then((res) => {
       this.detail = res;
-      this.detail.articleComments?.reverse();
+      res.articleComments?.reverse();
+      this.comments.push(...(res.articleComments || []));
+      this.page = page;
     })
   }
 
@@ -294,7 +303,7 @@ export struct ArticleDetail {
 
         if (this.detail && this.showComments) {
           ArticleComment({
-            comments: this.detail.articleComments || [],
+            comments: this.comments,
             oId: this.detail.oId,
             count: this.detail.articleCommentCount,
             onExist: () => {
@@ -313,6 +322,9 @@ export struct ArticleDetail {
                   this.detail.articleComments?.reverse();
                 })
               })
+            },
+            onNext: () => {
+              this.loadComments(this.page + 1);
             }
           }).zIndex(1000)
         }
