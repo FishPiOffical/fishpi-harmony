@@ -2,19 +2,19 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "module description"
+      "value": "摸鱼派APP"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "鱼油专属摸鱼社区"
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "摸鱼派APP"
     },
     {
       "name": "permission_reason_read_image_video",
-      "value": "Use to upload image or video when chat"
+      "value": "用于在聊天时上传图片"
     }
   ]
 }

@@ -7,13 +7,13 @@ export struct ChatItem {
   @Require @Param name: string;
   @Require @Param content: string;
   @Require @Param time: string;
+  @Param fontColor: ResourceColor = '#18191F';
 
   @Event onTap: (event?: ClickEvent) => void = ()=>{};
 
   getShortTime() {
     if (!this.time) return ''
-    const date = new Date(this.time)
-    return DateUtil.getTipDateStr(date.getTime())
+    return DateUtil.getTipDateStr(this.time)
   }
 
   build() {
@@ -25,6 +25,7 @@ export struct ChatItem {
         Row(){
           Text(this.name).fontWeight(FontWeight.Bold).fontSize(20)
             .textAlign(TextAlign.Start)
+            .fontColor(this.fontColor)
           Text(this.getShortTime())
             .fontSize(11)
             .fontColor('#9FA4B4')
@@ -38,6 +39,7 @@ export struct ChatItem {
             .maxLines(1)
             .fontSize(15)
             .width('100%')
+            .fontColor(this.fontColor)
         }
         .alignItems(VerticalAlign.Center)
         .height('50%')
@@ -61,5 +63,6 @@ export struct ChatItem {
     .width('100%')
     .height(70)
     .onClick(this.onTap)
+
   }
 }

@@ -5,6 +5,7 @@ import { AppData } from '../service';
 import Fishpi from '../service/fishpi';
 import { Home } from './Home';
 import { Login } from './Login';
+import { NoticeCommandType } from '../service/types/notice';
 
 
 PersistenceV2.notifyOnError((key: string, reason: string, msg: string) => {
@@ -19,6 +20,7 @@ struct Index {
   @Local app: AppData = PersistenceV2.connect(AppData, () => new AppData())!;
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
   @Local title: string = '聊天'
+  @Local noticeCount: number = 0;
 
   getTabBarStyle(icon: Resource, text: string) {
     return new BottomTabBarStyle(icon, text).iconStyle({
@@ -40,11 +42,8 @@ struct Index {
         });
       }),
       rightAction: new HeaderAction($r('app.media.notice'), () => {
-        this.getUIContext().getPromptAction().showToast({
-          message: '消息查看',
-          duration: 2000
-        });
-      }, new HeaderActionOptions({ stockColor: '#000', badge: true }))
+        this.pathStack.pushPathByName('Notice', null);
+      }, new HeaderActionOptions({ stockColor: '#000', badge: this.noticeCount > 0 }))
     }).width('100%').height('100%')
   }
 
@@ -59,7 +58,20 @@ struct Index {
   }
 
   aboutToAppear() {
-    if (this.isLogin) this.fishpi.setToken(this.app.token)
+    if (!this.isLogin) return;
+    this.fishpi.setToken(this.app.token)
+    this.fishpi.notice.count().then((res) => {
+      this.noticeCount = res.unreadNotificationCnt;
+    })
+    this.fishpi.notice.addListener((res) => {
+      switch(res.command) {
+        case NoticeCommandType.RefreshNotification:
+          this.fishpi.notice.count().then((res) => {
+            this.noticeCount = res.unreadNotificationCnt;
+          })
+          break;
+      }
+    })
   }
 
   build() {

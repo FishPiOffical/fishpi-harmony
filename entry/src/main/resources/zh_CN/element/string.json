@@ -2,15 +2,15 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "模块描述"
+      "value": "摸鱼派APP"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "鱼油专属摸鱼社区"
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "摸鱼派APP"
     },
     {
       "name": "permission_reason_read_image_video",

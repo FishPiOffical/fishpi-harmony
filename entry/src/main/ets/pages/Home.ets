@@ -7,6 +7,7 @@ import { Chats } from './Chats/Index';
 import { ArticleList } from './Article/Index';
 import { BreezeList } from './Breezemoon/Index';
 import { Profile } from './Profile/Index';
+import { NoticeCommandType } from "../service/types/notice";
 
 @ComponentV2
 export struct Home {

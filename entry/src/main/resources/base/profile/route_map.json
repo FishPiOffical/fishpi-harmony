@@ -71,6 +71,14 @@
       "data": {
         "description": "用户"
       }
+    },
+    {
+      "name": "Notice",
+      "pageSourceFile": "src/main/ets/pages/Notice/Index.ets",
+      "buildFunction": "NoticeBuilder",
+      "data": {
+        "description": "通知"
+      }
     }
   ]
 }

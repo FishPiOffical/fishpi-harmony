@@ -344,6 +344,10 @@ export interface INoticeAt {
    */
   oId: string;
   /**
+   * 数据 Id
+   */
+  dataId: string;
+  /**
    * 数据类型
    */
   dataType: DataType;
@@ -355,6 +359,14 @@ export interface INoticeAt {
    * 用户头像
    */
   userAvatarURL: string;
+  /**
+   * 用户头像
+   */
+  thumbnailURL: string;
+  /**
+   * 通知内容
+   */
+  description: string;
   /**
    * 通知内容
    */
@@ -497,6 +509,13 @@ export class NoticeData {
     return null;
   }
 
+  get reply() {
+    if (this.type === NoticeType.Reply) {
+      return this.data as INoticeComment;
+    }
+    return null;
+  }
+
   get at() {
     if (this.type === NoticeType.At) {
       return this.data as INoticeAt;
@@ -518,3 +537,159 @@ export class NoticeData {
     return null;
   }
 }
+
+export enum NoticeCommandType {
+  /** 刷新通知 */
+  RefreshNotification = 'refreshNotification',
+  /**
+   * 聊天未读数刷新
+   */
+  ChatUnreadCountRefresh = 'chatUnreadCountRefresh',
+  /**
+   * 新的闲聊消息
+   */
+  NewIdleChatMessage = 'newIdleChatMessage',
+  /**
+   * 系统广播警告
+   */
+  WarnBroadcast = 'warnBroadcast',
+  /**
+   * 清风明月更新
+   */
+  bzUpdate = 'bz-update',
+}
+
+/**
+ * 通知消息
+ */
+export interface INoticeCommand {
+  /**
+   * 通知类型
+   */
+  command: NoticeCommandType;
+}
+
+/**
+ * 未读消息数
+ */
+export interface INoticeUnReadCount extends INoticeCommand {
+  /**
+   * 未读数
+   */
+  count: number;
+}
+
+/**
+ * 私聊通知
+ */
+export interface INoticeIdleChat extends INoticeCommand {
+  senderUserName: string;
+  senderAvatar: string;
+  preview: string;
+}
+
+/**
+ * 系统广播
+ */
+export interface INoticeWarnBroadcast extends INoticeCommand {
+  warnBroadcastText: string;
+  who: string;
+}
+
+/**
+ * 清风明月更新
+ */
+export interface INoticeBreezemoon extends INoticeCommand {
+  /**
+   * 发布者用户名
+   */
+  breezemoonAuthorName: string;
+  /**
+   * 发布者头像
+   */
+  breezemoonAuthorThumbnailURL48: string;
+  /**
+   * 内容
+   */
+  breezemoonContent: string;
+  /**
+   * 清风明月ID
+   */
+  oId: string;
+}
+
+export interface INoticeMsg extends INoticeBreezemoon, INoticeWarnBroadcast, INoticeIdleChat, INoticeUnReadCount {
+  command: NoticeCommandType;
+}
+
+export class NoticeMsg implements INoticeMsg {
+  command: NoticeCommandType;
+  count: number = 0;
+  senderUserName: string = '';
+  senderAvatar: string = '';
+  preview: string = '';
+  warnBroadcastText: string = '';
+  who: string = '';
+  breezemoonAuthorName: string = '';
+  breezemoonAuthorThumbnailURL48: string = '';
+  breezemoonContent: string = '';
+  oId: string = '';
+
+  constructor(msg: INoticeMsg) {
+    this.command = msg.command;
+    this.count = msg.count;
+    this.senderUserName = msg.senderUserName;
+    this.senderAvatar = msg.senderAvatar;
+    this.preview = msg.preview;
+    this.warnBroadcastText = msg.warnBroadcastText;
+    this.who = msg.who;
+    this.breezemoonAuthorName = msg.breezemoonAuthorName;
+    this.breezemoonAuthorThumbnailURL48 = msg.breezemoonAuthorThumbnailURL48;
+    this.breezemoonContent = msg.breezemoonContent;
+    this.oId = msg.oId;
+  }
+
+  get unReadCount() {
+    if (this.command === NoticeCommandType.ChatUnreadCountRefresh) {
+      return this.count;
+    }
+    return 0;
+  }
+
+  get idleChat() {
+    if (this.command === NoticeCommandType.NewIdleChatMessage) {
+      return {
+        senderUserName: this.senderUserName,
+        senderAvatar: this.senderAvatar,
+        preview: this.preview,
+      } as INoticeIdleChat;
+    }
+    return null;
+  }
+
+  get warnBroadcast() {
+    if (this.command === NoticeCommandType.WarnBroadcast) {
+      return {
+        warnBroadcastText: this.warnBroadcastText,
+        who: this.who,
+      } as INoticeWarnBroadcast;
+    }
+    return null;
+  }
+
+  get breezemoon() {
+    if (this.command === NoticeCommandType.bzUpdate) {
+      return {
+        breezemoonAuthorName: this.breezemoonAuthorName,
+        breezemoonAuthorThumbnailURL48: this.breezemoonAuthorThumbnailURL48,
+        breezemoonContent: this.breezemoonContent,
+        oId: this.oId,
+      } as INoticeBreezemoon;
+    }
+    return null;
+  }
+}
+
+export type NoticeListener = (
+  data: NoticeMsg
+) => void;

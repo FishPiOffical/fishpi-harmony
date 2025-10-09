@@ -2,15 +2,15 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "module description"
+      "value": "Fishpi App"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "Take rest after the work"
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "Fishpi App"
     },
     {
       "name": "permission_reason_read_image_video",
