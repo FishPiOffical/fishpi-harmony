@@ -10,6 +10,7 @@ import { common } from "@kit.AbilityKit";
 import { pushToAppUrl, startBrowsableAbility } from "../../libs/utils";
 import { ArticleComment } from "./ArticleComment";
 import { Avatar } from "../../components/Avatar/Index";
+import { IUserParam } from "../User/Index";
 
 export interface IArticleParam {
   id: string;
@@ -52,6 +53,9 @@ export struct ArticleDetail {
   loadComments(page = 1) {
     if (page == 1) {
       this.comments = [];
+    }
+    if (this.detail && page > (this.detail?.pagination?.paginationPageCount || 0)) {
+      return;
     }
     this.fishpi.article.detail(this.oId, page).then((res) => {
       this.detail = res;
@@ -135,8 +139,18 @@ export struct ArticleDetail {
                 RichView({
                   html: this.detail!.articleContent,
                   onOpenWindow: (url) => {
+                    let mat = url.match(/fishpi\.cn\/member\/(.*?)\/*$/);
+                    if (mat) {
+                      this.pathStack.pushPathByName('User', { user: mat[1] } as IUserParam);
+                      return;
+                    }
+                    mat = url.match(/fishpi\.cn\/article\/(.*?)\/*$/);
+                    if (mat) {
+                      this.pathStack.pushPathByName('Article', { id: mat[1] } as IArticleParam);
+                      return;
+                    }
                     if (!pushToAppUrl(url, this.pathStack))
-                      startBrowsableAbility(url, getContext(this) as common.UIAbilityContext);
+                      startBrowsableAbility(url, this.getUIContext().getHostContext() as common.UIAbilityContext);
                   }
                 })
 

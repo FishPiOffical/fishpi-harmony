@@ -7,11 +7,11 @@
         "material": {
           "certpath": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001AED9B4C666745F263F980990C4C60856C2941B86F2414C37FEBD9E5165493DFC71C62BE946000",
+          "keyPassword": "0000001B97FD838DF185F9D6DD13B3FA705EFC3963A37CEB83F70AA83DF0657B6B3D207A106C644F46988D",
           "profile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "C:\\Users\\Hancel\\.ohos\\config\\default_Fishpi_SPWdUErAkpnGANlXwgjPW-lDLwgBr0eNO7hvJLzL3gY=.p12",
-          "storePassword": "0000001A271FE47F427E02EAC02D447AD822A785FE08E90445E9E606CFF8FE83AE8ED74A73EE22FF0984"
+          "storePassword": "0000001BEBDB70D4EB581C483C5A1D961862C0CF74BB585F8B8742FD3AF7C4EB0322C2C55BD014E7437B0E"
         }
       }
     ],

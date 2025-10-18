@@ -1,3 +1,4 @@
+import { AlertDialog } from '@kit.ArkUI';
 import { Header, HeaderAction, HeaderActionOptions } from '../layout/main/header'
 import { Nav } from "../layout/main/nav";
 import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI';
@@ -6,7 +7,8 @@ import Fishpi from '../service/fishpi';
 import { Home } from './Home';
 import { Login } from './Login';
 import { NoticeCommandType } from '../service/types/notice';
-
+import { startScanQrCode, toast } from '../libs/utils';
+import { common } from '@kit.AbilityKit';
 
 PersistenceV2.notifyOnError((key: string, reason: string, msg: string) => {
   console.error(`error key: ${key}, reason: ${reason}, message: ${msg}`);
@@ -36,9 +38,56 @@ struct Index {
     Header({
       title: this.title,
       leftAction: new HeaderAction($r('app.media.scan'), () => {
-        this.getUIContext().getPromptAction().showToast({
-          message: '扫一扫',
-          duration: 2000
+        startScanQrCode(this.getUIContext().getHostContext() as common.UIAbilityContext).then((result) => {
+          if (!result.startsWith('web:')) {
+            toast('无效的登录二维码，请扫码网页登录界面的二维码！', this.getUIContext());
+            return;
+          }
+          this.fishpi.scanLogin(result.replace('web:', ''), (cb) => {
+            this.getUIContext().showAlertDialog(
+              {
+                title: '登录设备',
+                message: '是否确认在此设备上登录？',
+                autoCancel: true,
+                alignment: DialogAlignment.Center,
+                gridCount: 4,
+                offset: { dx: 0, dy: -20 },
+                buttonDirection: DialogButtonDirection.HORIZONTAL,
+                buttons: [
+                  {
+                    value: '取消',
+                    action: () => {
+                      cb(false);
+                    }
+                  },
+                  {
+                    value: '确认',
+                    enabled: true,
+                    defaultFocus: true,
+                    style: DialogButtonStyle.HIGHLIGHT,
+                    backgroundColor: '#ed8f26',
+                    action: () => {
+                      cb(true);
+                    }
+                  }],
+                cancel: () => {
+                  console.info('Closed callbacks');
+                },
+                onWillDismiss: (dismissDialogAction: DismissDialogAction) => {
+                  console.info(`reason= ${dismissDialogAction.reason}`);
+                  console.info('AlertDialog onWillDismiss');
+                  if (dismissDialogAction.reason === DismissReason.PRESS_BACK) {
+                    dismissDialogAction.dismiss();
+                  }
+                  if (dismissDialogAction.reason === DismissReason.TOUCH_OUTSIDE) {
+                    dismissDialogAction.dismiss();
+                  }
+                }
+              }
+            )
+          })
+        }).catch((err: Error) => {
+          toast('扫码失败：' + err.message, this.getUIContext());
         });
       }),
       rightAction: new HeaderAction($r('app.media.notice'), () => {

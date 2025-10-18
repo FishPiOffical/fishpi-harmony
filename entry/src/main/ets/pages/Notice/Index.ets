@@ -2,7 +2,7 @@ import { AlertDialog } from '@kit.ArkUI';
 import { AppStorageV2 } from "@kit.ArkUI";
 import { Header, HeaderAction } from "../../layout/main/header";
 import Fishpi from "../../service/fishpi";
-import { NoticeType } from '../../service/types/notice';
+import { INoticeCount, NoticeType } from '../../service/types/notice';
 import { NoticeList } from './NoticeList';
 
 @Builder
@@ -14,6 +14,7 @@ export function NoticeBuilder(name: string, param: Object) {
 export struct Notice {
   @Consumer('routerTab') pathStack: NavPathStack = new NavPathStack()
   @Local fishpi: Fishpi = AppStorageV2.connect(Fishpi, () => new Fishpi())!;
+  @Local noticeCount?: INoticeCount;
   readConfirm: CustomDialogController = new CustomDialogController({
     builder: AlertDialog({
       primaryTitle: '标记所有消息已读',
@@ -45,6 +46,31 @@ export struct Notice {
         this.readConfirm.open();
       }),
     }).height('100%')
+  }
+
+  aboutToAppear(): void {
+    this.fishpi.notice.count().then((res) => {
+      this.noticeCount = res;
+    })
+  }
+
+  @Builder
+  TabBuilder(name: string, unreadCount: number) {
+    Column() { // 红点提示
+      if (unreadCount > 0) {
+        Badge({
+          count: unreadCount,
+          position: BadgePosition.RightTop,
+          style: {
+            color: Color.Red,
+            fontSize: 12
+          }
+        })
+      }
+
+      Text(name)
+        .fontSize(12)
+    }
   }
 
   build() {

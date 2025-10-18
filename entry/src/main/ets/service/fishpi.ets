@@ -24,6 +24,7 @@ import {
 } from './types/fishpi';
 import { IUserInfo, Metal } from './types/user';
 import User from './user';
+import { ReconnectingWebSocket } from '../libs/ws';
 
 export class Fishpi {
   private token: string = '';
@@ -190,6 +191,30 @@ export class Fishpi {
     return defHttp.upload<IUploadInfo>('/upload', files.map((file) => ({ key: 'file[]', value: file } as IKeyVal)), {
       'apiKey': this.token
     }).then(res => res && new UploadInfo(res));
+  }
+
+  scanLogin(targetId: string, confirm: (cb: (result: boolean) => void) => void) {
+    const rws = new ReconnectingWebSocket('wss://fishpi.cn/login-channel', {
+      connectionTimeout: 6000,
+    })
+
+    rws.onopen = async () => {
+      rws.send(JSON.stringify({
+        type: 3,
+        targetId,
+      }))
+
+      confirm((result) => {
+        if (result) {
+          rws.send(JSON.stringify({
+            type: 2,
+            targetId,
+            apiKey: this.token,
+          }))
+        }
+        rws.close()
+      })
+    }
   }
 }
 

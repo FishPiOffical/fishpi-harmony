@@ -1,10 +1,12 @@
-
+import { AlertDialog } from '@kit.ArkUI';
 import { common, Want } from "@kit.AbilityKit";
 import { BusinessError } from "@kit.BasicServicesKit";
 import { IArticleParam } from "../pages/Article/ArticleDetail";
 import { IArticleListParam } from "../pages/Article/Index";
 import { http } from '@kit.NetworkKit';
 import { image } from "@kit.ImageKit";
+import { scanBarcode, scanCore } from "@kit.ScanKit";
+import { hilog } from "@kit.PerformanceAnalysisKit";
 
 export function htmlToText(html: string, userName?: string): string {
   return html
@@ -25,6 +27,30 @@ export function toast(message: string | Resource, context: UIContext): void {
   }
 }
 
+export function confirm(title: string, message: string, confirmText = '确认', cancelText = '取消'): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
+    new CustomDialogController({
+      builder: new AlertDialog({
+        primaryTitle: title,
+        content: message,
+        primaryButton: {
+          value: cancelText,
+          action: () => {
+            resolve(false)
+          },
+        },
+        secondaryButton: {
+          value: confirmText,
+          role: ButtonRole.ERROR,
+          action: () => {
+            resolve(true)
+          }
+        },
+      }),
+    }).open();
+  });
+}
+
 export function startBrowsableAbility(url: string, context: common.UIAbilityContext): void {
   let want: Want = {
     action: 'ohos.want.action.viewData',
@@ -38,6 +64,33 @@ export function startBrowsableAbility(url: string, context: common.UIAbilityCont
     .catch((err: BusinessError) => {
       console.error(`Failed to startAbility. Code: ${err.code}, message: ${err.message}`);
     });
+}
+
+export function startScanQrCode(context: common.UIAbilityContext): Promise<string> {
+  return new Promise((resolve, reject) => {
+    try {
+      let options: scanBarcode.ScanOptions = {
+        scanTypes: [scanCore.ScanType.QR_CODE],
+        enableMultiMode: true,
+        enableAlbum: true
+      };
+      if (canIUse("SystemCapability.Multimedia.Scan.ScanBarcode")) {
+        scanBarcode.startScanForResult(context, options,
+          async (error: BusinessError<void>, result: scanBarcode.ScanResult) => {
+            if (error) {
+              hilog.error(0x0001, '[Scan CPSample]',
+                `Failed to get ScanResult by callback with options. Code: ${error.code}, message: ${error.message}`);
+              return;
+            }
+            resolve(result.originalValue);
+          })
+      } else {
+        reject(new Error('当前设备不支持扫码功能'));
+      }
+    } catch(error) {
+      reject(error);
+    }
+  });
 }
 
 export function pushToAppUrl(url: string, pathStack: NavPathStack) {

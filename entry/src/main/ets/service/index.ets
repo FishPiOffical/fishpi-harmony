@@ -5,6 +5,8 @@ import { GestureType, IRedPacket, RedPacketType } from "./types/redpacket";
 @ObservedV2
 export class AppData {
   @Trace token: string = '';
+  @Trace isFirstLaunch: boolean = true;
+  @Trace agreePrivacy: boolean = false;
 }
 
 @ObservedV2
