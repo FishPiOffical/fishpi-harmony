@@ -172,7 +172,6 @@ export struct Chat {
           }
         })
       }
-      .backgroundColor('#FFF')
 
       Row() {
         Text('')

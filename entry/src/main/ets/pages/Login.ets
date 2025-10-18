@@ -183,6 +183,10 @@ export struct Login {
               toast('请先阅读并同意用户协议和隐私政策', this.getUIContext())
               return
             }
+            if (!this.account.nameOrEmail || !this.account.userPassword) {
+              toast('请输入用户名和密码', this.getUIContext())
+              return
+            }
             const account = this.account.toJSON()
             account.userPassword = CryptoJS.MD5(account.userPassword).toString()
             this.fishpi.login(account).then((token) => {
@@ -201,11 +205,11 @@ export struct Login {
                 width: 12,
                 height: 12
               })
-              .select(this.app.agreePrivacy)
+              .select(this.agreePrivacy)
               .selectedColor(0xed6f21)
               .shape(CheckBoxShape.CIRCLE)
               .onChange((value: boolean) => {
-                console.info('Checkbox1 change is' + value);
+                this.agreePrivacy = value
               })
             Text() {
               Span('我已阅读并同意')

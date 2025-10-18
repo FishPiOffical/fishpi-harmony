@@ -36,7 +36,6 @@ export struct BreezemoonItem {
           left: 10,
           right: 10,
           top: 10,
-          bottom: 5
         }).width('100%')
         Column() {
           Text(htmlToText(this.item.breezemoonContent))
@@ -58,7 +57,7 @@ export struct BreezemoonItem {
               .fontSize(16)
               .margin({ left: 5 })
           }.width('100%')
-          .padding(10)
+          .padding({ left: 10, right: 10, bottom: 10 })
           .justifyContent(FlexAlign.End)
         }
       }

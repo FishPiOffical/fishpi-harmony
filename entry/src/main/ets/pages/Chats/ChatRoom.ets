@@ -196,12 +196,7 @@ export struct ChatRoom {
           })
         }
         .width('100%')
-        .padding({
-          left: 5
-        })
-        .backgroundColor('#FFF')
       }.width('100%')
-      .backgroundColor('#FFF')
 
       Row() {
         Text('')

@@ -154,7 +154,7 @@ struct Index {
     .menus(this.titleBuilder)
     .titleMode(NavigationTitleMode.Mini)
     .mode(this.isLogin ? NavigationMode.Auto : NavigationMode.Stack)
-    .navBarWidth(300)
+    .navBarWidth('33%')
     .ignoreLayoutSafeArea([LayoutSafeAreaType.SYSTEM], [LayoutSafeAreaEdge.BOTTOM])
   }
 }
